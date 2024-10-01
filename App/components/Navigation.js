@@ -1,8 +1,9 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
 import { useTheme } from '../utils/ThemeContext'; // Importa o hook de tema
+import { View } from 'react-native';
 
 import Entypo from '@expo/vector-icons/Entypo';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
@@ -12,16 +13,17 @@ import Map from '../pages/Map';
 import Report from '../pages/Report';
 import Settings from '../pages/Config';
 
-const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
-export default function TabNavigation() {
+export default function Navigation() {
   // Usa o tema do contexto
   const { colorScheme } = useTheme();
 
   return (
     <NavigationContainer>
       <StatusBar style="auto" />
-      <Tab.Navigator
+
+      <Stack.Navigator
         screenOptions={{
           headerShown: false,
           tabBarActiveTintColor: colorScheme.textPrimary,
@@ -30,24 +32,24 @@ export default function TabNavigation() {
           tabBarInactiveBackgroundColor: colorScheme.panelBackground,
         }}
       >
-        <Tab.Screen
+        <Stack.Screen
           name="Map"
           options={{ tabBarIcon: ({ color }) => <Entypo name="map" size={24} color={color} /> }}
           component={Map}
         />
 
-        <Tab.Screen
+        <Stack.Screen
           name="Reportar"
           options={{ tabBarIcon: ({ color }) => <MaterialIcons name="report-gmailerrorred" size={24} color={color} /> }}
           component={Report}
         />
 
-        <Tab.Screen
+        <Stack.Screen
           name="Configuracoes"
           options={{ tabBarIcon: ({ color }) => <FontAwesome name="gears" size={24} color={color} /> }}
           component={Settings}
         />
-      </Tab.Navigator>
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }

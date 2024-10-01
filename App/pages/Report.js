@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TextInput, Image, TouchableOpacity, Button } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+//import MapView, { Marker } from 'react-native-maps';
 import { getUserLocation } from '../utils/LocationPermition';
 import { useTheme } from '../utils/ThemeContext';
 import * as ImagePicker from 'expo-image-picker'; // Importar o expo-image-picker
@@ -61,7 +61,8 @@ export default function Report() {
     return (
         <View style={[styles.container, { backgroundColor: colorScheme.background }]}>
             <View style={[styles.containerHeader, { borderBottomColor: colorScheme.buttonSecondary }]}>
-                <MapView
+                <Image source={require('../assets/image.png')} style={styles.map} resizeMode='cover' />
+                {/* <MapView
                     key={colorScheme.background}
                     style={styles.map}
                     initialRegion={{
@@ -82,13 +83,13 @@ export default function Report() {
                         }}
                         pinColor={colorScheme.buttonSecondary}
                     />
-                </MapView>
+                </MapView> */}
             </View>
 
             <View style={styles.containerBody}>
                 <TouchableOpacity onPress={takePhoto} style={{ position: 'relative', justifyContent: 'center', alignItems: 'center' }}>
-                    <Image source={img != ''? img : require('../assets/placeHolder.png')} style={{ width: 300, height: 200 }} resizeMode='contain' />
-                    {img != ''? null : <Text style={{ position: 'absolute' }}>Inserir Foto Do Local</Text>}
+                    <Image source={img != '' ? img : require('../assets/placeHolder.png')} style={{ width: 300, height: 200 }} resizeMode='contain' />
+                    {img != '' ? null : <Text style={{ position: 'absolute' }}>Inserir Foto Do Local</Text>}
                 </TouchableOpacity>
                 <TextInput
                     placeholder='Titulo'
