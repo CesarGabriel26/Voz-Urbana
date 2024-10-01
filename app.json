@@ -15,13 +15,24 @@
       "supportsTablet": true
     },
     "android": {
+      "android": {
+        "permissions": [
+          "ACCESS_FINE_LOCATION"
+        ]
+      },
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.cesar_g_s_oliveira.VozUrbana"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b94ad871-e6df-4b16-8170-b5b0a9a1f490"
+      }
     }
   }
 }
