@@ -7,7 +7,6 @@ export async function getUserLocation() {
     
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
-        setErrorMsg('Permissão de localização negada');
         return;
     }
 

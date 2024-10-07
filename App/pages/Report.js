@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TextInput, Image, TouchableOpacity, Button } from 'react-native';
-//import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import { getUserLocation } from '../utils/LocationPermition';
 import { useTheme } from '../utils/ThemeContext';
 import * as ImagePicker from 'expo-image-picker'; // Importar o expo-image-picker
@@ -10,16 +10,13 @@ export default function Report() {
     const [img, setImg] = useState('');
     const { colorScheme } = useTheme();
 
-    // Função para abrir a câmera
     const takePhoto = async () => {
-        // Pede permissão para acessar a câmera
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
         if (status !== 'granted') {
             alert('Precisamos de permissão para acessar a câmera!');
             return;
         }
 
-        // Abre a câmera e captura a imagem
         let result = await ImagePicker.launchCameraAsync({
             allowsEditing: true,
             aspect: [4, 3],
@@ -36,13 +33,10 @@ export default function Report() {
         }
     };
 
-    // Função para salvar a referência da imagem no banco de dados
     const saveImageReference = (uri) => {
-        // Aqui você faria uma chamada ao seu backend ou banco de dados para salvar a URI da imagem
         console.log("Imagem salva no banco: ", uri);
     };
 
-    // Buscar a localização do usuário
     useEffect(() => {
         (async () => {
             let loc = await getUserLocation();
@@ -50,40 +44,37 @@ export default function Report() {
         })();
     }, [colorScheme]);
 
-    if (!location) {
-        return (
-            <View style={styles.container}>
-                <Text>Sem localização</Text>
-            </View>
-        );
-    }
-
     return (
         <View style={[styles.container, { backgroundColor: colorScheme.background }]}>
             <View style={[styles.containerHeader, { borderBottomColor: colorScheme.buttonSecondary }]}>
-                <Image source={require('../assets/image.png')} style={styles.map} resizeMode='cover' />
-                {/* <MapView
-                    key={colorScheme.background}
-                    style={styles.map}
-                    initialRegion={{
-                        latitude: location.latitude,
-                        longitude: location.longitude,
-                        latitudeDelta: 0.001,
-                        longitudeDelta: 0.001,
-                    }}
-                    scrollEnabled={false}
-                    zoomEnabled={false}
-                >
-                    <Marker
-                        key={colorScheme.buttonSecondary}
-                        title='Esse será o local'
-                        coordinate={{
-                            latitude: location.latitude,
-                            longitude: location.longitude
-                        }}
-                        pinColor={colorScheme.buttonSecondary}
-                    />
-                </MapView> */}
+                {
+                    location ? (
+                        <MapView
+                            key={colorScheme.background}
+                            style={styles.map}
+                            initialRegion={{
+                                latitude: location.latitude,
+                                longitude: location.longitude,
+                                latitudeDelta: 0.001,
+                                longitudeDelta: 0.001,
+                            }}
+                            scrollEnabled={false}
+                            zoomEnabled={false}
+                        >
+                            <Marker
+                                key={colorScheme.buttonSecondary}
+                                title='Esse será o local'
+                                coordinate={{
+                                    latitude: location.latitude,
+                                    longitude: location.longitude
+                                }}
+                                pinColor={colorScheme.buttonSecondary}
+                            />
+                        </MapView>
+                    ) : <View style={styles.container} ><Text>Carregando mapa</Text></View>
+                }
+
+
             </View>
 
             <View style={styles.containerBody}>
@@ -116,16 +107,20 @@ export default function Report() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     map: {
         width: '100%',
-        height: '100%',
+        height: 200,
     },
     containerHeader: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         borderBottomWidth: 4,
+        marginVertical: 20,
+        width: '80%'
     },
     containerBody: {
         flex: 3,
