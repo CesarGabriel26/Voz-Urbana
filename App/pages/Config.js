@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Modal } from 'react-native'
+import { View, Text, StyleSheet, Image } from 'react-native'
 import { Dropdown } from 'react-native-element-dropdown';
 import { colorSchemas } from '../styles/Colors';
 import { useTheme } from '../utils/ThemeContext';
@@ -58,24 +58,29 @@ export default function Settings() {
             </View>
 
             <TouchableOpacity style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    borderWidth: 1,
-                    borderRadius: 10,
-                    borderColor: colorScheme.backgroundInverse,
-                    overflow: 'hidden',
-                    backgroundColor: colorScheme.background,
-                    minHeight: 60,
-                    padding: 5
-                }}
-                onPress={()=>{setModalVisible(true)}}
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                borderWidth: 1,
+                borderRadius: 10,
+                borderColor: colorScheme.backgroundInverse,
+                overflow: 'hidden',
+                backgroundColor: colorScheme.background,
+                minHeight: 60,
+                padding: 5
+            }}
+                onPress={() => { setModalVisible(true) }}
             >
                 <View style={styles.Icon}>
                     <FontAwesome6 name="circle-user" size={40} color={colorScheme.textPrimary} />
                 </View>
                 <Text style={{ color: colorScheme.textPrimary }} >Informações do usuario</Text>
             </TouchableOpacity>
+
+            <View>
+                <Text>Ainda estamos trabalhando nisso</Text>
+                <Image source={require('../assets/merp.png')} />
+            </View>
 
             <UserProfile setModalVisible={setModalVisible} modalVisible={modalVisible} />
         </View>

@@ -119,14 +119,16 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderBottomWidth: 4,
-        marginVertical: 20,
+
         width: '80%'
+
     },
     containerBody: {
         flex: 3,
         justifyContent: 'center',
         alignItems: 'center',
         paddingHorizontal: '5%',
+        
     },
     inputText: {
         marginVertical: 10,

@@ -5,76 +5,95 @@ import { getUserLocation } from '../utils/LocationPermition';
 import { useTheme } from '../utils/ThemeContext';
 
 export default function Yours({ navigation }) {
-    const [complaints, setComplaints] = useState([]);
+    const [complaints, setComplaints] = useState([
+        {
+            id: 0,
+            data: '00/00/00',
+            content: 'Mim não gostar mimsnwejfn ksviwnfn mim ser cliente e querer coisas mim ser aunfeouowjefown mim querer algo aqui eá uma reelcameçaõ aidn uaia',
+            status: 'Sua requisição ainda não foi respondida!'
+        },
+        {
+            id: 0,
+            data: '00/00/00',
+            content: 'Mim não gostar mimsnwejfn ksviwnfn mim ser cliente e querer coisas mim ser aunfeouowjefown mim querer algo aqui eá uma reelcameçaõ aidn uaia',
+            status: 'Sua requisição ainda não foi respondida!'
+        },
+        {
+            id: 0,
+            data: '00/00/00',
+            content: 'Mim não gostar mimsnwejfn ksviwnfn mim ser cliente e querer coisas mim ser aunfeouowjefown mim querer algo aqui eá uma reelcameçaõ aidn uaia',
+            status: 'Sua requisição ainda não foi respondida!'
+        },
+        {
+            id: 0,
+            data: '00/00/00',
+            content: 'Mim não gostar mimsnwejfn ksviwnfn mim ser cliente e querer coisas mim ser aunfeouowjefown mim querer algo aqui eá uma reelcameçaõ aidn uaia',
+            status: 'Sua requisição ainda não foi respondida!'
+        },
+        {
+            id: 0,
+            data: '00/00/00',
+            content: 'Mim não gostar mimsnwejfn ksviwnfn mim ser cliente e querer coisas mim ser aunfeouowjefown mim querer algo aqui eá uma reelcameçaõ aidn uaia',
+            status: 'Sua requisição ainda não foi respondida!'
+        },
+        {
+            id: 0,
+            data: '00/00/00',
+            content: 'Mim não gostar mimsnwejfn ksviwnfn mim ser cliente e querer coisas mim ser aunfeouowjefown mim querer algo aqui eá uma reelcameçaõ aidn uaia',
+            status: 'Sua requisição ainda não foi respondida!'
+        },
+        {
+            id: 0,
+            data: '00/00/00',
+            content: 'Mim não gostar mimsnwejfn ksviwnfn mim ser cliente e querer coisas mim ser aunfeouowjefown mim querer algo aqui eá uma reelcameçaõ aidn uaia',
+            status: 'Sua requisição ainda não foi respondida!'
+        },
+        {
+            id: 0,
+            data: '00/00/00',
+            content: 'Mim não gostar mimsnwejfn ksviwnfn mim ser cliente e querer coisas mim ser aunfeouowjefown mim querer algo aqui eá uma reelcameçaõ aidn uaia',
+            status: 'Sua requisição ainda não foi respondida!'
+        },
+        {
+            id: 0,
+            data: '00/00/00',
+            content: 'Mim não gostar mimsnwejfn ksviwnfn mim ser cliente e querer coisas mim ser aunfeouowjefown mim querer algo aqui eá uma reelcameçaõ aidn uaia',
+            status: 'Sua requisição ainda não foi respondida!'
+        },
+        {
+            id: 0,
+            data: '00/00/00',
+            content: 'Mim não gostar mimsnwejfn ksviwnfn mim ser cliente e querer coisas mim ser aunfeouowjefown mim querer algo aqui eá uma reelcameçaõ aidn uaia',
+            status: 'Sua requisição ainda não foi respondida!'
+        },
+
+    ]);
     const [location, setLocation] = useState(null);
 
     const { colorScheme } = useTheme();
 
     return (
-        <View style={[styles.container, {marginBottom: 25 }]}>
-            <ScrollView>
+        <View style={[styles.container]}>
             <Text style={{ color: colorScheme.title, fontWeight: '800', fontSize: 20, margin: 20 }}>
                 Suas Reclamações
             </Text>
-            <View style={{ width: '80%' }}>
-                <Text style={{ marginStart: 5 }}>00/00/0000</Text>
-                <View style={{
-                    backgroundColor: colorScheme.panelBackground,
-                    height: 150,
-                    borderRadius: 15,
-                    display: 'flex',
-                    alignItems: 'center',
-                    paddingTop: 3,
-                    marginBottom: 15
-                }}>
-                    <View style={{
-                        backgroundColor: colorScheme.background,
-                        height: 100,
-                        borderRadius: 13,
-                        width: '98%',
-                        padding: 7
-                    }}>
-                        <Text style={{ color: colorScheme.textPrimary, textAlign: 'justify' }}>
-                            mim nao gostar mimimi reclamação pipipi popopo
-                        </Text>
-                    </View>
-                    <View>
-                        <Text style={{ color: colorScheme.textSecondary, fontWeight: '700', fontSize: 14, marginTop: 12 }}>Sua requisição ainda não foi respondida!</Text>
-                    </View>
-                </View>
-            </View>
 
-            <View style={{ width: '80%' }}>
-                <Text style={{ marginStart: 5,  }}>00/00/0000</Text>
-                <View style={{
-                    backgroundColor: colorScheme.panelBackground,
-                    height: 150,
-                    borderRadius: 15,
-                    display: 'flex',
-                    alignItems: 'center',
-                    paddingTop: 3,
-                    marginBottom: 15
-                }}>
-                    <View style={{
-                        backgroundColor: colorScheme.background,
-                        height: 100,
-                        borderRadius: 13,
-                        width: '98%',
-                        padding: 7
-                    }}>
-                        <Text style={{ color: colorScheme.textPrimary, textAlign: 'justify' }}>
-                            mim nao gostar mimimi reclamação pipipi popopo
-                        </Text>
+            <ScrollView style={{ flex: 1, width: '100%' }}>
+                {complaints.map((complaint, index) => (
+                    <View index={index} style={[styles.card, { backgroundColor: colorScheme.panelBackground }]}>
+                        <Text style={[styles.cardText, { color: colorScheme.textSecondary, marginTop: 0 }]}> {complaint.data}</Text>
+                        <View style={[styles.cardBody, { backgroundColor: colorScheme.background }]}>
+                            <Text>
+                                {complaint.content}
+                            </Text>
+                        </View>
+                        <Text style={[styles.cardText, { color: colorScheme.textSecondary }]} >{complaint.status}</Text>
                     </View>
-                    <View>
-                        <Text style={{ color: colorScheme.textSecondary, fontWeight: '700', fontSize: 14, marginTop: 12 }}>Sua requisição ainda não foi respondida!</Text>
-                    </View>
-                </View>
-            </View>
+                ))}
             </ScrollView>
+
         </View>
     );
-    // }
 }
 
 const styles = StyleSheet.create({
@@ -82,24 +101,24 @@ const styles = StyleSheet.create({
         flex: 1,
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        paddingHorizontal: 20
     },
-    map: {
+    card: {
         width: '100%',
-        height: '100%',
+        padding: 10,
+        borderRadius: 20,
+        marginBottom: 10
     },
-    btnSqr: {
-        width: 140,
-        height: 140,
-        backgroundColor: '#0A62AC',
-        borderRadius: 10,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center'
+    cardBody: {
+        minHeight: 100,
+        width: '100%',
+        padding: 5,
+        borderRadius: 10
     },
-    text: {
-        color: 'white',
-        fontWeight: '700',
-        fontSize: 16
-    },
+    cardText: {
+        fontSize: 15,
+        marginTop: 10,
+        marginBottom: 10
+    }
 });
