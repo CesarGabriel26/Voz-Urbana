@@ -11,14 +11,15 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Yours from '../pages/YourReports';
 import Home from '../pages/Home';
 import Report from '../pages/Report';
+import Peticoes from '../pages/Peticoes'
 import Settings from '../pages/Config'
 
 const Stack = createStackNavigator();
 
 export default function Navigation() {
   // Usa o tema do contexto
-  const { changeTheme ,colorScheme } = useTheme();
-  
+  const { changeTheme, colorScheme } = useTheme();
+
   useEffect(() => {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor('#0A62AC');
@@ -82,7 +83,15 @@ export default function Navigation() {
 
           }}
           component={Yours}
+        />
 
+        <Stack.Screen
+          name="Petiçoes"
+          options={{
+            tabBarIcon: ({ color }) => <MaterialIcons name="report-gmailerrorred" size={24} color={color} />,
+            headerShown: true
+          }}
+          component={Peticoes}
         />
 
         <Stack.Screen

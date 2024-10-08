@@ -50,7 +50,12 @@ export default function Home({ navigation }) {
                         <Text style={styles.text}>reclamação</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={[styles.btnSqr, { backgroundColor: colorScheme.buttonPrimary }]}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            navigation.navigate('Petiçoes')
+                        }}
+                        style={[styles.btnSqr, { backgroundColor: colorScheme.buttonPrimary }]}
+                    >
                         <Image source={require('../assets/Lapis.png')} resizeMode='cover' />
                         <Text style={styles.text}>Abaixo</Text>
                         <Text style={styles.text}>assinados</Text>

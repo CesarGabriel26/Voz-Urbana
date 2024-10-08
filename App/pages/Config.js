@@ -79,7 +79,7 @@ export default function Settings() {
 
             <View>
                 <Text>Ainda estamos trabalhando nisso</Text>
-                <Image source={require('../assets/merp.png')} />
+                <Image source={require('../assets/merp.gif')} style={{ width: '100%', height: 200}} resizeMode="contain" />
             </View>
 
             <UserProfile setModalVisible={setModalVisible} modalVisible={modalVisible} />
