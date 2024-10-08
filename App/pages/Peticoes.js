@@ -2,19 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Alert, StyleSheet, View, Text, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { useTheme } from '../utils/ThemeContext';
 import * as Progress from 'react-native-progress';
+import { listPetitions } from '../utils/Api';
 
 export default function Peticoes({ navigation }) {
-    const [complaints, setComplaints] = useState([
-        {
-            id: 0,
-            id_usuario: 1,
-            data: '00/00/00',
-            content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestias tenetur eos ducimus eius aperiam error illum quam quod iure, velit voluptatem quis ipsam, vero dignissimos sint sapiente. Molestiae, minima tempore! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestias tenetur eos ducimus eius aperiam error illum quam quod iure, velit voluptatem quis ipsam, vero dignissimos sint sapiente. Molestiae, minima tempore!',
-            aberto: true,
-            assinaturas: 8765,
-            maximoDeAssinaturas: 20000
-        },
-    ]);
+    const [complaints, setComplaints] = useState([]);
 
     const { colorScheme } = useTheme();
 
@@ -28,6 +19,33 @@ export default function Peticoes({ navigation }) {
         ]);
     }
 
+    const loadPetitions = async () => {
+        try {
+            let resp = await listPetitions();
+
+            if (resp.content) {
+                setComplaints(resp.content); // Atualiza o estado se o conteúdo for encontrado
+            } else {
+                console.error('No content found in the response');
+            }
+        } catch (error) {
+            console.error('Error loading petitions:', error);
+        }
+    }
+    function formatDate(dateString) {
+        const date = new Date(dateString); // Converte a string para objeto Date
+        const day = String(date.getDate()).padStart(2, '0'); // Extrai o dia e adiciona zero à esquerda se necessário
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Extrai o mês (adiciona +1 porque os meses começam em 0)
+        const year = date.getFullYear(); // Extrai o ano
+        
+        return `${day}/${month}/${year}`; // Retorna no formato dia/mês/ano
+    }
+    
+
+    useEffect(() => {
+        loadPetitions()
+    }, [])
+
     return (
         <View style={[styles.container]}>
             <Text style={{ color: colorScheme.title, fontWeight: '800', fontSize: 20, margin: 20 }}>
@@ -40,7 +58,7 @@ export default function Peticoes({ navigation }) {
                         <View style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', marginBottom: 10 }} >
                             <Image source={require('../assets/merp.gif')} style={{ width: 50, height: 50, borderRadius: 200 }} resizeMode="contain" />
                             <Text style={[styles.cardText, { color: colorScheme.textSecondary, marginTop: 0 }]}>
-                                {complaint.data}
+                                {formatDate(complaint.data)}
                             </Text>
                         </View>
                         <View style={[styles.cardBody, { backgroundColor: colorScheme.background }]}>
@@ -51,11 +69,11 @@ export default function Peticoes({ navigation }) {
 
                             <View style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', marginTop: 10 }} >
                                 <Text >
-                                    {complaint.assinaturas}
+                                    {complaint.signatures}
                                 </Text>
-                                <Progress.Bar progress={complaint.assinaturas / complaint.maximoDeAssinaturas} width={200} height={15} borderRadius={20} color={colorScheme.panelBackground} animationType='decay' />
+                                <Progress.Bar progress={complaint.signatures / complaint.required_signatures} width={200} height={15} borderRadius={20} color={colorScheme.panelBackground} animationType='decay' />
                                 <Text >
-                                    {complaint.maximoDeAssinaturas}
+                                    {complaint.required_signatures}
                                 </Text>
                             </View>
                             <TouchableOpacity

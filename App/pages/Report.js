@@ -4,6 +4,8 @@ import MapView, { Marker } from 'react-native-maps';
 import { getUserLocation } from '../utils/LocationPermition';
 import { useTheme } from '../utils/ThemeContext';
 import * as ImagePicker from 'expo-image-picker'; // Importar o expo-image-picker
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createReport } from '../utils/Api';
 
 export default function Report() {
     const [location, setLocation] = useState(null);
@@ -45,15 +47,18 @@ export default function Report() {
         let User = await AsyncStorage.getItem('usuario') || null
         let Userjson = JSON.parse(User)
 
-        let reclam = {
+        let report = {
             'user_id': Userjson.id,
             'latitude': location.latitude,
             'longitude': location.longitude,
             'titulo': Titulo,
             'conteudo': Descricao,
+            'imagem': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeJQeJyzgAzTEVqXiGe90RGBFhfp_4RcJJMQ&s',
             'data': new Date().toISOString()
         }
-        print(reclam)
+        let resp = await createReport(report)
+        console.log(resp);
+        
     }
 
     useEffect(() => {
@@ -64,29 +69,10 @@ export default function Report() {
     }, [colorScheme]);
 
     return (
-        <View style={[styles.container, { backgroundColor: colorScheme.background }]}>
-            <ScrollView style={{ paddingHorizontal: 20 }}>
+        <View style={[styles.container, { backgroundColor: 'red', width: '100%', padding: 20 }]}>
+            <ScrollView style={{width: '100%', backgroundColor: 'green'}} >
 
-                <View style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    marginVertical: 15
-                }}>
-                    <Image source={require('../assets/merp.gif')} style={{
-                        height: 50,
-                        width: 50,
-                        borderRadius: 30,
-                        borderWidth: 2,
-                        borderColor: '#0A62AC'
-                    }} />
-                    <Text style={{
-                        color: colorScheme.textPrimary,
-                        fontWeight: 'bold',
-                        fontSize: 17,
-                    }}> Nome de usuario</Text>
-                </View>
-                <View style={[styles.card, { marginTop: 10, minHeight: 200 }]}>
+                <View style={[styles.card, { marginTop: 10, height: 200 }]}>
                     <Text style={{
                         color: colorScheme.textSecondary,
                         fontWeight: 'bold',
@@ -154,16 +140,17 @@ export default function Report() {
                         onChangeText={setDescricao}
                     />
 
-                    <View style={{ display: 'flex', alignItems: 'center', gap: 7, margin: 20, width: '100%' }}>
+                    <View style={{  alignItems: 'center', margin: 20, width: '100%' }}>
                         <TouchableOpacity
-                            style={[styles.btnL, styles.btnE, { backgroundColor: colorScheme.buttonPrimary, width: '100%' }]}
+                            style={[styles.btnL, styles.btnE, { backgroundColor: colorScheme.buttonPrimary, width: '100%', marginBottom: 50 }]}
+                            onPress={enviar}
                         >
                             <Text style={{ color: colorScheme.textSecondary, width: '100%', textAlign: 'center' }} >Enviar reclamação</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
-
-            </ScrollView>
+                </ScrollView>
+            
         </View>
     );
 }
