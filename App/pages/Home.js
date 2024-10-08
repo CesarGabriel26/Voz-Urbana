@@ -3,7 +3,7 @@ import { Platform, StyleSheet, View, Text, Image, TouchableOpacity, ScrollView }
 import MapView, { Marker } from 'react-native-maps';
 import { getUserLocation } from '../utils/LocationPermition';
 import { useTheme } from '../utils/ThemeContext';
-//AIzaSyAbmF-_a_3LssPO9mGt3vx4WURsiG8aYSA
+
 export default function Home({ navigation }) {
     const [complaints, setComplaints] = useState([]);
     const [location, setLocation] = useState(null);
