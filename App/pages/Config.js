@@ -4,13 +4,16 @@ import { View, Text, StyleSheet, Image } from 'react-native'
 import { Dropdown } from 'react-native-element-dropdown';
 import { colorSchemas } from '../styles/Colors';
 import { useTheme } from '../utils/ThemeContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Ionicons from '@expo/vector-icons/Ionicons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import UserProfile from '../components/UserProfileModal';
+
 import { TouchableOpacity } from 'react-native';
 
-export default function Settings() {
+export default function Settings({ navigation }) {
     const { changeTheme, colorScheme } = useTheme();
     const [themes, setThemes] = useState([]);
     const [theme, setTheme] = useState('');
@@ -21,20 +24,14 @@ export default function Settings() {
         setThemes(colorSchemas());
     }, []);
 
+    const logOut = async() => {
+        await AsyncStorage.removeItem('usuario')
+        navigation.navigate('Login')
+    }
+
     return (
         <View style={[styles.container, { backgroundColor: colorScheme.background }]}>
-            <View style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                borderWidth: 1,
-                borderRadius: 10,
-                borderColor: colorScheme.backgroundInverse,
-                overflow: 'hidden',
-                backgroundColor: colorScheme.background,
-                minHeight: 50,
-                padding: 5
-            }} >
+            <View style={[styles.option, { borderColor: colorScheme.backgroundInverse, backgroundColor: colorScheme.background }]}>
                 <View style={styles.Icon}>
                     <Ionicons name="color-palette" size={40} color={colorScheme.textPrimary} />
                 </View>
@@ -57,18 +54,7 @@ export default function Settings() {
                 </View>
             </View>
 
-            <TouchableOpacity style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                borderWidth: 1,
-                borderRadius: 10,
-                borderColor: colorScheme.backgroundInverse,
-                overflow: 'hidden',
-                backgroundColor: colorScheme.background,
-                minHeight: 60,
-                padding: 5
-            }}
+            <TouchableOpacity style={[styles.option, { borderColor: colorScheme.backgroundInverse, backgroundColor: colorScheme.background }]}
                 onPress={() => { setModalVisible(true) }}
             >
                 <View style={styles.Icon}>
@@ -77,9 +63,18 @@ export default function Settings() {
                 <Text style={{ color: colorScheme.textPrimary }} >Informações do usuario</Text>
             </TouchableOpacity>
 
+            <TouchableOpacity style={[styles.option, { borderColor: colorScheme.backgroundInverse, backgroundColor: colorScheme.background }]}
+                onPress={logOut}
+            >
+                <View style={styles.Icon}>
+                    <MaterialIcons name="logout" size={40} color={colorScheme.textPrimary} />
+                </View>
+                <Text style={{ color: colorScheme.textPrimary }} >Sair</Text>
+            </TouchableOpacity>
+
             <View>
                 <Text>Ainda estamos trabalhando nisso</Text>
-                <Image source={require('../assets/merp.gif')} style={{ width: '100%', height: 200}} resizeMode="contain" />
+                <Image source={require('../assets/merp.gif')} style={{ width: '100%', height: 200 }} resizeMode="contain" />
             </View>
 
             <UserProfile setModalVisible={setModalVisible} modalVisible={modalVisible} />
@@ -111,4 +106,14 @@ const styles = StyleSheet.create({
         width: '100%',
         paddingHorizontal: 8,
     },
+    option: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderRadius: 10,
+        overflow: 'hidden',
+        minHeight: 60,
+        padding: 5
+    }
 });

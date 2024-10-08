@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useTheme } from '../utils/ThemeContext'; // Importa o hook de tema
@@ -13,12 +13,15 @@ import Home from '../pages/Home';
 import Report from '../pages/Report';
 import Peticoes from '../pages/Peticoes'
 import Settings from '../pages/Config'
+import Login from '../pages/Login';
+import CadUser from '../pages/cadUser';
+import Map from '../pages/Map';
 
 const Stack = createStackNavigator();
 
 export default function Navigation() {
   // Usa o tema do contexto
-  const { changeTheme, colorScheme } = useTheme();
+  const { colorScheme } = useTheme();
 
   useEffect(() => {
     if (Platform.OS === 'android') {
@@ -35,42 +38,46 @@ export default function Navigation() {
 
       <Stack.Navigator
         screenOptions={{
-          headerShown: true,
           headerTintColor: colorScheme.textSecondary,
           headerStyle: {
             backgroundColor: colorScheme.panelBackground,
             height: 80,
           },
           headerTitleAlign: 'center',
-          headerTitle: () => (
-            <View style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-              <Image
-                source={require('../assets/Logo.png')}
-                style={{ width: 70, height: 70 }}
-                resizeMode="contain"
-              />
-            </View>
-          ),
+
         }}
       >
         <Stack.Screen
-          name="Home"
+          name="Login"
           options={{
             tabBarIcon: ({ color }) => <Entypo name="home" size={24} color={color} />,
             headerShown: true,
           }}
+          component={Login}
+        />
+        <Stack.Screen
+          name="Cadastro"
+          options={{
+            tabBarIcon: ({ color }) => <Entypo name="home" size={24} color={color} />,
+          }}
+          component={CadUser}
+        />
+
+        <Stack.Screen
+          name="Home"
+          options={{
+            tabBarIcon: ({ color }) => <Entypo name="home" size={24} color={color} />,
+            headerLeft: null, // Remove a seta de voltar
+            gestureEnabled: false, // Desabilita o gesto de voltar
+          }}
           component={Home}
+
         />
 
         <Stack.Screen
           name="Reportar"
           options={{
             tabBarIcon: ({ color }) => <MaterialIcons name="report-gmailerrorred" size={24} color={color} />,
-            headerShown: true,
           }}
           component={Report}
 
@@ -79,26 +86,32 @@ export default function Navigation() {
           name="Suas Reclamações"
           options={{
             tabBarIcon: ({ color }) => <MaterialIcons name="report-gmailerrorred" size={24} color={color} />,
-            headerShown: true
-
           }}
           component={Yours}
         />
 
         <Stack.Screen
-          name="Petiçoes"
+          name="Petições"
           options={{
             tabBarIcon: ({ color }) => <MaterialIcons name="report-gmailerrorred" size={24} color={color} />,
-            headerShown: true
           }}
           component={Peticoes}
         />
 
         <Stack.Screen
-          name="Configuracoes"
+          name="Mapa"
+          options={{
+            tabBarIcon: ({ color }) => <MaterialIcons name="report-gmailerrorred" size={24} color={color} />,
+          }}
+          component={Map}
+        />
+
+        <Stack.Screen
+          name="Configuraçoes"
           options={{ tabBarIcon: ({ color }) => <FontAwesome name="gears" size={24} color={color} /> }}
           component={Settings}
         />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

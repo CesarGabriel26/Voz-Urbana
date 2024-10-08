@@ -1,4 +1,4 @@
-const URL = "http://<your-server-url>";
+const URL = "http://192.168.0.107:5000";
 
 // Funções para Usuários
 export const createUser = async (userData) => {
@@ -18,7 +18,10 @@ export const loginUser = async (email, password) => {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ 
+            email: email, 
+            senha: password
+         }),
     });
     return response.json();
 };

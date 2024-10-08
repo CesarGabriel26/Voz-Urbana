@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Platform, StyleSheet, View, Text, Image } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+// import MapView, { Marker } from 'react-native-maps';
 import { getUserLocation } from '../utils/LocationPermition';
 import { useTheme } from '../utils/ThemeContext';
 
-export default function Home() {
+export default function Map() {
     const [complaints, setComplaints] = useState([]);
     const [location, setLocation] = useState(null);
 
@@ -20,7 +20,7 @@ export default function Home() {
     if (location) {
         return (
             <View style={styles.container}>
-                <MapView
+                {/* <MapView
                     style={styles.map}
                     initialRegion={{
                         latitude: location.latitude,
@@ -38,7 +38,7 @@ export default function Home() {
                             onPress={() => navigation.navigate('ComplaintDetails', { complaint })}
                         />
                     ))}
-                </MapView>
+                </MapView> */}
             </View>
         );
     } else {

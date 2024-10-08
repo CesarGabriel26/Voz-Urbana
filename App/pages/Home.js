@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Platform, StyleSheet, View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import { Platform, StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, Pressable } from 'react-native';
+// import MapView, { Marker } from 'react-native-maps';
 import { getUserLocation } from '../utils/LocationPermition';
 import { useTheme } from '../utils/ThemeContext';
 
@@ -52,7 +52,7 @@ export default function Home({ navigation }) {
 
                     <TouchableOpacity
                         onPress={() => {
-                            navigation.navigate('Petiçoes')
+                            navigation.navigate('Petições')
                         }}
                         style={[styles.btnSqr, { backgroundColor: colorScheme.buttonPrimary }]}
                     >
@@ -72,7 +72,7 @@ export default function Home({ navigation }) {
 
                     <TouchableOpacity style={[styles.btnSqr, { backgroundColor: colorScheme.buttonPrimary }]}
                         onPress={() => {
-                            navigation.navigate('Configuracoes')
+                            navigation.navigate('Configuraçoes')
                         }}
                     >
                         <Image source={require('../assets/Engrenagem.png')} resizeMode='cover' />
@@ -81,14 +81,19 @@ export default function Home({ navigation }) {
                 </View>
 
                 <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <View style={{ height: 2, width: '80%', backgroundColor: '#0A62AC', margin: 20 }}></View>
+                    <View style={{ height: 2, width: '80%', backgroundColor: colorScheme.panelBackground, margin: 20 }}></View>
 
                     <Text style={{ color: colorScheme.title, fontWeight: '800', fontSize: 20, marginBottom: 20 }}>
                         Reclamações na sua área
                     </Text>
 
-                    <TouchableOpacity style={{ height: 200, width: 300, marginBottom: 35 }}>
-                        {
+                    <Pressable
+                        style={{ height: 200, width: 300, marginBottom: 35, backgroundColor: 'red' }}
+                        onPress={() => {
+                            navigation.navigate('Mapa')
+                        }}  
+                    >
+                        {/* {
                             location ? (
                                 (<MapView
                                     style={styles.map}
@@ -98,6 +103,8 @@ export default function Home({ navigation }) {
                                         latitudeDelta: 0.005,
                                         longitudeDelta: 0.005,
                                     }}
+                                    scrollEnabled={false}
+                                    zoomEnabled={false}
                                 >
                                     {complaints.map((complaint, index) => (
                                         <Marker
@@ -110,8 +117,8 @@ export default function Home({ navigation }) {
                                     ))}
                                 </MapView>)
                             ) : <View style={styles.container} ><Text>Carregando mapa</Text></View>
-                        }
-                    </TouchableOpacity>
+                        } */}
+                    </Pressable>
                 </View>
             </ScrollView>
         </View>

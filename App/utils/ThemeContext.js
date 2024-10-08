@@ -4,7 +4,19 @@ import { getColorScheme, setColorScheme as updateColorScheme } from '../styles/C
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  const [colorScheme, setColorScheme] = useState({});
+  const [colorScheme, setColorScheme] = useState({
+    textPrimary: '#000000',
+    textSecondary: '#FFFFFF',
+
+    title: '#0A62AC',
+
+    background: '#FFFFFF',
+    backgroundInverse: '#000000',
+    panelBackground: '#0A62AC',
+
+    buttonPrimary: '#0A62AC',
+    buttonSecondary: '#FFFFFF',
+  });
 
   const loadColorScheme = async () => {
     const scheme = await getColorScheme();
