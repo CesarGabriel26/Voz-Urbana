@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Platform, StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, Pressable } from 'react-native';
-// import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import { getUserLocation } from '../utils/LocationPermition';
 import { useTheme } from '../utils/ThemeContext';
 
@@ -93,7 +93,7 @@ export default function Home({ navigation }) {
                             navigation.navigate('Mapa')
                         }}  
                     >
-                        {/* {
+                        {
                             location ? (
                                 (<MapView
                                     style={styles.map}
@@ -117,7 +117,7 @@ export default function Home({ navigation }) {
                                     ))}
                                 </MapView>)
                             ) : <View style={styles.container} ><Text>Carregando mapa</Text></View>
-                        } */}
+                        }
                     </Pressable>
                 </View>
             </ScrollView>

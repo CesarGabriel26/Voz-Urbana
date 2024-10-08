@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TextInput, Image, TouchableOpacity, Button, ScrollView } from 'react-native';
-// import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import { getUserLocation } from '../utils/LocationPermition';
 import { useTheme } from '../utils/ThemeContext';
 import * as ImagePicker from 'expo-image-picker'; // Importar o expo-image-picker
@@ -94,7 +94,7 @@ export default function Report() {
                         marginBottom: 10
                     }}> Informe o local do seu problema</Text>
                     <View style={{ width: '100%', overflow: 'hidden', borderRadius: 15, }}>
-                        {/* {
+                        {
                             location ? (
                                 <MapView
                                     key={colorScheme.background}
@@ -119,7 +119,7 @@ export default function Report() {
                                     />
                                 </MapView>
                             ) : <View style={styles.container} ><Text>Carregando mapa</Text></View>
-                        } */}
+                        }
                     </View>
 
                 </View>
@@ -162,7 +162,7 @@ export default function Report() {
                         </TouchableOpacity>
                     </View>
                 </View>
-                
+
             </ScrollView>
         </View>
     );
