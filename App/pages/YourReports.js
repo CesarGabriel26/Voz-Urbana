@@ -1,53 +1,70 @@
 import React, { useState, useEffect } from 'react';
-import { Platform, StyleSheet, View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, ActivityIndicator } from 'react-native';
 import { useTheme } from '../utils/ThemeContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getReportsByUser } from '../utils/Api';
 
 import IonicIcons from '@expo/vector-icons/Ionicons'
+import { formatDate } from '../utils/Parser';
 
 export default function Yours({ navigation }) {
-    const [complaints, setComplaints] = useState([
-        {
-            id: 0,
-            data: '00/00/00',
-            content: 'Mim não gostar mimsnwejfn ksviwnfn mim ser cliente e querer coisas mim ser aunfeouowjefown mim querer algo aqui eá uma reelcameçaõ aidn uaia',
-            aberto: true
-        },
-    ]);
+    const [complaints, setComplaints] = useState([]);
+    const [loaded, setloaded] = useState(false);
 
     const { colorScheme } = useTheme();
+    
+    const loadList = async () => {
+        setloaded(false)
+        let userString = await AsyncStorage.getItem('usuario')
+        let userJson = await JSON.parse(userString)
+        let rest = await getReportsByUser(userJson.id)
+
+        if (rest.content) {
+            setComplaints(rest.content)
+            setloaded(true)
+        }
+    }
+
+    useEffect(() => {
+        loadList()
+    }, []);
 
     return (
-        <View style={[styles.container]}>
-            <Text style={{ color: colorScheme.title, fontWeight: '800', fontSize: 20, margin: 20 }}>
+        <View style={[styles.container, { backgroundColor: colorScheme.Screen.background }]}>
+            <Text style={{ color: colorScheme.Text.title, fontWeight: '800', fontSize: 20, margin: 20 }}>
                 Suas Reclamações
             </Text>
 
             <ScrollView style={{ flex: 1, width: '100%' }}>
-                {complaints.map((complaint, index) => (
-                    <View key={index} style={[styles.card, { backgroundColor: colorScheme.panelBackground }]}>
-                        <Text style={[styles.cardText, { color: colorScheme.textSecondary, marginTop: 0 }]}> {complaint.data}</Text>
-                        <View style={[styles.cardBody, { backgroundColor: colorScheme.background }]}>
-                            <Text>
-                                {complaint.content}
-                            </Text>
-                        </View>
-                        {
-                            complaint.aberto ? (
-                                <Text style={[styles.cardText, { color: colorScheme.textSecondary }]} >
-                                    Sua requisição ainda não foi respondida!
-                                </Text>
-                            ) : (
-                                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }} >
-                                    <Text style={[styles.cardText, { color: colorScheme.textSecondary }]} >
-                                        Sua requisição foi respondida!
+                {
+                    loaded ? (
+                        complaints.map((complaint, index) => (
+                            <View key={index} style={[styles.card, { backgroundColor: colorScheme.Screen.panelBackground }]}>
+                                <Text style={[styles.cardText, { color: colorScheme.Text.textSecondary, marginTop: 0 }]}> {formatDate(complaint.data, true)}</Text>
+                                <View style={[styles.cardBody, { backgroundColor: colorScheme.Screen.background }]}>
+                                    <Text>
+                                        {complaint.conteudo}
                                     </Text>
-                                    <IonicIcons name="checkmark-done-circle-outline" size={30} color="#25B92F" />
                                 </View>
-                            )
-                        }
+                                {
+                                    complaint.aceito ? (
+                                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }} >
+                                            <Text style={[styles.cardText, { color: colorScheme.Text.textSecondary }]} >
+                                                Sua requisição foi respondida!
+                                            </Text>
+                                            <IonicIcons name="checkmark-done-circle-outline" size={30} color="#25B92F" />
+                                        </View>
+                                    ) : (
+                                        <Text style={[styles.cardText, { color: colorScheme.Text.textSecondary }]} >
+                                            Sua requisição ainda não foi respondida!
+                                        </Text>
+                                    )
+                                }
 
-                    </View>
-                ))}
+                            </View>
+                        ))
+                    ) : <ActivityIndicator size="large" color={colorScheme.Button.buttonPrimary} />
+                }
             </ScrollView>
 
         </View>

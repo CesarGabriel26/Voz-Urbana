@@ -43,16 +43,16 @@ export default function UserProfile({ setModalVisible, modalVisible }) {
                     setModalVisible(!modalVisible);
                 }}
             >
-                <View style={[styles.modalView, { backgroundColor: colorScheme.background }]}>
-                    <View style={[styles.header, { backgroundColor: colorScheme.background, justifyContent: 'center' }]}>
+                <View style={[styles.modalView, { backgroundColor: colorScheme.Screen.background }]}>
+                    <View style={[styles.header, { backgroundColor: colorScheme.Screen.background, justifyContent: 'center' }]}>
                         <TouchableOpacity
                             style={[styles.button, styles.buttonClose]}
                             onPress={() => setModalVisible(!modalVisible)}>
-                            <Text style={styles.textStyle}><Icon name='arrow-back' size={25} color={colorScheme.textPrimary} /></Text>
+                            <Text style={styles.textStyle}><Icon name='arrow-back' size={25} color={colorScheme.Text.textPrimary} /></Text>
                         </TouchableOpacity>
                     </View>
 
-                    <View style={[styles.body, { backgroundColor: colorScheme.background }]}>
+                    <View style={[styles.body, { backgroundColor: colorScheme.Screen.background }]}>
                         <TouchableOpacity>
                             <Image source={{ uri: Foto }}
                                 style={{
@@ -60,17 +60,17 @@ export default function UserProfile({ setModalVisible, modalVisible }) {
                                     width: 140,
                                     borderRadius: 100,
                                     borderWidth: 2,
-                                    borderColor: colorScheme.panelBackground,
+                                    borderColor: colorScheme.Screen.panelBackground,
                                 }}
                             />
                         </TouchableOpacity>
 
                         <View style={{ gap: 20, width: '100%' }} >
-                            <TouchableOpacity style={[styles.input, styles.editavel, { borderColor: colorScheme.panelBackground }]} >
+                            <TouchableOpacity style={[styles.input, styles.editavel, { borderColor: colorScheme.Screen.panelBackground }]} >
                                 <Text style={{ fontSize: 20 }} >Nome : {Nome}</Text>
                                 <Feather name='edit-2' size={20} />
                             </TouchableOpacity>
-                            <TouchableOpacity style={[styles.input, styles.editavel, { borderColor: colorScheme.panelBackground }]} >
+                            <TouchableOpacity style={[styles.input, styles.editavel, { borderColor: colorScheme.Screen.panelBackground }]} >
                                 <Text style={{ fontSize: 20 }} >Email : {Email}</Text>
                                 <Feather name='edit-2' size={20} />
                             </TouchableOpacity>
@@ -97,11 +97,11 @@ export default function UserProfile({ setModalVisible, modalVisible }) {
 
                             <Switch
                                 trackColor={{ false: 'gray', true: 'gray' }}
-                                thumbColor={isEnabled ? colorScheme.panelBackground : '#f4f3f4'}
-                                ios_backgroundColor="#FFFFFF"
+                                thumbColor={colorScheme.Switch.thumbColor[isEnabled]}
+                                ios_backgroundColor={colorScheme.Switch.ios_backgroundColor}
                                 onValueChange={toggleSwitch}
                                 value={isEnabled}
-                                style={isEnabled ? { borderWidth: 2, borderColor: colorScheme.panelBackground, } : { borderWidth: 2, borderColor: 'lightgray' }}
+                                style={isEnabled ? { borderWidth: 2, borderColor: colorScheme.Screen.panelBackground, } : { borderWidth: 2, borderColor: 'lightgray' }}
 
                             />
                         </View>

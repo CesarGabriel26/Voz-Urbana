@@ -1,4 +1,4 @@
-const URL = "http://192.168.0.107:5000";
+const URL = "https://voz-urbana-api.vercel.app" //"http://192.168.0.152:5000" //"https://voz-urbana-api.vercel.app";
 
 // Funções para Usuários
 export const createUser = async (userData) => {
@@ -18,10 +18,10 @@ export const loginUser = async (email, password) => {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
-            email: email, 
+        body: JSON.stringify({
+            email: email,
             senha: password
-         }),
+        }),
     });
     return response.json();
 };
@@ -133,3 +133,31 @@ export const deletePetition = async (id) => {
     });
     return response.json();
 };
+
+// Função para enviar uma imagem
+export const uploadImage = async (imageUri, userName) => {
+    const currentDate = new Date().toISOString().replace(/:/g, '-'); // Formata a data para evitar caracteres inválidos
+    const fileName = `${userName}_${currentDate}.jpg`; // Cria o nome do arquivo
+
+    const formData = new FormData();
+    formData.append('imagem', {
+        uri: imageUri,
+        type: 'image/jpeg', // ou o tipo correto da imagem
+        name: fileName, // Nome dinâmico
+    });
+
+    const response = await fetch(`${URL}/imagem/upload`, {
+        method: 'POST',
+        headers: {
+        },
+        body: formData,
+    });
+
+    if (!response.ok) {
+        // Lida com possíveis erros
+        const errorResponse = await response.json();
+        throw new Error(`Erro ao enviar imagem: ${errorResponse.error || response.statusText}`);
+    }
+
+    return response.json();
+}

@@ -62,10 +62,10 @@ export default function Login({ navigation, route }) {
     }
 
     return (
-        <View >
+        <View style={[styles.container, { backgroundColor: colorScheme.Screen.background }]} >
             <ScrollView>
 
-                <View style={[styles.container]}>
+                <View style={{ gap: 25 }} >
                     <View style={{ display: 'flex', alignItems: 'center' }} >
                         <Image source={require('../assets/LogoHightResolution.png')} resizeMode='contain' style={{
                             width: 80,
@@ -77,8 +77,10 @@ export default function Login({ navigation, route }) {
                         <View>
                             <Text>E-mail</Text>
                             <TextInput
-                                style={[styles.input, { borderColor: colorScheme.buttonPrimary }]} placeholder='Exemplo@exemplo.com'
+                                placeholder='Exemplo@exemplo.com'
                                 onChangeText={setEmail}
+                                style={[styles.input, { borderColor: colorScheme.Button.buttonPrimary, color: colorScheme.Text.textPrimary }]} 
+                                placeholderTextColor={colorScheme.Text.textPlaceHolder}
                                 value={Email}
                             />
                         </View>
@@ -86,8 +88,10 @@ export default function Login({ navigation, route }) {
                         <View>
                             <Text>Senha</Text>
                             <TextInput
-                                style={[styles.input, { borderColor: colorScheme.buttonPrimary }]} placeholder='Exemplo123'
+                                style={[styles.input, { borderColor: colorScheme.Button.buttonPrimary, color: colorScheme.Text.textPrimary }]} 
+                                placeholder='Exemplo123'
                                 onChangeText={setSenha}
+                                placeholderTextColor={colorScheme.Text.textPlaceHolder}
                                 value={Senha}
                                 secureTextEntry
                             />
@@ -95,13 +99,13 @@ export default function Login({ navigation, route }) {
                     </View>
 
                     <View style={{ gap: 15 }} >
-                        <TouchableOpacity style={[styles.btnL, { borderColor: colorScheme.buttonPrimary }]} >
-                            <Text>Login com Google</Text>
-                            <Ionicons name='logo-google' size={25} />
+                        <TouchableOpacity style={[styles.btnL, { borderColor: colorScheme.Button.buttonPrimary }]} >
+                            <Text style={{ color: colorScheme.Text.textPrimary}} >Login com Google</Text>
+                            <Ionicons name='logo-google' size={25}  color={colorScheme.Text.textPrimary} />
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.btnL, { borderColor: colorScheme.buttonPrimary }]} >
-                            <Text>Login com Facebook</Text>
-                            <Ionicons name='logo-facebook' size={25} />
+                        <TouchableOpacity style={[styles.btnL, { borderColor: colorScheme.Button.buttonPrimary }]} >
+                            <Text style={{ color: colorScheme.Text.textPrimary}} >Login com Facebook</Text>
+                            <Ionicons name='logo-facebook' size={25} color={colorScheme.Text.textPrimary} />
                         </TouchableOpacity>
                     </View>
 
@@ -111,17 +115,17 @@ export default function Login({ navigation, route }) {
                         </View>
 
                         <TouchableOpacity
-                            style={[styles.btnL, styles.btnE, { backgroundColor: colorScheme.buttonPrimary }]}
+                            style={[styles.btnL, styles.btnE, { backgroundColor: colorScheme.Button.buttonPrimary }]}
                             onPress={Confirmar}>
-                            <Text style={{ color: colorScheme.textSecondary }} >ENTRA</Text>
+                            <Text style={{ color: colorScheme.Text.textPrimary }} >ENTRA</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
-                            style={[styles.btnL, styles.btnE, { backgroundColor: colorScheme.buttonPrimary }]}
+                            style={[styles.btnL, styles.btnE, { backgroundColor: colorScheme.Button.buttonPrimary }]}
                             onPress={() => {
                                 navigation.navigate('Cadastro')
                             }}>
-                            <Text style={{ color: colorScheme.textSecondary }} >CADSATRO</Text>
+                            <Text style={{ color: colorScheme.Text.textPrimary }} >CADSATRO</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -136,7 +140,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         paddingHorizontal: 40,
         justifyContent: 'center',
-        gap: 25,
+
         paddingTop: 15
     },
     input: {

@@ -22,6 +22,14 @@ export default function Settings({ navigation }) {
 
     useEffect(() => {
         setThemes(colorSchemas());
+
+        (
+            async()=>{
+                let currentTheme = await AsyncStorage.getItem('colorSchema')
+                setTheme(currentTheme)
+            }
+        )()
+
     }, []);
 
     const logOut = async() => {
@@ -30,10 +38,10 @@ export default function Settings({ navigation }) {
     }
 
     return (
-        <View style={[styles.container, { backgroundColor: colorScheme.background }]}>
-            <View style={[styles.option, { borderColor: colorScheme.backgroundInverse, backgroundColor: colorScheme.background }]}>
+        <View style={[styles.container, { backgroundColor: colorScheme.Screen.background }]}>
+            <View style={[styles.option, { borderColor: colorScheme.Screen.backgroundInverse, backgroundColor: colorScheme.Screen.background }]}>
                 <View style={styles.Icon}>
-                    <Ionicons name="color-palette" size={40} color={colorScheme.textPrimary} />
+                    <Ionicons name="color-palette" size={40} color={colorScheme.Text.textPrimary} />
                 </View>
 
                 <View style={styles.dropdownContainer}>
@@ -43,33 +51,33 @@ export default function Settings({ navigation }) {
                         valueField="value"
                         value={theme}
                         placeholder="Selecione um tema"
-                        placeholderStyle={{ color: colorScheme.textPrimary }}
-                        selectedTextStyle={{ color: colorScheme.textPrimary }}
+                        placeholderStyle={{ color: colorScheme.Text.textPrimary }}
+                        selectedTextStyle={{ color: colorScheme.Text.textPrimary }}
                         onChange={item => {
                             setTheme(item.value);
                             changeTheme(item.value);
                         }}
-                        style={[styles.dropdown, { backgroundColor: colorScheme.background }]}
+                        style={[styles.dropdown, { backgroundColor: colorScheme.Screen.background }]}
                     />
                 </View>
             </View>
 
-            <TouchableOpacity style={[styles.option, { borderColor: colorScheme.backgroundInverse, backgroundColor: colorScheme.background }]}
+            <TouchableOpacity style={[styles.option, { borderColor: colorScheme.Screen.backgroundInverse, backgroundColor: colorScheme.Screen.background }]}
                 onPress={() => { setModalVisible(true) }}
             >
                 <View style={styles.Icon}>
-                    <FontAwesome6 name="circle-user" size={40} color={colorScheme.textPrimary} />
+                    <FontAwesome6 name="circle-user" size={40} color={colorScheme.Text.textPrimary} />
                 </View>
-                <Text style={{ color: colorScheme.textPrimary }} >Informações do usuario</Text>
+                <Text style={{ color: colorScheme.Text.textPrimary }} >Informações do usuario</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.option, { borderColor: colorScheme.backgroundInverse, backgroundColor: colorScheme.background }]}
+            <TouchableOpacity style={[styles.option, { borderColor: colorScheme.Screen.backgroundInverse, backgroundColor: colorScheme.Screen.background }]}
                 onPress={logOut}
             >
                 <View style={styles.Icon}>
-                    <MaterialIcons name="logout" size={40} color={colorScheme.textPrimary} />
+                    <MaterialIcons name="logout" size={40} color={colorScheme.Text.textPrimary} />
                 </View>
-                <Text style={{ color: colorScheme.textPrimary }} >Sair</Text>
+                <Text style={{ color: colorScheme.Text.textPrimary }} >Sair</Text>
             </TouchableOpacity>
 
             <View>

@@ -67,10 +67,10 @@ export default function CadUser({ navigation, setUser }) {
     }
 
     return (
-        <View >
+        <View style={[styles.container, { backgroundColor: colorScheme.Screen.background }]} >
             <ScrollView>
 
-                <View style={[styles.container]}>
+                <View style={{ gap: 25 }} >
                     <View style={{ display: 'flex', alignItems: 'center' }} >
                         <Image source={require('../assets/LogoHightResolution.png')} resizeMode='contain' style={{
                             width: 80,
@@ -82,41 +82,51 @@ export default function CadUser({ navigation, setUser }) {
                         <View>
                             <Text>Nome</Text>
                             <TextInput
-                                style={styles.input} placeholder='Carlão'
+                                placeholder='Carlão'
                                 onChangeText={setNome}
                                 value={Nome}
+                                style={[styles.input, { borderColor: colorScheme.Button.buttonPrimary, color: colorScheme.Text.textPrimary }]}
+                                placeholderTextColor={colorScheme.Text.textPlaceHolder}
                             />
                         </View>
                         <View>
                             <Text>E-mail</Text>
                             <TextInput
-                                style={styles.input} placeholder='Exemplo@exemplo.com'
+                                placeholder='Exemplo@exemplo.com'
                                 onChangeText={setEmail}
                                 value={Email}
+                                style={[styles.input, { borderColor: colorScheme.Button.buttonPrimary, color: colorScheme.Text.textPrimary }]}
+                                placeholderTextColor={colorScheme.Text.textPlaceHolder}
                             />
                         </View>
                         <View>
                             <Text>Cpf</Text>
                             <TextInput
-                                style={styles.input} placeholder='000.000.000-00'
+                                placeholder='000.000.000-00'
                                 onChangeText={setCpf}
                                 value={Cpf}
+                                style={[styles.input, { borderColor: colorScheme.Button.buttonPrimary, color: colorScheme.Text.textPrimary }]}
+                                placeholderTextColor={colorScheme.Text.textPlaceHolder}
                             />
                         </View>
                         <View>
                             <Text>Senha</Text>
                             <TextInput
-                                style={styles.input} placeholder='jorge12320'
+                                placeholder='jorge12320'
                                 onChangeText={setSenha}
                                 value={Senha}
+                                style={[styles.input, { borderColor: colorScheme.Button.buttonPrimary, color: colorScheme.Text.textPrimary }]}
+                                placeholderTextColor={colorScheme.Text.textPlaceHolder}
                             />
                         </View>
                         <View>
                             <Text>Corfirmar senha</Text>
                             <TextInput
-                                style={styles.input} placeholder='jorge12320'
+                                placeholder='jorge12320'
                                 onChangeText={setConfirmarSenha}
                                 value={ConfirmarSenha}
+                                style={[styles.input, { borderColor: colorScheme.Button.buttonPrimary, color: colorScheme.Text.textPrimary }]}
+                                placeholderTextColor={colorScheme.Text.textPlaceHolder}
                             />
                         </View>
                     </View>
@@ -126,15 +136,10 @@ export default function CadUser({ navigation, setUser }) {
                             <Text style={{ color: 'red' }} >{Erro}</Text>
                         </View>
                         <TouchableOpacity
-                            style={
-                                [
-                                    { marginTop: 10, marginBottom: 5, padding: 10, borderRadius: 5, },
-                                    { backgroundColor: colorScheme.panelBackground }
-                                ]
-                            }
+                            style={[styles.btnL, styles.btnE, { backgroundColor: colorScheme.Button.buttonPrimary }]}
                             onPress={Confirmar}
                         >
-                            <Text style={{ textAlign: 'center', color: colorScheme.textSecondary }} >Criar usuario</Text>
+                            <Text style={{ color: colorScheme.Text.textPrimary }} >Criar usuario</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -151,7 +156,6 @@ const styles = StyleSheet.create({
         display: 'flex',
         paddingHorizontal: 40,
         justifyContent: 'center',
-        gap: 25,
         paddingTop: 15
     },
     input: {

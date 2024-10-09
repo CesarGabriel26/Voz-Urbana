@@ -25,25 +25,14 @@ export default function Home({ navigation }) {
 
 
     return (
-        <View style={[styles.container, {}]}>
+        <View style={[styles.container, { backgroundColor: colorScheme.Screen.background }]}>
             <ScrollView >
-                <View style={
-                    {
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-evenly',
-                        width: '100%',
-                        flexWrap: 'wrap',
-                        gap: 20,
-                        marginTop: 30,
-                        paddingHorizontal: 30
-                    }
-                }>
+                <View style={styles.containerHome}>
                     <TouchableOpacity
                         onPress={() => {
                             navigation.navigate('Reportar')
                         }}
-                        style={[styles.btnSqr, { backgroundColor: colorScheme.buttonPrimary }]}
+                        style={[styles.btnSqr, { backgroundColor: colorScheme.Button.buttonPrimary }]}
                     >
                         <Image source={require('../assets/Exclama.png')} resizeMode='cover' />
                         <Text style={styles.text}>Nova</Text>
@@ -54,14 +43,14 @@ export default function Home({ navigation }) {
                         onPress={() => {
                             navigation.navigate('Petições')
                         }}
-                        style={[styles.btnSqr, { backgroundColor: colorScheme.buttonPrimary }]}
+                        style={[styles.btnSqr, { backgroundColor: colorScheme.Button.buttonPrimary }]}
                     >
                         <Image source={require('../assets/Lapis.png')} resizeMode='cover' />
                         <Text style={styles.text}>Abaixo</Text>
                         <Text style={styles.text}>assinados</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={[styles.btnSqr, { backgroundColor: colorScheme.buttonPrimary }]}
+                    <TouchableOpacity style={[styles.btnSqr, { backgroundColor: colorScheme.Button.buttonPrimary }]}
                         onPress={() => {
                             navigation.navigate('Suas Reclamações')
                         }}>
@@ -70,7 +59,7 @@ export default function Home({ navigation }) {
                         <Text style={styles.text}>reclamações</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={[styles.btnSqr, { backgroundColor: colorScheme.buttonPrimary }]}
+                    <TouchableOpacity style={[styles.btnSqr, { backgroundColor: colorScheme.Button.buttonPrimary }]}
                         onPress={() => {
                             navigation.navigate('Configuraçoes')
                         }}
@@ -81,9 +70,9 @@ export default function Home({ navigation }) {
                 </View>
 
                 <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <View style={{ height: 2, width: '80%', backgroundColor: colorScheme.panelBackground, margin: 20 }}></View>
+                    <View style={{ height: 2, width: '80%', backgroundColor: colorScheme.Screen.panelBackground, margin: 20 }}></View>
 
-                    <Text style={{ color: colorScheme.title, fontWeight: '800', fontSize: 20, marginBottom: 20 }}>
+                    <Text style={{ color: colorScheme.Text.title, fontWeight: '800', fontSize: 20, marginBottom: 20 }}>
                         Reclamações na sua área
                     </Text>
 
@@ -129,6 +118,16 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         display: 'flex',
+    },
+    containerHome: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        width: '100%',
+        flexWrap: 'wrap',
+        gap: 20,
+        marginTop: 30,
+        paddingHorizontal: 30
     },
     map: {
         width: '100%',
