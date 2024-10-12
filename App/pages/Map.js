@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Platform, StyleSheet, View, Text, Image } from 'react-native';
+import { Platform, StyleSheet, View, Text, Image, ActivityIndicator } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { getUserLocation } from '../utils/LocationPermition';
 import { useTheme } from '../utils/ThemeContext';
+import { listReports } from '../utils/Api';
 
-export default function Map() {
+export default function Map({ navigation }) {
     const [complaints, setComplaints] = useState([]);
     const [location, setLocation] = useState(null);
 
@@ -14,7 +15,10 @@ export default function Map() {
         (async () => {
             let loc = await getUserLocation()
             setLocation(loc)
-        })();
+
+            let resp = await listReports()
+            setComplaints(resp.content)
+        })()
     }, []);
 
     if (location) {
@@ -32,10 +36,13 @@ export default function Map() {
                     {complaints.map((complaint, index) => (
                         <Marker
                             key={index}
-                            coordinate={complaint.location}
-                            title={complaint.text}
-                            description="Reclamação registrada"
-                            onPress={() => navigation.navigate('ComplaintDetails', { complaint })}
+                            coordinate={{
+                                latitude: parseFloat(complaint.latitude),
+                                longitude: parseFloat(complaint.longitude)
+                            }}
+                            title={complaint.titulo}
+                            description={complaint.conteudo}
+                            //onPress={() => navigation.navigate('ComplaintDetails', { comp : complaint })}
                         />
                     ))}
                 </MapView>
@@ -44,7 +51,7 @@ export default function Map() {
     } else {
         return (
             <View style={styles.container}>
-                <Text>Verifique se a localização esta ativada</Text>
+                <ActivityIndicator size="large" color={colorScheme.Button.buttonPrimary} />
             </View>
         )
     }

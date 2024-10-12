@@ -42,7 +42,7 @@ export default function Yours({ navigation }) {
                             <View key={index} style={[styles.card, { backgroundColor: colorScheme.Screen.panelBackground }]}>
                                 <Text style={[styles.cardText, { color: colorScheme.Text.textSecondary, marginTop: 0 }]}> {formatDate(complaint.data, true)}</Text>
                                 <View style={[styles.cardBody, { backgroundColor: colorScheme.Screen.background }]}>
-                                    <Text>
+                                    <Text style={{ color: colorScheme.Text.textPrimary}} >
                                         {complaint.conteudo}
                                     </Text>
                                 </View>
@@ -52,7 +52,7 @@ export default function Yours({ navigation }) {
                                             <Text style={[styles.cardText, { color: colorScheme.Text.textSecondary }]} >
                                                 Sua requisição foi respondida!
                                             </Text>
-                                            <IonicIcons name="checkmark-done-circle-outline" size={30} color="#25B92F" />
+                                            <IonicIcons name="checkmark-done-circle-outline" size={30} color={colorScheme.Icons.check} />
                                         </View>
                                     ) : (
                                         <Text style={[styles.cardText, { color: colorScheme.Text.textSecondary }]} >

@@ -39,9 +39,9 @@ export default function Login({ navigation, route }) {
         if (Email != "" && Senha != "") {
             let resp = await loginUser(Email, Senha)
 
-            setErro(resp.message)
-            await AsyncStorage.setItem('usuario', JSON.stringify(resp.content));
+            setErro(resp.error)
 
+            await AsyncStorage.setItem('usuario', resp.content);
             navigation.navigate('Home');
         } else {
             if (Email == "") {

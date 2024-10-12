@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Platform, StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, Pressable } from 'react-native';
+import { Platform, StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, Pressable, ActivityIndicator } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { getUserLocation } from '../utils/LocationPermition';
 import { useTheme } from '../utils/ThemeContext';
@@ -77,7 +77,7 @@ export default function Home({ navigation }) {
                     </Text>
 
                     <Pressable
-                        style={{ height: 200, width: 300, marginBottom: 35, backgroundColor: 'red' }}
+                        style={{ height: 200, width: 300, marginBottom: 35}}
                         onPress={() => {
                             navigation.navigate('Mapa')
                         }}  
@@ -105,7 +105,8 @@ export default function Home({ navigation }) {
                                         />
                                     ))}
                                 </MapView>)
-                            ) : <View style={styles.container} ><Text>Carregando mapa</Text></View>
+                            ) : <View style={styles.container} ><ActivityIndicator size="large" color={colorScheme.Button.buttonPrimary} />
+                            </View>
                         }
                     </Pressable>
                 </View>

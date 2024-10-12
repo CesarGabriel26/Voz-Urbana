@@ -79,16 +79,16 @@ export default function Report() {
     return (
         <View style={[styles.container, { backgroundColor: colorScheme.Screen.background }]}>
             <ScrollView
-                horizontal={false} // Garante rolagem apenas vertical
-                showsVerticalScrollIndicator={false} // Opcional, oculta a barra de rolagem
+                horizontal={false}
+                showsVerticalScrollIndicator={false}
             >
                 <View style={{ marginTop: 20, }} >
                     <View style={[styles.card, { backgroundColor: colorScheme.Screen.panelBackground }]}>
-                        <Text style={[styles.cardText, { color: colorScheme.Text.textSecondary }]}>
+                        <Text style={[styles.cardText, { color: colorScheme.Text.textPrimary }]}>
                             Informe o local do seu problema
                         </Text>
 
-                        <View style={{flex:1, borderRadius: 20, overflow: 'hidden', justifyContent: 'center', alignItems: 'center'}}>
+                        <View style={{ flex: 1, borderRadius: 20, overflow: 'hidden', justifyContent: 'center', alignItems: 'center' }}>
                             {
                                 location ? (
                                     <MapView
@@ -121,7 +121,7 @@ export default function Report() {
                     </View>
 
                     <View style={[styles.card, { backgroundColor: colorScheme.Screen.panelBackground }]}>
-                        <Text style={[styles.cardText, { color: colorScheme.Text.textSecondary }]}>
+                        <Text style={[styles.cardText, { color: colorScheme.Text.textPrimary }]}>
                             Adicione uma imagem do problema
                         </Text>
 
@@ -134,10 +134,14 @@ export default function Report() {
                         </TouchableOpacity>
                     </View>
 
-                    <TextInput style={[
-                        styles.input,
-                        { borderColor: colorScheme.Button.buttonPrimary }]}
+                    <TextInput style={
+                        [
+                            styles.input,
+                            { borderColor: colorScheme.Button.buttonPrimary, color: colorScheme.Text.textPrimary }
+                        ]
+                    }
                         placeholder='Título'
+                        placeholderTextColor={colorScheme.Text.textPlaceHolder}
                         value={Titulo}
                         onChangeText={setTitulo}
                     />
@@ -146,22 +150,24 @@ export default function Report() {
                             styles.input,
                             {
                                 borderColor: colorScheme.Button.buttonPrimary,
+                                color: colorScheme.Text.textPrimary,
                                 minHeight: 150,
                                 textAlignVertical: 'top',
                                 padding: 10
                             }
                         ]}
                         placeholder='Descrição do problema'
+                        placeholderTextColor={colorScheme.Text.textPlaceHolder}
                         multiline={true}
                         value={Descricao}
                         onChangeText={setDescricao}
                     />
                     <View style={{ alignItems: 'center', width: '100%' }}>
                         <TouchableOpacity
-                            style={[styles.btnL, { backgroundColor: colorScheme.Button.buttonPrimary, width: '100%', marginBottom: 50 }]}
+                            style={[styles.btnL, { backgroundColor: colorScheme.Button.buttonPrimary, width: '100%', marginBottom: 50}]}
                             onPress={enviar}
                         >
-                            <Text style={{ color: colorScheme.Text.textSecondary, width: '100%', textAlign: 'center' }} >Enviar reclamação</Text>
+                            <Text style={{ width: '100%', textAlign: 'center', color: colorScheme.Text.textPrimary}} >Enviar reclamação</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

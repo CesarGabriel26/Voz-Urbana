@@ -28,6 +28,10 @@ export const Colors = {
                 true: '#0A62AC',
                 false: '#f4f3f4'
             }
+        },
+
+        Icons: {
+            check: '#25B92F'
         }
 
     },
@@ -38,7 +42,7 @@ export const Colors = {
             textSecondary: '#B0B0B0',
             textPlaceHolder: '#c9c9c9',
 
-            title: '#0A62AC',
+            title: '#0a8cac',
         },
 
         Screen: {
@@ -48,16 +52,20 @@ export const Colors = {
         },
 
         Button: {
-            buttonPrimary: '#0A62AC',
+            buttonPrimary: '#0a8cac',
             buttonSecondary: '#FFFFFF',
         },
 
         Switch: {
             ios_backgroundColor: '#1A1A1A',
             thumbColor: {
-                true: '#0A62AC',
+                true: '#0a8cac',
                 false: '#444444'
             }
+        },
+
+        Icons: {
+            check: '#3dff4a'
         }
     },
 };

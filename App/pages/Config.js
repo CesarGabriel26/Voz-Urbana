@@ -24,7 +24,7 @@ export default function Settings({ navigation }) {
         setThemes(colorSchemas());
 
         (
-            async()=>{
+            async () => {
                 let currentTheme = await AsyncStorage.getItem('colorSchema')
                 setTheme(currentTheme)
             }
@@ -32,7 +32,7 @@ export default function Settings({ navigation }) {
 
     }, []);
 
-    const logOut = async() => {
+    const logOut = async () => {
         await AsyncStorage.removeItem('usuario')
         navigation.navigate('Login')
     }
@@ -81,7 +81,7 @@ export default function Settings({ navigation }) {
             </TouchableOpacity>
 
             <View>
-                <Text>Ainda estamos trabalhando nisso</Text>
+                <Text style={{ color: colorScheme.Text.textPrimary }} >Ainda estamos trabalhando nisso</Text>
                 <Image source={require('../assets/merp.gif')} style={{ width: '100%', height: 200 }} resizeMode="contain" />
             </View>
 
