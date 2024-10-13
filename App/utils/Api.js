@@ -1,4 +1,4 @@
-const URL = "http://192.168.0.152:5000" //"http://192.168.0.152:5000" //"https://voz-urbana-api.vercel.app";
+const URL = "https://voz-urbana-api.vercel.app" //"http://192.168.0.152:5000" //"https://voz-urbana-api.vercel.app";
 
 // Funções para Usuários
 export const createUser = async (userData) => {
@@ -23,6 +23,26 @@ export const loginUser = async (email, password) => {
             senha: password
         }),
     });
+    return response.json();
+};
+
+export const checkUserPassword = async (userId, password) => {
+    const response = await fetch(`${URL}/usuarios/passwordCheck/${userId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            senha: password
+        }),
+    });
+
+    if (!response.ok) {
+        // Se a resposta não for bem-sucedida, você pode lançar um erro ou retornar uma mensagem adequada.
+        const errorData = await response.json();
+        return {"error": errorData.error || 'Erro ao verificar a senha.'}
+    }
+
     return response.json();
 };
 
@@ -161,3 +181,26 @@ export const uploadImage = async (imageUri, userName) => {
 
     return response.json();
 }
+
+export const deleteImage = async (fileName) => {
+    try {
+        const response = await fetch(`${URL}/imagem/delete`, {
+            method: 'POST',  // Mudado para POST
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ link: fileName }),  // Enviando o link no corpo
+        });
+
+        if (!response.ok) {
+            const errorResponse = await response.json();
+            throw new Error(`Erro ao deletar imagem: ${errorResponse.error || response.statusText}`);
+        }
+
+        return response.json();
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+

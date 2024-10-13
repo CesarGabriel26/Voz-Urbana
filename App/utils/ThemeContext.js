@@ -7,8 +7,19 @@ export const ThemeProvider = ({ children }) => {
   const [colorScheme, setColorScheme] = useState(Colors.MainTheme);
 
   const loadColorScheme = async () => {
-    const scheme = await getColorScheme();
-    setColorScheme(scheme);
+    try {
+      const scheme = await getColorScheme();
+      if (scheme) {
+        setColorScheme(scheme);
+      } else {
+        await AsyncStorage.setItem('colorSchema', 'MainTheme');
+        scheme = await getColorScheme();
+        setColorScheme(scheme);
+      }
+    } catch (error) {
+      console.error("Erro ao carregar esquema de cores:", error);
+      setColorScheme(Colors.MainTheme);
+    }
   };
 
   useEffect(() => {

@@ -6,6 +6,7 @@ import { useTheme } from '../utils/ThemeContext';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createReport, uploadImage } from '../utils/Api';
+import Decode from '../utils/JWT';
 
 export default function Report() {
     const [location, setLocation] = useState(null);
@@ -18,7 +19,7 @@ export default function Report() {
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
 
         let User = await AsyncStorage.getItem('usuario')
-        let jsonUser = JSON.parse(User)
+        let jsonUser = Decode(User)
 
         if (status !== 'granted') {
             alert('Precisamos de permissão para acessar a câmera!');

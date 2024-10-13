@@ -80,10 +80,10 @@ export default function Settings({ navigation }) {
                 <Text style={{ color: colorScheme.Text.textPrimary }} >Sair</Text>
             </TouchableOpacity>
 
-            <View>
+            {/* <View>
                 <Text style={{ color: colorScheme.Text.textPrimary }} >Ainda estamos trabalhando nisso</Text>
                 <Image source={require('../assets/merp.gif')} style={{ width: '100%', height: 200 }} resizeMode="contain" />
-            </View>
+            </View> */}
 
             <UserProfile setModalVisible={setModalVisible} modalVisible={modalVisible} />
         </View>
