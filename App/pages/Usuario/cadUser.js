@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, TextInput, View, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
-import { createUser } from '../utils/Api';
-import { useTheme } from '../utils/ThemeContext';
+import { createUser } from '../../utils/Api';
+import { useTheme } from '../../utils/ThemeContext';
 
 export default function CadUser({ navigation, setUser }) {
     const { colorScheme } = useTheme();
@@ -72,7 +72,7 @@ export default function CadUser({ navigation, setUser }) {
 
                 <View style={{ gap: 25 }} >
                     <View style={{ display: 'flex', alignItems: 'center' }} >
-                        <Image source={require('../assets/LogoHightResolution.png')} resizeMode='contain' style={{
+                        <Image source={require('../../assets/LogoHightResolution.png')} resizeMode='contain' style={{
                             width: 80,
                             height: 80
                         }} />

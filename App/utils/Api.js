@@ -147,6 +147,15 @@ export const updatePetition = async (id, petitionData) => {
     return response.json();
 };
 
+export const getRemainingTimeForPetition = async (petitionId) => {
+    const response = await fetch(`${URL}/peticoes/check_timer/${petitionId}`);
+    if (!response.ok) {
+        throw new Error(response.error);
+    }
+    return response.json();
+};
+
+
 export const deletePetition = async (id) => {
     const response = await fetch(`${URL}/peticoes/delete/${id}`, {
         method: 'DELETE',

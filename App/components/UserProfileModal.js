@@ -8,7 +8,7 @@ import Icon from '@expo/vector-icons/Ionicons'
 import Feather from '@expo/vector-icons/Feather'
 import Dialog from 'react-native-dialog';
 
-import Decode from '../utils/JWT';
+import decodeUserToken from '../utils/JWT';
 import { checkUserPassword, deleteImage, updateUser, uploadImage } from '../utils/Api';
 
 export default function UserProfile({ setModalVisible, modalVisible }) {
@@ -33,7 +33,7 @@ export default function UserProfile({ setModalVisible, modalVisible }) {
             try {
                 let User = await AsyncStorage.getItem('usuario');
                 if (User) {
-                    let decodedUser = Decode(User);
+                    let decodedUser = decodeUserToken(User);
                     setUser(decodedUser);
 
                     delete decodedUser.senha;
@@ -143,7 +143,7 @@ export default function UserProfile({ setModalVisible, modalVisible }) {
 
         await AsyncStorage.setItem('usuario', resposta.content);
 
-        let us = Decode(resposta.content)
+        let us = decodeUserToken(resposta.content)
         setUser(us)
 
         setLoading(false)

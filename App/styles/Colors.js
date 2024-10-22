@@ -31,7 +31,27 @@ export const Colors = {
         },
 
         Icons: {
+            loader: '0A62AC',
             check: '#25B92F'
+        },
+
+        PetitionStatus: {
+            stepStrokeFinishedColor: '#0A62AC',
+            stepIndicatorFinishedColor: '#0A62AC',
+            separatorFinishedColor: '#0A62AC',
+            stepIndicatorLabelFinishedColor: '#ffffff',
+
+            stepStrokeUnFinishedColor: '#aaaaaa',
+            separatorUnFinishedColor: '#aaaaaa',
+            stepIndicatorUnFinishedColor: '#aaaaaa',
+            stepIndicatorLabelUnFinishedColor: '#ffffff',
+
+            stepStrokeCurrentColor: '#0A62AC',
+            stepIndicatorCurrentColor: '#ffffff',
+            stepIndicatorLabelCurrentColor: '#0A62AC',
+
+            labelColor: '#999999',
+            currentStepLabelColor: '#0A62AC',
         }
 
     },
@@ -39,7 +59,7 @@ export const Colors = {
     DarkMode: {
         Text: {
             textPrimary: '#FFFFFF',
-            textSecondary: '#B0B0B0',
+            textSecondary: '#ffffff',
             textPlaceHolder: '#c9c9c9',
 
             title: '#0a8cac',
@@ -66,6 +86,25 @@ export const Colors = {
 
         Icons: {
             check: '#3dff4a'
+        },
+
+        PetitionStatus: {
+            stepStrokeFinishedColor: '#0A62AC',
+            stepIndicatorFinishedColor: '#0A62AC',
+            separatorFinishedColor: '#0A62AC',
+            stepIndicatorLabelFinishedColor: '#ffffff',
+
+            stepStrokeUnFinishedColor: '#aaaaaa',
+            separatorUnFinishedColor: '#aaaaaa',
+            stepIndicatorUnFinishedColor: '#aaaaaa',
+            stepIndicatorLabelUnFinishedColor: '#ffffff',
+
+            stepStrokeCurrentColor: '#0A62AC',
+            stepIndicatorCurrentColor: '#ffffff',
+            stepIndicatorLabelCurrentColor: '#0A62AC',
+
+            labelColor: '#999999',
+            currentStepLabelColor: '#0A62AC',
         }
     },
 };

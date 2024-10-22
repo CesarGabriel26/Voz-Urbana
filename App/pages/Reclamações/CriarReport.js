@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TextInput, Image, TouchableOpacity, Button, ScrollView, ActivityIndicator } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import { getUserLocation } from '../utils/LocationPermition';
-import { useTheme } from '../utils/ThemeContext';
+import { getUserLocation } from '../../utils/LocationPermition';
+import { useTheme } from '../../utils/ThemeContext';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createReport, uploadImage } from '../utils/Api';
-import Decode from '../utils/JWT';
+import { createReport, uploadImage } from '../../utils/Api';
+import decodeUserToken from '../../utils/JWT';
 
-export default function Report() {
+export default function CriarReport() {
     const [location, setLocation] = useState(null);
     const [img, setImg] = useState('');
     const { colorScheme } = useTheme();
@@ -19,7 +19,7 @@ export default function Report() {
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
 
         let User = await AsyncStorage.getItem('usuario')
-        let jsonUser = Decode(User)
+        let jsonUser = decodeUserToken(User)
 
         if (status !== 'granted') {
             alert('Precisamos de permissão para acessar a câmera!');
@@ -128,7 +128,7 @@ export default function Report() {
 
                         <TouchableOpacity onPress={takePhoto} style={styles.imageContainer}>
                             <Image
-                                source={img != '' ? img : require('../assets/placeHolder.png')}
+                                source={img != '' ? img : require('../../assets/placeHolder.png')}
                                 style={styles.image}
                                 resizeMode='cover'
                             />

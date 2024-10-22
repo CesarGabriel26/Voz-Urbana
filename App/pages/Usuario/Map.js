@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Platform, StyleSheet, View, Text, Image, ActivityIndicator } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import { getUserLocation } from '../utils/LocationPermition';
-import { useTheme } from '../utils/ThemeContext';
-import { listReports } from '../utils/Api';
+import { getUserLocation } from '../../utils/LocationPermition';
+import { useTheme } from '../../utils/ThemeContext';
+import { listReports } from '../../utils/Api';
 
 export default function Map({ navigation }) {
     const [complaints, setComplaints] = useState([]);
@@ -68,4 +68,5 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
     },
+    
 });

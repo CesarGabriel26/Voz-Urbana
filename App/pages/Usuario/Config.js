@@ -2,14 +2,14 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native'
 import { Dropdown } from 'react-native-element-dropdown';
-import { colorSchemas } from '../styles/Colors';
-import { useTheme } from '../utils/ThemeContext';
+import { colorSchemas } from '../../styles/Colors';
+import { useTheme } from '../../utils/ThemeContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Ionicons from '@expo/vector-icons/Ionicons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import UserProfile from '../components/UserProfileModal';
+import UserProfile from '../../components/UserProfileModal';
 
 import { TouchableOpacity } from 'react-native';
 

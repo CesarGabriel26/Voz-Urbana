@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Platform, StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, Pressable, ActivityIndicator } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import { getUserLocation } from '../utils/LocationPermition';
-import { useTheme } from '../utils/ThemeContext';
+import { getUserLocation } from '../../utils/LocationPermition';
+import { useTheme } from '../../utils/ThemeContext';
 
 export default function Home({ navigation }) {
     const [complaints, setComplaints] = useState([]);
@@ -34,9 +34,28 @@ export default function Home({ navigation }) {
                         }}
                         style={[styles.btnSqr, { backgroundColor: colorScheme.Button.buttonPrimary }]}
                     >
-                        <Image source={require('../assets/Exclama.png')} resizeMode='cover' />
+                        <Image source={require('../../assets/Exclama.png')} resizeMode='cover' />
                         <Text style={styles.text}>Nova</Text>
                         <Text style={styles.text}>reclamação</Text>
+                    </TouchableOpacity>
+
+
+                    <TouchableOpacity style={[styles.btnSqr, { backgroundColor: colorScheme.Button.buttonPrimary }]}
+                        onPress={() => {
+                            navigation.navigate('Criar Petição')
+                        }}>
+                        <Image source={require('../../assets/Megafone.png')} resizeMode='cover' />
+                        <Text style={styles.text}>Nova</Text>
+                        <Text style={styles.text}>Petição</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={[styles.btnSqr, { backgroundColor: colorScheme.Button.buttonPrimary }]}
+                        onPress={() => {
+                            navigation.navigate('Reclamações')
+                        }}>
+                        <Image source={require('../../assets/Megafone.png')} resizeMode='cover' />
+                        <Text style={styles.text}> </Text>
+                        <Text style={styles.text}>Reclamações</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
@@ -45,27 +64,9 @@ export default function Home({ navigation }) {
                         }}
                         style={[styles.btnSqr, { backgroundColor: colorScheme.Button.buttonPrimary }]}
                     >
-                        <Image source={require('../assets/Lapis.png')} resizeMode='cover' />
-                        <Text style={styles.text}>Abaixo</Text>
-                        <Text style={styles.text}>assinados</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={[styles.btnSqr, { backgroundColor: colorScheme.Button.buttonPrimary }]}
-                        onPress={() => {
-                            navigation.navigate('Suas Reclamações')
-                        }}>
-                        <Image source={require('../assets/Megafone.png')} resizeMode='cover' />
-                        <Text style={styles.text}>Suas</Text>
-                        <Text style={styles.text}>reclamações</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={[styles.btnSqr, { backgroundColor: colorScheme.Button.buttonPrimary }]}
-                        onPress={() => {
-                            navigation.navigate('Configuraçoes')
-                        }}
-                    >
-                        <Image source={require('../assets/Engrenagem.png')} resizeMode='cover' />
-                        <Text style={[styles.text, { marginTop: 10 }]}>Configurações</Text>
+                        <Image source={require('../../assets/Lapis.png')} resizeMode='cover' />
+                        <Text style={styles.text}> </Text>
+                        <Text style={styles.text}>Petições</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -77,10 +78,10 @@ export default function Home({ navigation }) {
                     </Text>
 
                     <Pressable
-                        style={{ height: 200, width: 300, marginBottom: 35}}
+                        style={{ height: 200, width: 300, marginBottom: 35 }}
                         onPress={() => {
                             navigation.navigate('Mapa')
-                        }}  
+                        }}
                     >
                         {
                             location ? (

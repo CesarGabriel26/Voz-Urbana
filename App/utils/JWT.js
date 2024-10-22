@@ -1,6 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 
-export default function Decode(token) {
+export default function decodeUserToken(token) {
     if (!token) {
         throw new Error("Tokennulo.");
     }

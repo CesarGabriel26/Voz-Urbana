@@ -2,20 +2,25 @@ import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useTheme } from '../utils/ThemeContext'; // Importa o hook de tema
-import { StatusBar, Platform, Image, View } from 'react-native';
+import { StatusBar, Platform, Image, TouchableOpacity } from 'react-native';
 
-import Entypo from '@expo/vector-icons/Entypo';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
-import Yours from '../pages/YourReports';
-import Home from '../pages/Home';
-import Report from '../pages/Report';
-import Peticoes from '../pages/Peticoes'
-import Settings from '../pages/Config'
-import Login from '../pages/Login';
-import CadUser from '../pages/cadUser';
-import Map from '../pages/Map';
+import CriarReport from '../pages/Reclamações/CriarReport';
+import Reportes from '../pages/Reclamações/Reports';
+import ReportesDoUsuario from '../pages/Reclamações/SeusReports';
+
+import CriaPeticao from '../pages/Petições/CriarPeticao'
+import Peticoes from '../pages/Petições/Peticoes'
+import PeticoesDoUsuario from '../pages/Petições/SuasPeticoes';
+import VerPeticao from '../pages/Petições/VerPeticao'
+
+import Home from '../pages/Usuario/Home';
+import Settings from '../pages/Usuario/Config'
+import Login from '../pages/Usuario/Login';
+import CadUser from '../pages/Usuario/cadUser';
+import Map from '../pages/Usuario/Map';
+
 
 const Stack = createStackNavigator();
 
@@ -37,81 +42,82 @@ export default function Navigation() {
       <StatusBar style="auto" />
 
       <Stack.Navigator
-        screenOptions={{
+        screenOptions={({ navigation }) => ({
           headerTintColor: colorScheme.Text.textSecondary,
           headerStyle: {
             backgroundColor: colorScheme.Screen.panelBackground,
             height: 80,
           },
           headerTitleAlign: 'center',
-
-        }}
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Configurações')}
+              style={{
+                marginRight: 25
+              }}
+            >
+              <FontAwesome name="gear" size={30} color="white" />
+            </TouchableOpacity>
+          ),
+        })}
       >
+        {/* Telas normais */}
         <Stack.Screen
           name="Login"
-          options={{
-            tabBarIcon: ({ color }) => <Entypo name="home" size={24} color={color} />,
-            headerShown: true,
-          }}
           component={Login}
         />
         <Stack.Screen
           name="Cadastro"
-          options={{
-            tabBarIcon: ({ color }) => <Entypo name="home" size={24} color={color} />,
-          }}
           component={CadUser}
         />
-
         <Stack.Screen
           name="Home"
           options={{
-            tabBarIcon: ({ color }) => <Entypo name="home" size={24} color={color} />,
-            headerLeft: null, // Remove a seta de voltar
-            gestureEnabled: false, // Desabilita o gesto de voltar
+            headerLeft: ""
           }}
           component={Home}
-
+        />
+        <Stack.Screen
+          name="Mapa"
+          component={Map}
+        />
+        <Stack.Screen
+          name="Configurações"
+          component={Settings}
         />
 
+        {/* Reclamações / Reportes */}
+        <Stack.Screen
+          name="Reclamações"
+          component={Reportes}
+        />
         <Stack.Screen
           name="Reportar"
-          options={{
-            tabBarIcon: ({ color }) => <MaterialIcons name="report-gmailerrorred" size={24} color={color} />,
-          }}
-          component={Report}
+          component={CriarReport}
 
         />
         <Stack.Screen
           name="Suas Reclamações"
-          options={{
-            tabBarIcon: ({ color }) => <MaterialIcons name="report-gmailerrorred" size={24} color={color} />,
-          }}
-          component={Yours}
+          component={ReportesDoUsuario}
         />
 
+        {/* Petições / Abaixo assinados */}
         <Stack.Screen
           name="Petições"
-          options={{
-            tabBarIcon: ({ color }) => <MaterialIcons name="report-gmailerrorred" size={24} color={color} />,
-          }}
           component={Peticoes}
         />
-
         <Stack.Screen
-          name="Mapa"
-          options={{
-            tabBarIcon: ({ color }) => <MaterialIcons name="report-gmailerrorred" size={24} color={color} />,
-          }}
-          component={Map}
+          name="Criar Petição"
+          component={CriaPeticao}
         />
-
         <Stack.Screen
-          name="Configuraçoes"
-          options={{ tabBarIcon: ({ color }) => <FontAwesome name="gears" size={24} color={color} /> }}
-          component={Settings}
+          name="Suas Petições"
+          component={PeticoesDoUsuario}
         />
-
+        <Stack.Screen
+          name="Detalhes Da Petição"
+          component={VerPeticao}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

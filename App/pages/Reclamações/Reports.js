@@ -1,23 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, ScrollView, ActivityIndicator } from 'react-native';
-import { useTheme } from '../utils/ThemeContext';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getReportsByUser } from '../utils/Api';
+import { StyleSheet, View, Text, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { useTheme } from '../../utils/ThemeContext';
+import { listReports } from '../../utils/Api';
 
 import IonicIcons from '@expo/vector-icons/Ionicons'
-import { formatDate } from '../utils/Parser';
+import { formatDate } from '../../utils/Parser';
 
-export default function Yours({ navigation }) {
+export default function Reportes({ navigation }) {
     const [complaints, setComplaints] = useState([]);
     const [loaded, setloaded] = useState(false);
 
     const { colorScheme } = useTheme();
-    
+
     const loadList = async () => {
         setloaded(false)
-        let userString = await AsyncStorage.getItem('usuario')
-        let userJson = await JSON.parse(userString)
-        let rest = await getReportsByUser(userJson.id)
+        let rest = await listReports()
 
         if (rest.content) {
             setComplaints(rest.content)
@@ -31,9 +28,19 @@ export default function Yours({ navigation }) {
 
     return (
         <View style={[styles.container, { backgroundColor: colorScheme.Screen.background }]}>
-            <Text style={{ color: colorScheme.Text.title, fontWeight: '800', fontSize: 20, margin: 20 }}>
-                Suas Reclamações
+            <Text style={{ color: colorScheme.Text.title, fontWeight: '800', fontSize: 20, marginTop: 20 }}>
+                Reclamações
             </Text>
+            <TouchableOpacity
+                style={{ marginBottom: 20, marginTop: 15 }}
+                onPress={() => {
+                    navigation.navigate('Suas Reclamações')
+                }}
+            >
+                <Text style={{color: colorScheme.Text.title, fontWeight: '400', fontSize: 15}}>
+                    Suas Reclamções
+                </Text>
+            </TouchableOpacity>
 
             <ScrollView style={{ flex: 1, width: '100%' }}>
                 {
@@ -42,7 +49,7 @@ export default function Yours({ navigation }) {
                             <View key={index} style={[styles.card, { backgroundColor: colorScheme.Screen.panelBackground }]}>
                                 <Text style={[styles.cardText, { color: colorScheme.Text.textSecondary, marginTop: 0 }]}> {formatDate(complaint.data, true)}</Text>
                                 <View style={[styles.cardBody, { backgroundColor: colorScheme.Screen.background }]}>
-                                    <Text style={{ color: colorScheme.Text.textPrimary}} >
+                                    <Text style={{ color: colorScheme.Text.textPrimary }} >
                                         {complaint.conteudo}
                                     </Text>
                                 </View>
