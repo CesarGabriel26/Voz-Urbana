@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Platform, StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, Pressable, ActivityIndicator } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
-import { getUserLocation } from '../../utils/LocationPermition';
+import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, Pressable, ActivityIndicator } from 'react-native';
+import { Marker } from 'react-native-maps';
 import { useTheme } from '../../utils/ThemeContext';
+import { listReports } from '../../utils/Api';
+import { getUserLocation } from '../../utils/LocationPermition';
+import OpenStreetMapComponent from '../../components/Maps';
 
 export default function Home({ navigation }) {
     const [complaints, setComplaints] = useState([]);
@@ -19,9 +21,17 @@ export default function Home({ navigation }) {
         }
     };
 
+    const loadList = async () => {
+        let resp = await listReports()
+        if (resp.content) {
+            setComplaints(resp.content)
+        }
+    }
+
     useEffect(() => {
+        loadList()
         getLocation();
-    }, []);  // Adicione um array vazio para executar o `useEffect` apenas uma vez
+    }, []);
 
 
     return (
@@ -85,34 +95,20 @@ export default function Home({ navigation }) {
                     >
                         {
                             location ? (
-                                (<MapView
+                                <OpenStreetMapComponent
                                     style={styles.map}
-                                    initialRegion={{
-                                        latitude: location.latitude,
-                                        longitude: location.longitude,
-                                        latitudeDelta: 0.005,
-                                        longitudeDelta: 0.005,
-                                    }}
+                                    location={location}
+                                    markers={complaints}
                                     scrollEnabled={false}
                                     zoomEnabled={false}
-                                >
-                                    {complaints.map((complaint, index) => (
-                                        <Marker
-                                            key={index}
-                                            coordinate={complaint.location}
-                                            title={complaint.text}
-                                            description="Reclamação registrada"
-                                            onPress={() => navigation.navigate('ComplaintDetails', { complaint })}
-                                        />
-                                    ))}
-                                </MapView>)
+                                />
                             ) : <View style={styles.container} ><ActivityIndicator size="large" color={colorScheme.Button.buttonPrimary} />
                             </View>
                         }
                     </Pressable>
                 </View>
-            </ScrollView>
-        </View>
+            </ScrollView >
+        </View >
     );
 }
 

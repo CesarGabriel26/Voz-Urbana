@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TextInput, Image, TouchableOpacity, Button, ScrollView, ActivityIndicator } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import { StyleSheet, View, Text, TextInput, Image, TouchableOpacity, Alert, ScrollView, ActivityIndicator } from 'react-native';
+import { Marker } from 'react-native-maps';
 import { getUserLocation } from '../../utils/LocationPermition';
 import { useTheme } from '../../utils/ThemeContext';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createReport, uploadImage } from '../../utils/Api';
 import decodeUserToken from '../../utils/JWT';
+import OpenStreetMapComponent from '../../components/Maps';
+
+import Feather from '@expo/vector-icons/Feather';
+import AdressInput from '../../components/AdressModela';
 
 export default function CriarReport() {
     const [location, setLocation] = useState(null);
@@ -15,38 +19,54 @@ export default function CriarReport() {
     const [Titulo, setTitulo] = useState('');
     const [Descricao, setDescricao] = useState('');
 
-    const takePhoto = async () => {
+    const [modalVisible, setModalVisible] = useState(false);
+
+    const takePhotoOrChooseFromGallery = async () => {
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
+        const { status: mediaLibraryStatus } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-        let User = await AsyncStorage.getItem('usuario')
-        let jsonUser = decodeUserToken(User)
-
-        if (status !== 'granted') {
-            alert('Precisamos de permissão para acessar a câmera!');
+        if (status !== 'granted' || mediaLibraryStatus !== 'granted') {
+            alert('Precisamos de permissão para acessar a câmera e a galeria!');
             return;
         }
 
-        let result = await ImagePicker.launchCameraAsync({
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
+        // Pergunta ao usuário se ele quer abrir a câmera ou escolher da galeria
+        Alert.alert(
+            "Escolha uma opção",
+            "Deseja capturar uma nova foto ou escolher da galeria?",
+            [
+                {
+                    text: "Galeria",
+                    onPress: async () => {
+                        let result = await ImagePicker.launchImageLibraryAsync({
+                            allowsEditing: true,
+                            aspect: [4, 3],
+                            quality: 1,
+                        });
 
-        if (!result.canceled) {
-            const uri = result.assets[0].uri; // URI da imagem
-            const resp = await uploadImage(uri, jsonUser.nome);
+                        if (!result.canceled) {
+                            setImg(result["assets"][0]);
+                        }
 
-            if (resp.error) {
-                console.log(resp.error);
-                return
-            }
+                    }
+                },
+                {
+                    text: "Câmera",
+                    onPress: async () => {
+                        let result = await ImagePicker.launchCameraAsync({
+                            allowsEditing: true,
+                            aspect: [4, 3],
+                            quality: 1,
+                        });
 
-            let data = resp.content["url"]
-
-            setImg({ uri: data });
-        } else {
-            console.log("Captura da imagem cancelada.");
-        }
+                        if (!result.canceled) {
+                            setImg(result["assets"][0]);
+                        }
+                    }
+                },
+                { text: "Cancelar", style: "cancel" }
+            ]
+        );
     };
 
     const enviar = async () => {
@@ -85,48 +105,64 @@ export default function CriarReport() {
             >
                 <View style={{ marginTop: 20, }} >
                     <View style={[styles.card, { backgroundColor: colorScheme.Screen.panelBackground }]}>
-                        <Text style={[styles.cardText, { color: colorScheme.Text.textPrimary }]}>
-                            Informe o local do seu problema
-                        </Text>
+                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }} >
+                            <Text style={[styles.cardText, { color: colorScheme.Text.textSecondary }]}>
+                                Informe o local do seu problema
+                            </Text>
+                            <TouchableOpacity onPress={() => {
+                                Alert.alert(
+                                    "Info",
+                                    "Selecione no mapa o local do problema, ou informe o endereço em 'informar endereço' ",
+                                )
+                            }} >
+                                <Feather name='info' size={17} color={colorScheme.Text.textSecondary} />
+                            </TouchableOpacity>
+                        </View>
 
                         <View style={{ flex: 1, borderRadius: 20, overflow: 'hidden', justifyContent: 'center', alignItems: 'center' }}>
                             {
                                 location ? (
-                                    <MapView
-                                        key={colorScheme.Screen.background}
+                                    <OpenStreetMapComponent
                                         style={styles.map}
-                                        initialRegion={{
-                                            latitude: location.latitude,
-                                            longitude: location.longitude,
-                                            latitudeDelta: 0.001,
-                                            longitudeDelta: 0.001,
-                                        }}
-                                        scrollEnabled={false}
-                                        zoomEnabled={false}
-                                    >
-                                        <Marker
-                                            key={colorScheme.Button.buttonSecondary}
-                                            title='Esse será o local'
-                                            coordinate={{
-                                                latitude: location.latitude,
-                                                longitude: location.longitude
-                                            }}
-                                            pinColor={colorScheme.Button.buttonSecondary}
-                                        />
-                                    </MapView>
+                                        location={location}
+                                        anim={false}
+                                        markers={
+                                            [
+                                                {
+                                                    latitude: location.latitude,
+                                                    longitude: location.longitude,
+                                                    title: "Esse será o local",
+                                                    descricao: "Sua reclamação sera registrada aqui",
+                                                    props: {
+                                                        pinColor: colorScheme.Button.buttonSecondary
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    />
                                 ) : (
                                     <ActivityIndicator size="large" color={colorScheme.Button.buttonSecondary} />
                                 )
                             }
                         </View>
+
+                        <TouchableOpacity
+                            style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}
+                            onPress={() => {setModalVisible(true)}}
+                        >
+                            <Text style={[styles.cardText, { color: colorScheme.Text.textSecondary, fontSize: 12, marginTop: 10, textAlign: 'right' }]}>
+                                informar endereço
+                            </Text>
+                            <Feather name='chevron-right' size={12} color={colorScheme.Text.textSecondary} />
+                        </TouchableOpacity>
                     </View>
 
                     <View style={[styles.card, { backgroundColor: colorScheme.Screen.panelBackground }]}>
-                        <Text style={[styles.cardText, { color: colorScheme.Text.textPrimary }]}>
+                        <Text style={[styles.cardText, { color: colorScheme.Text.textSecondary }]}>
                             Adicione uma imagem do problema
                         </Text>
 
-                        <TouchableOpacity onPress={takePhoto} style={styles.imageContainer}>
+                        <TouchableOpacity onPress={takePhotoOrChooseFromGallery} style={styles.imageContainer}>
                             <Image
                                 source={img != '' ? img : require('../../assets/placeHolder.png')}
                                 style={styles.image}
@@ -165,14 +201,17 @@ export default function CriarReport() {
                     />
                     <View style={{ alignItems: 'center', width: '100%' }}>
                         <TouchableOpacity
-                            style={[styles.btnL, { backgroundColor: colorScheme.Button.buttonPrimary, width: '100%', marginBottom: 50}]}
+                            style={[styles.btnL, { backgroundColor: colorScheme.Button.buttonPrimary, width: '100%', marginBottom: 50 }]}
                             onPress={enviar}
                         >
-                            <Text style={{ width: '100%', textAlign: 'center', color: colorScheme.Text.textPrimary}} >Enviar reclamação</Text>
+                            <Text style={{ width: '100%', textAlign: 'center', color: colorScheme.Text.textSecondary }} >Enviar reclamação</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
             </ScrollView>
+
+            <AdressInput modalVisible={modalVisible} setModalVisible={setModalVisible} />
+
         </View>
     );
 }

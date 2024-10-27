@@ -9,6 +9,8 @@ export const Colors = {
             textPlaceHolder: '#acacac',
 
             title: '#0A62AC',
+
+            error: '#ff4949'
         },
 
         Screen: {

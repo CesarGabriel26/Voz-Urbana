@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Platform, StyleSheet, View, Text, Image, ActivityIndicator } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import { StyleSheet, View, ActivityIndicator } from 'react-native';
 import { getUserLocation } from '../../utils/LocationPermition';
 import { useTheme } from '../../utils/ThemeContext';
 import { listReports } from '../../utils/Api';
+import OpenStreetMapComponent from '../../components/Maps';
 
 export default function Map({ navigation }) {
     const [complaints, setComplaints] = useState([]);
@@ -24,28 +24,11 @@ export default function Map({ navigation }) {
     if (location) {
         return (
             <View style={styles.container}>
-                <MapView
+                <OpenStreetMapComponent
                     style={styles.map}
-                    initialRegion={{
-                        latitude: location.latitude,
-                        longitude: location.longitude,
-                        latitudeDelta: 0.01,
-                        longitudeDelta: 0.01,
-                    }}
-                >
-                    {complaints.map((complaint, index) => (
-                        <Marker
-                            key={index}
-                            coordinate={{
-                                latitude: parseFloat(complaint.latitude),
-                                longitude: parseFloat(complaint.longitude)
-                            }}
-                            title={complaint.titulo}
-                            description={complaint.conteudo}
-                            //onPress={() => navigation.navigate('ComplaintDetails', { comp : complaint })}
-                        />
-                    ))}
-                </MapView>
+                    location={location}
+                    markers={complaints}
+                />
             </View>
         );
     } else {
@@ -68,5 +51,5 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
     },
-    
+
 });
