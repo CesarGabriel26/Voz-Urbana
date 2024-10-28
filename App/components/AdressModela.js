@@ -5,12 +5,12 @@ import Icon from '@expo/vector-icons/Ionicons';
 import { Picker } from '@react-native-picker/picker';
 import { getLatLongFromAddress } from '../utils/LocationPermition';
 
-export default function AddressInput({ setModalVisible, modalVisible }) {
+export default function AddressInput({ setModalVisible, modalVisible, setAdress, setLocation }) {
     const { colorScheme } = useTheme();
 
     const [street, setStreet] = useState("");
     const [number, setNumber] = useState("");
-    const [state, setState] = useState("SP");
+    const [state, setState] = useState('São Paulo');
     const [city, setCity] = useState("");
     const [zipCode, setZipCode] = useState("");
     const [Complemento, setComplemento] = useState("");
@@ -19,28 +19,40 @@ export default function AddressInput({ setModalVisible, modalVisible }) {
 
     // Lista de estados e cidades
     const states = [
-        { label: 'São Paulo', value: 'SP' },
-        { label: 'Rio de Janeiro', value: 'RJ' },
-        { label: 'Minas Gerais', value: 'MG' },
-        { label: 'Espírito Santo', value: 'ES' },
+        { label: 'São Paulo', value: 'São Paulo' },
+        { label: 'Rio de Janeiro', value: 'Rio de Janeiro' },
+        { label: 'Minas Gerais', value: 'Minas Gerais' },
+        { label: 'Espírito Santo', value: 'Espírito Santo' },
     ];
 
     const citiesByState = {
-        SP: ["São Paulo", "Campinas", "Santos", "Sorocaba", "Andradina"],
-        RJ: ["Rio de Janeiro", "Niterói", "Petrópolis", "Volta Redonda"],
-        MG: ["Belo Horizonte", "Uberlândia", "Contagem", "Juiz de Fora"],
-        ES: ["Vitória", "Vila Velha", "Serra", "Cariacica"]
+        'São Paulo': ["São Paulo", "Campinas", "Santos", "Sorocaba", "Andradina"],
+        'Rio de Janeiro': ["Rio de Janeiro", "Niterói", "Petrópolis", "Volta Redonda"],
+        'Minas Gerais': ["Belo Horizonte", "Uberlândia", "Contagem", "Juiz de Fora"],
+        'Espírito Santo': ["Vitória", "Vila Velha", "Serra", "Cariacica"]
     };
 
     const handleSubmit = async () => {
         setLoading(true);
 
-        let a = await getLatLongFromAddress(street, number, city, state, "Brasil")
+        let location = await getLatLongFromAddress(street, number, city, state, "Brasil")
+        setLocation(location)
 
-        setTimeout(() => {
-            setLoading(false);
-            setModalVisible(false);
-        }, 1500);
+        await setAdress(
+            JSON.stringify(
+                {
+                    "street": street,
+                    "number": number,
+                    "city": city,
+                    "state": state,
+                    "Country": "Brasil",
+                    "zipCode": zipCode,
+                    "complemento": Complemento
+                }
+            )
+        )
+        setLoading(false);
+        setModalVisible(false);
     };
 
     return (

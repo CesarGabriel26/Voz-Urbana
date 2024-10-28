@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
+import IonicIcons from '@expo/vector-icons/Ionicons'
+
 import { useTheme } from '../../utils/ThemeContext';
 import { listReports } from '../../utils/Api';
-
-import IonicIcons from '@expo/vector-icons/Ionicons'
-import { formatDate } from '../../utils/Parser';
+import { formatDate } from '../../utils/Parser'
 
 export default function Reportes({ navigation }) {
     const [complaints, setComplaints] = useState([]);
@@ -28,16 +28,13 @@ export default function Reportes({ navigation }) {
 
     return (
         <View style={[styles.container, { backgroundColor: colorScheme.Screen.background }]}>
-            <Text style={{ color: colorScheme.Text.title, fontWeight: '800', fontSize: 20, marginTop: 20 }}>
-                Reclamações
-            </Text>
             <TouchableOpacity
                 style={{ marginBottom: 20, marginTop: 15 }}
                 onPress={() => {
                     navigation.navigate('Suas Reclamações')
                 }}
             >
-                <Text style={{color: colorScheme.Text.title, fontWeight: '400', fontSize: 15}}>
+                <Text style={{ color: colorScheme.Text.title, fontWeight: '400', fontSize: 15 }}>
                     Suas Reclamções
                 </Text>
             </TouchableOpacity>
@@ -47,7 +44,16 @@ export default function Reportes({ navigation }) {
                     loaded ? (
                         complaints.map((complaint, index) => (
                             <View key={index} style={[styles.card, { backgroundColor: colorScheme.Screen.panelBackground }]}>
-                                <Text style={[styles.cardText, { color: colorScheme.Text.textSecondary, marginTop: 0 }]}> {formatDate(complaint.data, true)}</Text>
+                                <View style={{ display: "flex", justifyContent: 'space-between', flexDirection: 'row' }} >
+                                    <Text style={[styles.cardText, { color: colorScheme.Text.textSecondary, marginTop: 0 }]}> {formatDate(complaint.data, true)}</Text>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            navigation.navigate("Detalhes", { complaintId: complaint.id });
+                                        }}
+                                    >
+                                        <Text style={[styles.cardText, { color: colorScheme.Text.textSecondary, marginTop: 0 }]}> Detalhes {">"} </Text>
+                                    </TouchableOpacity>
+                                </View>
                                 <View style={[styles.cardBody, { backgroundColor: colorScheme.Screen.background }]}>
                                     <Text style={{ color: colorScheme.Text.textPrimary }} >
                                         {complaint.conteudo}
@@ -67,13 +73,11 @@ export default function Reportes({ navigation }) {
                                         </Text>
                                     )
                                 }
-
                             </View>
                         ))
                     ) : <ActivityIndicator size="large" color={colorScheme.Button.buttonPrimary} />
                 }
             </ScrollView>
-
         </View>
     );
 }

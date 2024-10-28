@@ -26,6 +26,11 @@ export const loginUser = async (email, password) => {
     return response.json();
 };
 
+export const getUserById = async (id) => {
+    const response = await fetch(`${URL}/usuarios/get/${id}`);
+    return response.json();
+};
+
 export const checkUserPassword = async (userId, password) => {
     const response = await fetch(`${URL}/usuarios/passwordCheck/${userId}`, {
         method: 'POST',
@@ -40,7 +45,7 @@ export const checkUserPassword = async (userId, password) => {
     if (!response.ok) {
         // Se a resposta não for bem-sucedida, você pode lançar um erro ou retornar uma mensagem adequada.
         const errorData = await response.json();
-        return {"error": errorData.error || 'Erro ao verificar a senha.'}
+        return { "error": errorData.error || 'Erro ao verificar a senha.' }
     }
 
     return response.json();
@@ -60,6 +65,16 @@ export const updateUser = async (userId, userData) => {
 export const deleteUser = async (userId) => {
     const response = await fetch(`${URL}/usuarios/delete/${userId}`, {
         method: 'DELETE',
+    });
+    return response.json();
+};
+
+export const verifyUserToken = async (userId) => {
+    const response = await fetch(`${URL}/usuarios/verifyToken/${userId}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
     });
     return response.json();
 };

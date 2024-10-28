@@ -9,6 +9,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import CriarReport from '../pages/Reclamações/CriarReport';
 import Reportes from '../pages/Reclamações/Reports';
 import ReportesDoUsuario from '../pages/Reclamações/SeusReports';
+import DetalhesReclamacoes from '../pages/Reclamações/DetailsScreen';
 
 import CriaPeticao from '../pages/Petições/CriarPeticao'
 import Peticoes from '../pages/Petições/Peticoes'
@@ -99,6 +100,10 @@ export default function Navigation() {
         <Stack.Screen
           name="Suas Reclamações"
           component={ReportesDoUsuario}
+        />
+        <Stack.Screen
+          name="Detalhes"
+          component={DetalhesReclamacoes}
         />
 
         {/* Petições / Abaixo assinados */}

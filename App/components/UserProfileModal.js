@@ -35,8 +35,6 @@ export default function UserProfile({ setModalVisible, modalVisible }) {
                 if (User) {
                     let decodedUser = decodeUserToken(User);
                     setUser(decodedUser);
-
-                    delete decodedUser.senha;
                     setNewUserData(decodedUser);
                 } else {
                     console.log("Nenhum token encontrado.");

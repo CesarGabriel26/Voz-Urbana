@@ -43,15 +43,18 @@ const OpenStreetMapComponent = (
                 />
                 {
                     children ? children : markers.map((marker, index) => (
-                        <Marker
-                            key={index}
-                            coordinate={{
-                                latitude: parseFloat(marker.latitude),
-                                longitude: parseFloat(marker.longitude)
-                            }}
-                            title={marker.title ? marker.title : marker.text}
-                            description={marker.descricao ? marker.descricao : "Reclamação registrada"}
-                        />
+                        (marker.latitude) ? (
+                            <Marker
+                                key={index}
+                                coordinate={{
+                                    latitude: parseFloat(marker.latitude),
+                                    longitude: parseFloat(marker.longitude)
+                                }}
+                                title={marker.title ? marker.title : marker.text}
+                                description={marker.descricao ? marker.descricao : "Reclamação registrada"}
+                                {...marker.props}
+                            />
+                        ) : null
                     ))
                 }
             </MapView>

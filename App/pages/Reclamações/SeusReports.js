@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, ScrollView, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useTheme } from '../../utils/ThemeContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getReportsByUser } from '../../utils/Api';
@@ -14,6 +14,7 @@ export default function ReportesDoUsuario({ navigation }) {
 
     const { colorScheme } = useTheme();
     
+
     const loadList = async () => {
         setloaded(false)
 
@@ -32,19 +33,24 @@ export default function ReportesDoUsuario({ navigation }) {
     }, []);
 
     return (
-        <View style={[styles.container, { backgroundColor: colorScheme.Screen.background }]}>
-            <Text style={{ color: colorScheme.Text.title, fontWeight: '800', fontSize: 20, margin: 20 }}>
-                Suas Reclamações
-            </Text>
-
+        <View style={[styles.container, { backgroundColor: colorScheme.Screen.background, paddingTop: 35 }]}>
             <ScrollView style={{ flex: 1, width: '100%' }}>
                 {
                     loaded ? (
                         complaints.map((complaint, index) => (
                             <View key={index} style={[styles.card, { backgroundColor: colorScheme.Screen.panelBackground }]}>
-                                <Text style={[styles.cardText, { color: colorScheme.Text.textSecondary, marginTop: 0 }]}> {formatDate(complaint.data, true)}</Text>
+                                <View style={{ display: "flex", justifyContent: 'space-between', flexDirection: 'row' }} >
+                                    <Text style={[styles.cardText, { color: colorScheme.Text.textSecondary, marginTop: 0 }]}> {formatDate(complaint.data, true)}</Text>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            navigation.navigate("Detalhes", { complaintId: complaint.id });
+                                        }}
+                                    >
+                                        <Text style={[styles.cardText, { color: colorScheme.Text.textSecondary, marginTop: 0 }]}> Detalhes {">"} </Text>
+                                    </TouchableOpacity>
+                                </View>
                                 <View style={[styles.cardBody, { backgroundColor: colorScheme.Screen.background }]}>
-                                    <Text style={{ color: colorScheme.Text.textPrimary}} >
+                                    <Text style={{ color: colorScheme.Text.textPrimary }} >
                                         {complaint.conteudo}
                                     </Text>
                                 </View>

@@ -14,10 +14,12 @@ import AdressInput from '../../components/AdressModela';
 
 export default function CriarReport() {
     const [location, setLocation] = useState(null);
+    const [Markerlocation, setMarkerlocation] = useState(null);
     const [img, setImg] = useState('');
     const { colorScheme } = useTheme();
     const [Titulo, setTitulo] = useState('');
     const [Descricao, setDescricao] = useState('');
+    const [adress, setAdress] = useState('')
 
     const [modalVisible, setModalVisible] = useState(false);
 
@@ -81,7 +83,8 @@ export default function CriarReport() {
             'conteudo': Descricao,
             'imagem': img["uri"],
             'data': new Date().toISOString(),
-            'aceito': false
+            'aceito': false,
+            'adress': adress
         };
 
         let resp = await createReport(report)
@@ -121,34 +124,32 @@ export default function CriarReport() {
 
                         <View style={{ flex: 1, borderRadius: 20, overflow: 'hidden', justifyContent: 'center', alignItems: 'center' }}>
                             {
-                                location ? (
-                                    <OpenStreetMapComponent
-                                        style={styles.map}
-                                        location={location}
-                                        anim={false}
-                                        markers={
-                                            [
-                                                {
-                                                    latitude: location.latitude,
-                                                    longitude: location.longitude,
-                                                    title: "Esse será o local",
-                                                    descricao: "Sua reclamação sera registrada aqui",
-                                                    props: {
-                                                        pinColor: colorScheme.Button.buttonSecondary
-                                                    }
+                                <OpenStreetMapComponent
+                                    style={styles.map}
+                                    location={location}
+                                    scrollEnabled={false}
+                                    zoomEnabled={false}
+                                    anim={false}
+                                    markers={
+                                        [
+                                            {
+                                                latitude: Markerlocation ? Markerlocation.latitude : null,
+                                                longitude: Markerlocation ? Markerlocation.longitude : null,
+                                                title: "Esse será o local",
+                                                descricao: "Sua reclamação sera registrada aqui",
+                                                props: {
+                                                    pinColor: colorScheme.Button.buttonSecondary
                                                 }
-                                            ]
-                                        }
-                                    />
-                                ) : (
-                                    <ActivityIndicator size="large" color={colorScheme.Button.buttonSecondary} />
-                                )
+                                            }
+                                        ]
+                                    }
+                                />
                             }
                         </View>
 
                         <TouchableOpacity
                             style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}
-                            onPress={() => {setModalVisible(true)}}
+                            onPress={() => { setModalVisible(true) }}
                         >
                             <Text style={[styles.cardText, { color: colorScheme.Text.textSecondary, fontSize: 12, marginTop: 10, textAlign: 'right' }]}>
                                 informar endereço
@@ -210,7 +211,7 @@ export default function CriarReport() {
                 </View>
             </ScrollView>
 
-            <AdressInput modalVisible={modalVisible} setModalVisible={setModalVisible} />
+            <AdressInput modalVisible={modalVisible} setModalVisible={setModalVisible} setAdress={setAdress} setLocation={setMarkerlocation} />
 
         </View>
     );
