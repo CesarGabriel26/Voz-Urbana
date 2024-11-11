@@ -10,7 +10,7 @@ import decodeUserToken from '../../utils/JWT';
 import OpenStreetMapComponent from '../../components/Maps';
 
 import Feather from '@expo/vector-icons/Feather';
-import AdressInput from '../../components/AdressModela';
+import AdressInput from '../../components/AdressModel';
 
 export default function CriarReport() {
     const [location, setLocation] = useState(null);
@@ -83,8 +83,8 @@ export default function CriarReport() {
             'conteudo': Descricao,
             'imagem': img["uri"],
             'data': new Date().toISOString(),
-            'aceito': false,
-            'adress': adress
+            'adress': `${adress.number} ${adress.street}, ${adress.city}, ${adress.state}, ${adress.zipCode}, ${adress.Country}`,
+            'prioridade': 5,
         };
 
         let resp = await createReport(report)

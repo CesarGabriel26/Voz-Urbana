@@ -16,7 +16,8 @@ export default function CriaPeticao({ navigation }) {
 
     const [cause, setCause] = useState('');
     const [description, setDescription] = useState('');
-    const [goal, setGoal] = useState(1000); // Default to 1000 signatures
+    const [goal, setGoal] = useState(1000); 
+    const [local, setLocal] = useState(''); // Default to 1000 signatures
 
     const [region, setRegion] = useState({
         latitude: -23.5505,
