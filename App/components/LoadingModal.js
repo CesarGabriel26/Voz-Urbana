@@ -11,9 +11,9 @@ const LoadingModal = ({ visible }) => {
             animationType="slide"
             visible={visible}
         >
-            <View style={[styles.container, {backgroundColor: colorScheme.Screen.backgroundInverse}]}>
+            <View style={[styles.container, {backgroundColor: colorScheme.background.inverse}]}>
                 <View style={styles.modalContent}>
-                    <ActivityIndicator size="large" color={colorScheme.Icons.loader}/>
+                    <ActivityIndicator size="large" color={colorScheme.icon.loader}/>
                 </View>
             </View>
         </Modal>

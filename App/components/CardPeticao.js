@@ -8,27 +8,27 @@ export default function CardPeticao({ complaint, AlertaDeConfirmacao, ExibirPeti
     const { colorScheme } = useTheme();
 
     return (
-        <View style={[styles.card, { backgroundColor: colorScheme.Screen.panelBackground }]}>
+        <View style={[styles.card, { backgroundColor: colorScheme.background.panel }]}>
             <View style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', marginBottom: 10 }} >
                 <Image source={require('../assets/merp.gif')} style={{ width: 50, height: 50, borderRadius: 200 }} resizeMode="contain" />
-                <Text style={[styles.cardText, { color: colorScheme.Text.textSecondary, marginTop: 0 }]}>
+                <Text style={[styles.cardText, { color: colorScheme.text.secondary, marginTop: 0 }]}>
                     {formatDate(complaint.data)}
                 </Text>
             </View>
-            <View style={[styles.cardBody, { backgroundColor: colorScheme.Screen.background }]}>
+            <View style={[styles.cardBody, { backgroundColor: colorScheme.background.default }]}>
                 <Text numberOfLines={1} style={{ height: 25 }}>
                     {complaint.causa}
                 </Text>
-                <View style={{ height: 2, width: '100%', backgroundColor: colorScheme.Screen.panelBackground, marginVertical: 5 }}></View>
+                <View style={{ height: 2, width: '100%', backgroundColor: colorScheme.background.panel, marginVertical: 5 }}></View>
                 <Text numberOfLines={5} style={{ maxHeight: 150, minHeight: 50 }} >
                     {complaint.content}
                 </Text>
-                <View style={{ height: 2, width: '100%', backgroundColor: colorScheme.Screen.panelBackground, marginVertical: 10 }}></View>
+                <View style={{ height: 2, width: '100%', backgroundColor: colorScheme.background.panel, marginVertical: 10 }}></View>
                 <View style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', marginTop: 10, marginBottom: 10 }} >
                     <Text >
                         {complaint.signatures}
                     </Text>
-                    <Progress.Bar progress={complaint.signatures / complaint.required_signatures} width={200} height={15} borderRadius={20} color={colorScheme.Screen.panelBackground} animationType='decay' />
+                    <Progress.Bar progress={complaint.signatures / complaint.required_signatures} width={200} height={15} borderRadius={20} color={colorScheme.background.panel} animationType='decay' />
                     <Text >
                         {complaint.required_signatures}
                     </Text>
@@ -39,12 +39,12 @@ export default function CardPeticao({ complaint, AlertaDeConfirmacao, ExibirPeti
                             style={
                                 [
                                     { marginBottom: 5, padding: 10, borderRadius: 5, },
-                                    { backgroundColor: colorScheme.Screen.panelBackground }
+                                    { backgroundColor: colorScheme.background.panel }
                                 ]
                             }
                             onPress={AlertaDeConfirmacao}
                         >
-                            <Text style={{ textAlign: 'center', color: colorScheme.Text.textSecondary }} >Assinar petição</Text>
+                            <Text style={{ textAlign: 'center', color: colorScheme.text.secondary }} >Assinar petição</Text>
                         </TouchableOpacity>
                     ) : null
                 }
@@ -54,7 +54,7 @@ export default function CardPeticao({ complaint, AlertaDeConfirmacao, ExibirPeti
                             style={
                                 [
                                     { marginBottom: 5, padding: 10, borderRadius: 5, },
-                                    { backgroundColor: colorScheme.Screen.panelBackground }
+                                    { backgroundColor: colorScheme.background.panel }
                                 ]
                             }
                             onPress={() => {
@@ -64,7 +64,7 @@ export default function CardPeticao({ complaint, AlertaDeConfirmacao, ExibirPeti
                                 )
                             }}
                         >
-                            <Text style={{ textAlign: 'center', color: colorScheme.Text.textSecondary }} >Exibir</Text>
+                            <Text style={{ textAlign: 'center', color: colorScheme.text.secondary }} >Exibir</Text>
                         </TouchableOpacity>
                     ) : null
                 }

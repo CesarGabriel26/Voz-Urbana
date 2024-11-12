@@ -33,37 +33,37 @@ export default function ReportesDoUsuario({ navigation }) {
     }, []);
 
     return (
-        <View style={[styles.container, { backgroundColor: colorScheme.Screen.background, paddingTop: 35 }]}>
+        <View style={[styles.container, { backgroundColor: colorScheme.background.default, paddingTop: 35 }]}>
             <ScrollView style={{ flex: 1, width: '100%' }}>
                 {
                     loaded ? (
                         complaints.map((complaint, index) => (
-                            <View key={index} style={[styles.card, { backgroundColor: colorScheme.Screen.panelBackground }]}>
+                            <View key={index} style={[styles.card, { backgroundColor: colorScheme.background.panel }]}>
                                 <View style={{ display: "flex", justifyContent: 'space-between', flexDirection: 'row' }} >
-                                    <Text style={[styles.cardText, { color: colorScheme.Text.textSecondary, marginTop: 0 }]}> {formatDate(complaint.data, true)}</Text>
+                                    <Text style={[styles.cardText, { color: colorScheme.text.secondary, marginTop: 0 }]}> {formatDate(complaint.data, true)}</Text>
                                     <TouchableOpacity
                                         onPress={() => {
                                             navigation.navigate("Detalhes", { complaintId: complaint.id });
                                         }}
                                     >
-                                        <Text style={[styles.cardText, { color: colorScheme.Text.textSecondary, marginTop: 0 }]}> Detalhes {">"} </Text>
+                                        <Text style={[styles.cardText, { color: colorScheme.text.secondary, marginTop: 0 }]}> Detalhes {">"} </Text>
                                     </TouchableOpacity>
                                 </View>
-                                <View style={[styles.cardBody, { backgroundColor: colorScheme.Screen.background }]}>
-                                    <Text style={{ color: colorScheme.Text.textPrimary }} >
+                                <View style={[styles.cardBody, { backgroundColor: colorScheme.background.default }]}>
+                                    <Text style={{ color: colorScheme.text.dark }} >
                                         {complaint.conteudo}
                                     </Text>
                                 </View>
                                 {
                                     complaint.aceito ? (
                                         <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }} >
-                                            <Text style={[styles.cardText, { color: colorScheme.Text.textSecondary }]} >
+                                            <Text style={[styles.cardText, { color: colorScheme.text.secondary }]} >
                                                 Sua requisição foi respondida!
                                             </Text>
                                             <IonicIcons name="checkmark-done-circle-outline" size={30} color={colorScheme.Icons.check} />
                                         </View>
                                     ) : (
-                                        <Text style={[styles.cardText, { color: colorScheme.Text.textSecondary }]} >
+                                        <Text style={[styles.cardText, { color: colorScheme.text.secondary }]} >
                                             Sua requisição ainda não foi respondida!
                                         </Text>
                                     )
@@ -71,7 +71,7 @@ export default function ReportesDoUsuario({ navigation }) {
 
                             </View>
                         ))
-                    ) : <ActivityIndicator size="large" color={colorScheme.Button.buttonPrimary} />
+                    ) : <ActivityIndicator size="large" color={colorScheme.button.primary} />
                 }
             </ScrollView>
 

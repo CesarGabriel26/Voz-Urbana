@@ -59,7 +59,7 @@ export default function Login({ navigation, route }) {
     };
 
     return (
-        <View style={[styles.container, { backgroundColor: colorScheme.Screen.background }]}>
+        <View style={[styles.container, { backgroundColor: colorScheme.background.default }]}>
             <ScrollView>
                 <View style={{ gap: 25 }}>
                     <View style={{ display: 'flex', alignItems: 'center' }}>
@@ -79,8 +79,8 @@ export default function Login({ navigation, route }) {
                             <TextInput
                                 placeholder='Exemplo@exemplo.com'
                                 onChangeText={setEmail}
-                                style={[styles.input, { borderColor: colorScheme.Button.buttonPrimary, color: colorScheme.Text.textPrimary }]}
-                                placeholderTextColor={colorScheme.Text.textPlaceHolder}
+                                style={[styles.input, { borderColor: colorScheme.button.primary, color: colorScheme.text.dark }]}
+                                placeholderTextColor={colorScheme.text.placeholder}
                                 value={Email}
                             />
                         </View>
@@ -88,10 +88,10 @@ export default function Login({ navigation, route }) {
                         <View>
                             <Text>Senha</Text>
                             <TextInput
-                                style={[styles.input, { borderColor: colorScheme.Button.buttonPrimary, color: colorScheme.Text.textPrimary }]}
+                                style={[styles.input, { borderColor: colorScheme.button.primary, color: colorScheme.text.dark }]}
                                 placeholder='Exemplo123'
                                 onChangeText={setSenha}
-                                placeholderTextColor={colorScheme.Text.textPlaceHolder}
+                                placeholderTextColor={colorScheme.text.placeholder}
                                 value={Senha}
                                 secureTextEntry
                             />
@@ -99,13 +99,13 @@ export default function Login({ navigation, route }) {
                     </View>
 
                     <View style={{ gap: 15 }}>
-                        <TouchableOpacity style={[styles.btnL, { borderColor: colorScheme.Button.buttonPrimary }]}>
-                            <Text style={{ color: colorScheme.Text.textPrimary }}>Login com Google</Text>
-                            <Ionicons name='logo-google' size={25} color={colorScheme.Text.textPrimary} />
+                        <TouchableOpacity style={[styles.btnL, { borderColor: colorScheme.button.primary }]}>
+                            <Text style={{ color: colorScheme.text.dark }}>Login com Google</Text>
+                            <Ionicons name='logo-google' size={25} color={colorScheme.text.dark} />
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.btnL, { borderColor: colorScheme.Button.buttonPrimary }]}>
-                            <Text style={{ color: colorScheme.Text.textPrimary }}>Login com Facebook</Text>
-                            <Ionicons name='logo-facebook' size={25} color={colorScheme.Text.textPrimary} />
+                        <TouchableOpacity style={[styles.btnL, { borderColor: colorScheme.button.primary }]}>
+                            <Text style={{ color: colorScheme.text.dark }}>Login com Facebook</Text>
+                            <Ionicons name='logo-facebook' size={25} color={colorScheme.text.dark} />
                         </TouchableOpacity>
                     </View>
 
@@ -113,7 +113,7 @@ export default function Login({ navigation, route }) {
                         <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
                             {
                                 Loading ? (
-                                    <ActivityIndicator size="large" color={colorScheme.Button.buttonPrimary} />
+                                    <ActivityIndicator size="large" color={colorScheme.button.primary} />
                                 ) : (
                                     <Text style={{ color: 'red' }}>{Erro}</Text>
                                 )
@@ -121,17 +121,17 @@ export default function Login({ navigation, route }) {
                         </View>
 
                         <TouchableOpacity
-                            style={[styles.btnL, styles.btnE, { backgroundColor: colorScheme.Button.buttonPrimary }]}
+                            style={[styles.btnL, styles.btnE, { backgroundColor: colorScheme.button.primary }]}
                             onPress={Confirmar}>
-                            <Text style={{ color: colorScheme.Text.textSecondary }}>ENTRAR</Text>
+                            <Text style={{ color: colorScheme.text.secondary }}>ENTRAR</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
-                            style={[styles.btnL, styles.btnE, { backgroundColor: colorScheme.Button.buttonPrimary }]}
+                            style={[styles.btnL, styles.btnE, { backgroundColor: colorScheme.button.primary }]}
                             onPress={() => {
                                 navigation.navigate('Cadastro');
                             }}>
-                            <Text style={{ color: colorScheme.Text.textSecondary }}>CADASTRO</Text>
+                            <Text style={{ color: colorScheme.text.secondary }}>CADASTRO</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

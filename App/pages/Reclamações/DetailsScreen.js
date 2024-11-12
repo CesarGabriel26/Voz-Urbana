@@ -53,23 +53,23 @@ export default function DetalhesReclamacoes({ navigation, route }) {
     }, []);
 
     return (
-        <View style={[styles.container, { backgroundColor: colorScheme.Screen.background, paddingTop: 35 }]}>
+        <View style={[styles.container, { backgroundColor: colorScheme.background.default, paddingTop: 35 }]}>
             {loaded ? (
                 <ScrollView style={{ flex: 1, width: '100%', display: 'flex'}}>
                     <View style={{ backgroundColor: colorScheme.Card.cardBackground, padding: 15, borderRadius: 20}} >
                         <View style={styles.header}>
                             <Image source={{ uri: user.pfp }} style={styles.profilePic} />
                             <View style={styles.headerInfo}>
-                                <Text style={[styles.dateText, { color: colorScheme.Text.textSecondary }]}>
+                                <Text style={[styles.dateText, { color: colorScheme.text.secondary }]}>
                                     {formatDate(complaint.data, true)}
                                 </Text>
-                                <Text style={[styles.userName, { color: colorScheme.Text.textSecondary }]}>por {user.nome}</Text>
+                                <Text style={[styles.userName, { color: colorScheme.text.secondary }]}>por {user.nome}</Text>
                             </View>
                         </View>
 
                         <View style={[styles.card, { backgroundColor: colorScheme.Card.cardLight }]}>
-                            <Text style={[styles.title, { color: colorScheme.Text.textPrimary }]}>{complaint.titulo}</Text>
-                            <Text style={[styles.description, { color: colorScheme.Text.textPrimary }]}>{complaint.conteudo}</Text>
+                            <Text style={[styles.title, { color: colorScheme.text.dark }]}>{complaint.titulo}</Text>
+                            <Text style={[styles.description, { color: colorScheme.text.dark }]}>{complaint.conteudo}</Text>
                         </View>
 
                         <TouchableOpacity style={{ borderWidth: 2, borderColor: colorScheme.Card.cardLight, borderRadius: 10, overflow: 'hidden'}} >
@@ -80,13 +80,13 @@ export default function DetalhesReclamacoes({ navigation, route }) {
                         <View style={styles.statusContainer}>
                             {complaint.aceito ? (
                                 <View style={styles.statusApproved}>
-                                    <Text style={[styles.statusText, { color: colorScheme.Text.textSecondary }]}>
+                                    <Text style={[styles.statusText, { color: colorScheme.text.secondary }]}>
                                         Sua requisição foi respondida!
                                     </Text>
                                     <IonicIcons name="checkmark-done-circle-outline" size={30} color={colorScheme.Icons.check} />
                                 </View>
                             ) : (
-                                <Text style={[styles.statusText, { color: colorScheme.Text.textSecondary }]}>
+                                <Text style={[styles.statusText, { color: colorScheme.text.secondary }]}>
                                     Sua requisição ainda não foi respondida!
                                 </Text>
                             )}
@@ -94,7 +94,7 @@ export default function DetalhesReclamacoes({ navigation, route }) {
                     </View>
                 </ScrollView>
             ) : (
-                <ActivityIndicator size="large" color={colorScheme.Button.buttonPrimary} />
+                <ActivityIndicator size="large" color={colorScheme.button.primary} />
             )}
         </View>
     );

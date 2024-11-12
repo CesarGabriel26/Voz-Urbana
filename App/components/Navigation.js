@@ -44,9 +44,9 @@ export default function Navigation() {
 
       <Stack.Navigator
         screenOptions={({ navigation }) => ({
-          headerTintColor: colorScheme.Text.textSecondary,
+          headerTintColor: colorScheme.text.secondary,
           headerStyle: {
-            backgroundColor: colorScheme.Screen.panelBackground,
+            backgroundColor: colorScheme.background.panel,
             height: 80,
           },
           headerTitleAlign: 'center',

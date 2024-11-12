@@ -101,15 +101,15 @@ export default function CriarReport() {
     }, [colorScheme]);
 
     return (
-        <View style={[styles.container, { backgroundColor: colorScheme.Screen.background }]}>
+        <View style={[styles.container, { backgroundColor: colorScheme.background.default }]}>
             <ScrollView
                 horizontal={false}
                 showsVerticalScrollIndicator={false}
             >
                 <View style={{ marginTop: 20, }} >
-                    <View style={[styles.card, { backgroundColor: colorScheme.Screen.panelBackground }]}>
+                    <View style={[styles.card, { backgroundColor: colorScheme.background.panel }]}>
                         <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }} >
-                            <Text style={[styles.cardText, { color: colorScheme.Text.textSecondary }]}>
+                            <Text style={[styles.cardText, { color: colorScheme.text.secondary }]}>
                                 Informe o local do seu problema
                             </Text>
                             <TouchableOpacity onPress={() => {
@@ -118,7 +118,7 @@ export default function CriarReport() {
                                     "Selecione no mapa o local do problema, ou informe o endereço em 'informar endereço' ",
                                 )
                             }} >
-                                <Feather name='info' size={17} color={colorScheme.Text.textSecondary} />
+                                <Feather name='info' size={17} color={colorScheme.text.secondary} />
                             </TouchableOpacity>
                         </View>
 
@@ -138,7 +138,7 @@ export default function CriarReport() {
                                                 title: "Esse será o local",
                                                 descricao: "Sua reclamação sera registrada aqui",
                                                 props: {
-                                                    pinColor: colorScheme.Button.buttonSecondary
+                                                    pinColor: colorScheme.button.primary
                                                 }
                                             }
                                         ]
@@ -151,15 +151,15 @@ export default function CriarReport() {
                             style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}
                             onPress={() => { setModalVisible(true) }}
                         >
-                            <Text style={[styles.cardText, { color: colorScheme.Text.textSecondary, fontSize: 12, marginTop: 10, textAlign: 'right' }]}>
+                            <Text style={[styles.cardText, { color: colorScheme.text.secondary, fontSize: 12, marginTop: 10, textAlign: 'right' }]}>
                                 informar endereço
                             </Text>
-                            <Feather name='chevron-right' size={12} color={colorScheme.Text.textSecondary} />
+                            <Feather name='chevron-right' size={12} color={colorScheme.text.secondary} />
                         </TouchableOpacity>
                     </View>
 
-                    <View style={[styles.card, { backgroundColor: colorScheme.Screen.panelBackground }]}>
-                        <Text style={[styles.cardText, { color: colorScheme.Text.textSecondary }]}>
+                    <View style={[styles.card, { backgroundColor: colorScheme.background.panel }]}>
+                        <Text style={[styles.cardText, { color: colorScheme.text.secondary }]}>
                             Adicione uma imagem do problema
                         </Text>
 
@@ -175,11 +175,11 @@ export default function CriarReport() {
                     <TextInput style={
                         [
                             styles.input,
-                            { borderColor: colorScheme.Button.buttonPrimary, color: colorScheme.Text.textPrimary }
+                            { borderColor: colorScheme.button.primary, color: colorScheme.text.dark }
                         ]
                     }
                         placeholder='Título'
-                        placeholderTextColor={colorScheme.Text.textPlaceHolder}
+                        placeholderTextColor={colorScheme.text.placeholder}
                         value={Titulo}
                         onChangeText={setTitulo}
                     />
@@ -187,25 +187,25 @@ export default function CriarReport() {
                         style={[
                             styles.input,
                             {
-                                borderColor: colorScheme.Button.buttonPrimary,
-                                color: colorScheme.Text.textPrimary,
+                                borderColor: colorScheme.button.primary,
+                                color: colorScheme.text.dark,
                                 minHeight: 150,
                                 textAlignVertical: 'top',
                                 padding: 10
                             }
                         ]}
                         placeholder='Descrição do problema'
-                        placeholderTextColor={colorScheme.Text.textPlaceHolder}
+                        placeholderTextColor={colorScheme.text.placeholder}
                         multiline={true}
                         value={Descricao}
                         onChangeText={setDescricao}
                     />
                     <View style={{ alignItems: 'center', width: '100%' }}>
                         <TouchableOpacity
-                            style={[styles.btnL, { backgroundColor: colorScheme.Button.buttonPrimary, width: '100%', marginBottom: 50 }]}
+                            style={[styles.btnL, { backgroundColor: colorScheme.button.primary, width: '100%', marginBottom: 50 }]}
                             onPress={enviar}
                         >
-                            <Text style={{ width: '100%', textAlign: 'center', color: colorScheme.Text.textSecondary }} >Enviar reclamação</Text>
+                            <Text style={{ width: '100%', textAlign: 'center', color: colorScheme.text.secondary }} >Enviar reclamação</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

@@ -41,7 +41,7 @@ export default function PeticoesDoUsuario({ navigation }) {
     }, [])
 
     return (
-        <View style={[styles.container, { backgroundColor: colorScheme.Screen.background }]}>
+        <View style={[styles.container, { backgroundColor: colorScheme.background.default }]}>
             <ScrollView style={{ flex: 1, width: '100%' }}>
                 {complaints.map((complaint, index) => (
                     <CardPeticao key={index} complaint={complaint} ExibirPeticao navigation={navigation}/>

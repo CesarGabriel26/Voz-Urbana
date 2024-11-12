@@ -10,6 +10,7 @@ import Dialog from 'react-native-dialog';
 
 import decodeUserToken from '../utils/JWT';
 import { checkUserPassword, deleteImage, updateUser, uploadImage } from '../utils/Api';
+import { DEFAULT_USER_PROFILE } from '../utils/consts';
 
 export default function UserProfile({ setModalVisible, modalVisible }) {
     const { colorScheme } = useTheme();
@@ -92,12 +93,11 @@ export default function UserProfile({ setModalVisible, modalVisible }) {
                 setLoading(true);
                 if (newField === "pfp") {
                     if (newFieldValue !== User.pfp) {
-                        if (User.pfp != 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLMI5YxZE03Vnj-s-sth2_JxlPd30Zy7yEGg&s') {
+                        if (User.pfp != DEFAULT_USER_PROFILE) {
                             let resp = await deleteImage(User.pfp);
-                            // Verifique se a resposta foi bem-sucedida, não se há erro
                             if (!resp.success) {
                                 console.log("Erro ao deletar imagem antiga");
-                                return;  // Aqui você pode decidir como lidar com o erro
+                                return; 
                             }
                         }
 
@@ -109,7 +109,7 @@ export default function UserProfile({ setModalVisible, modalVisible }) {
 
                         let url = resp.content["url"];
                         setNewUserData((prevUser) => ({ ...prevUser, pfp: url }));
-                        setShouldUpdate(true); // Indica que deve atualizar os dados
+                        setShouldUpdate(true);
                     }
                 } else if (newField === "nome") {
                     setNewUserData((prevUser) => ({ ...prevUser, nome: newFieldValue }));
@@ -196,16 +196,16 @@ export default function UserProfile({ setModalVisible, modalVisible }) {
                 setModalVisible(!modalVisible);
             }}
         >
-            <View style={[styles.modalView, { backgroundColor: colorScheme.Screen.background }]}>
-                <View style={[styles.header, { backgroundColor: colorScheme.Screen.background, justifyContent: 'center' }]}>
+            <View style={[styles.modalView, { backgroundColor: colorScheme.background.default }]}>
+                <View style={[styles.header, { backgroundColor: colorScheme.background.default, justifyContent: 'center' }]}>
                     <TouchableOpacity
                         style={[styles.button, styles.buttonClose]}
                         onPress={() => setModalVisible(!modalVisible)}>
-                        <Text style={styles.textStyle}><Icon name='arrow-back' size={25} color={colorScheme.Text.textPrimary} /></Text>
+                        <Text style={styles.textStyle}><Icon name='arrow-back' size={25} color={colorScheme.text.dark} /></Text>
                     </TouchableOpacity>
                 </View>
 
-                <View style={[styles.body, { backgroundColor: colorScheme.Screen.background }]}>
+                <View style={[styles.body, { backgroundColor: colorScheme.background.default }]}>
                     <TouchableOpacity
                         onPress={() => {
                             edit('pfp')
@@ -215,7 +215,7 @@ export default function UserProfile({ setModalVisible, modalVisible }) {
                             width: 140,
                             borderRadius: 100,
                             borderWidth: 2,
-                            borderColor: colorScheme.Screen.panelBackground,
+                            borderColor: colorScheme.background.panel,
                             overflow: 'hidden'
                         }}
                     >
@@ -224,7 +224,7 @@ export default function UserProfile({ setModalVisible, modalVisible }) {
 
                     <View style={{ gap: 20, width: '100%' }} >
                         <TouchableOpacity
-                            style={[styles.input, styles.editavel, { borderColor: colorScheme.Screen.panelBackground }]}
+                            style={[styles.input, styles.editavel, { borderColor: colorScheme.background.panel }]}
                             onPress={() => {
                                 edit('nome')
                             }}
@@ -233,7 +233,7 @@ export default function UserProfile({ setModalVisible, modalVisible }) {
                             <Feather name='edit-2' size={20} />
                         </TouchableOpacity>
                         <TouchableOpacity
-                            style={[styles.input, styles.editavel, { borderColor: colorScheme.Screen.panelBackground }]}
+                            style={[styles.input, styles.editavel, { borderColor: colorScheme.background.panel }]}
                             onPress={() => {
                                 edit('email')
                             }}
@@ -269,11 +269,11 @@ export default function UserProfile({ setModalVisible, modalVisible }) {
 
                         <Switch
                             trackColor={{ false: 'gray', true: 'gray' }}
-                            thumbColor={colorScheme.Switch.thumbColor[isEnabled]}
+                            thumbColor={colorScheme.switch.thumbColor[isEnabled]}
                             ios_backgroundColor={colorScheme.Switch.ios_backgroundColor}
                             onValueChange={toggleSwitch}
                             value={isEnabled}
-                            style={isEnabled ? { borderWidth: 2, borderColor: colorScheme.Screen.panelBackground, } : { borderWidth: 2, borderColor: 'lightgray' }}
+                            style={isEnabled ? { borderWidth: 2, borderColor: colorScheme.background.panel, } : { borderWidth: 2, borderColor: 'lightgray' }}
 
                         />
                     </View>
@@ -314,7 +314,7 @@ export default function UserProfile({ setModalVisible, modalVisible }) {
                             )}
                             <Dialog.Description style={{ color: 'red' }}>
                                 {loading ? (
-                                    <ActivityIndicator size="large" color={colorScheme.Button.buttonPrimary} />
+                                    <ActivityIndicator size="large" color={colorScheme.button.primary} />
                                 ) : erro}
                             </Dialog.Description>
                         </>
@@ -324,7 +324,7 @@ export default function UserProfile({ setModalVisible, modalVisible }) {
                             <Dialog.Description>Digite sua senha atual</Dialog.Description>
                             <Dialog.Description style={{ color: 'red' }}>
                                 {loading ? (
-                                    <ActivityIndicator size="large" color={colorScheme.Button.buttonPrimary} />
+                                    <ActivityIndicator size="large" color={colorScheme.button.primary} />
                                 ) : erro}
                             </Dialog.Description>
                             <Dialog.Input

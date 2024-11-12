@@ -63,24 +63,24 @@ export default function AddressInput({ setModalVisible, modalVisible, setAdress,
             onRequestClose={() => setModalVisible(!modalVisible)}
         >
             <View style={styles.modalOverlay}>
-                <View style={[styles.modalView, { backgroundColor: colorScheme.Screen.background }]}>
+                <View style={[styles.modalView, { backgroundColor: colorScheme.background.default }]}>
                     <View style={[styles.header]}>
                         <View style={{
                             flexDirection: 'row',
                             alignItems: 'center',
                         }}>
                             <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
-                                <Icon name='arrow-back' size={25} color={colorScheme.Text.textPrimary} />
+                                <Icon name='arrow-back' size={25} color={colorScheme.text.dark} />
                             </TouchableOpacity>
-                            <Text style={[styles.title, { color: colorScheme.Text.textPrimary }]}>Endereço</Text>
+                            <Text style={[styles.title, { color: colorScheme.text.dark }]}>Endereço</Text>
                         </View>
                         <View style={{
                             flexDirection: 'row',
                             alignItems: 'center',
                         }}>
-                            <Text style={[{ color: colorScheme.Text.textPlaceHolder }]}>todos os campos com</Text>
+                            <Text style={[{ color: colorScheme.text.placeholder }]}>todos os campos com</Text>
                             <Text style={[{ color: "orange" }]}> * </Text>
-                            <Text style={[{ color: colorScheme.Text.textPlaceHolder }]}>são obrigatorios</Text>
+                            <Text style={[{ color: colorScheme.text.placeholder }]}>são obrigatorios</Text>
                         </View>
                     </View>
 
@@ -89,44 +89,44 @@ export default function AddressInput({ setModalVisible, modalVisible, setAdress,
                             <View style={{
                                 flexDirection: 'row',
                             }}>
-                                <Text style={[styles.label, { color: colorScheme.Text.textPrimary }]}>Rua</Text>
+                                <Text style={[styles.label, { color: colorScheme.text.dark }]}>Rua</Text>
                                 <Text style={[{ color: "orange" }]}> * </Text>
                             </View>
                             <TextInput
-                                style={[styles.input, { borderBottomColor: colorScheme.Screen.panelBackground, color: colorScheme.Text.textPrimary }]}
+                                style={[styles.input, { borderBottomColor: colorScheme.background.panel, color: colorScheme.text.dark }]}
                                 value={street}
                                 onChangeText={setStreet}
                                 placeholder="Rua Exemplo"
-                                placeholderTextColor={colorScheme.Text.textPlaceHolder}
+                                placeholderTextColor={colorScheme.text.placeholder}
                             />
                         </View>
                         <View style={styles.inputContainer}>
-                            <Text style={[styles.label, { color: colorScheme.Text.textPrimary }]}>Número</Text>
+                            <Text style={[styles.label, { color: colorScheme.text.dark }]}>Número</Text>
                             <TextInput
-                                style={[styles.input, { borderBottomColor: colorScheme.Screen.panelBackground, color: colorScheme.Text.textPrimary }]}
+                                style={[styles.input, { borderBottomColor: colorScheme.background.panel, color: colorScheme.text.dark }]}
                                 value={number}
                                 onChangeText={setNumber}
                                 placeholder="123"
                                 keyboardType="numeric"
-                                placeholderTextColor={colorScheme.Text.textPlaceHolder}
+                                placeholderTextColor={colorScheme.text.placeholder}
                             />
                         </View>
                         <View style={styles.inputContainer}>
-                            <Text style={[styles.label, { color: colorScheme.Text.textPrimary }]}>CEP</Text>
+                            <Text style={[styles.label, { color: colorScheme.text.dark }]}>CEP</Text>
                             <TextInput
-                                style={[styles.input, { borderBottomColor: colorScheme.Screen.panelBackground, color: colorScheme.Text.textPrimary }]}
+                                style={[styles.input, { borderBottomColor: colorScheme.background.panel, color: colorScheme.text.dark }]}
                                 value={zipCode}
                                 onChangeText={setZipCode}
                                 placeholder="00000-000"
                                 keyboardType="numeric"
-                                placeholderTextColor={colorScheme.Text.textPlaceHolder}
+                                placeholderTextColor={colorScheme.text.placeholder}
                             />
                         </View>
                         <View style={styles.inputContainer}>
                             <View style={{
                                 flexDirection: 'row',
                             }}>
-                                <Text style={[styles.label, { color: colorScheme.Text.textPrimary }]}>Estado</Text>
+                                <Text style={[styles.label, { color: colorScheme.text.dark }]}>Estado</Text>
                                 <Text style={[{ color: "orange" }]}> * </Text>
                             </View>
                             <Picker
@@ -135,7 +135,7 @@ export default function AddressInput({ setModalVisible, modalVisible, setAdress,
                                     setState(value);
                                     setCity("");  // Reseta a cidade ao mudar o estado
                                 }}
-                                style={[styles.picker, { color: colorScheme.Text.textPrimary }]}
+                                style={[styles.picker, { color: colorScheme.text.dark }]}
                             >
                                 {states.sort().map((state) => (
                                     <Picker.Item key={state.value} label={state.label} value={state.value} />
@@ -146,13 +146,13 @@ export default function AddressInput({ setModalVisible, modalVisible, setAdress,
                             <View style={{
                                 flexDirection: 'row',
                             }}>
-                                <Text style={[styles.label, { color: colorScheme.Text.textPrimary }]}>Cidade</Text>
+                                <Text style={[styles.label, { color: colorScheme.text.dark }]}>Cidade</Text>
                                 <Text style={[{ color: "orange" }]}> * </Text>
                             </View>
                             <Picker
                                 selectedValue={city}
                                 onValueChange={(value) => setCity(value)}
-                                style={[styles.picker, { color: colorScheme.Text.textPrimary }]}
+                                style={[styles.picker, { color: colorScheme.text.dark }]}
                             >
                                 <Picker.Item label="Selecione a cidade" value="" />
                                 {citiesByState[state]?.sort().map((city) => (
@@ -162,17 +162,17 @@ export default function AddressInput({ setModalVisible, modalVisible, setAdress,
                         </View>
 
                         <View style={styles.inputContainer}>
-                            <Text style={[styles.label, { color: colorScheme.Text.textPrimary }]}>Complemento</Text>
+                            <Text style={[styles.label, { color: colorScheme.text.dark }]}>Complemento</Text>
                             <TextInput
-                                style={[styles.input, { borderBottomColor: colorScheme.Screen.panelBackground, color: colorScheme.Text.textPrimary }]}
+                                style={[styles.input, { borderBottomColor: colorScheme.background.panel, color: colorScheme.text.dark }]}
                                 placeholder='Em frente a [...], proximo de [...]'
-                                placeholderTextColor={colorScheme.Text.textPlaceHolder}
+                                placeholderTextColor={colorScheme.text.placeholder}
                                 value={Complemento}
                                 onChangeText={setComplemento}
                             />
                         </View>
 
-                        {loading && <ActivityIndicator size="small" color={colorScheme.Screen.panelBackground} style={styles.loadingIndicator} />}
+                        {loading && <ActivityIndicator size="small" color={colorScheme.background.panel} style={styles.loadingIndicator} />}
                         {error ? <Text style={[styles.errorText, { color: colorScheme.Text.error }]}>{error}</Text> : null}
                     </ScrollView>
 

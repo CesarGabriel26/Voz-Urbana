@@ -67,39 +67,39 @@ export default function CriaPeticao({ navigation }) {
 
     return (
         <ScrollView>
-            <View style={[styles.container, { backgroundColor: colorScheme.Screen.background }]}>
-                <Text style={[styles.title, { color: colorScheme.Text.title }]}>Monte sua petição!</Text>
+            <View style={[styles.container, { backgroundColor: colorScheme.background.default }]}>
+                <Text style={[styles.title, { color: colorScheme.text.primary }]}>Monte sua petição!</Text>
 
-                <Text style={{ fontWeight: 800, color: colorScheme.Text.title }} >Causa:</Text>
+                <Text style={{ fontWeight: 800, color: colorScheme.text.primary }} >Causa:</Text>
                 <TextInput
-                    style={[styles.input, { borderColor: colorScheme.Button.buttonPrimary, color: colorScheme.Text.textPrimary }]}
-                    placeholderTextColor={colorScheme.Text.textPlaceHolder}
+                    style={[styles.input, { borderColor: colorScheme.button.primary, color: colorScheme.text.dark }]}
+                    placeholderTextColor={colorScheme.text.placeholder}
                     placeholder="Digite a causa"
                     value={cause}
                     onChangeText={setCause}
                 />
 
-                <Text style={{ fontWeight: 800, color: colorScheme.Text.title }}>Explique sua petição:</Text>
+                <Text style={{ fontWeight: 800, color: colorScheme.text.primary }}>Explique sua petição:</Text>
                 <TextInput
-                    style={[styles.input, { height: 100, borderColor: colorScheme.Button.buttonPrimary, color: colorScheme.Text.textPrimary }]}
-                    placeholderTextColor={colorScheme.Text.textPlaceHolder}
+                    style={[styles.input, { height: 100, borderColor: colorScheme.button.primary, color: colorScheme.text.dark }]}
+                    placeholderTextColor={colorScheme.text.placeholder}
                     multiline
                     placeholder="Descreva o problema ou motivo"
                     value={description}
                     onChangeText={setDescription}
                 />
 
-                <Text style={{ fontWeight: 800, color: colorScheme.Text.title }}>Meta (assinaturas):</Text>
+                <Text style={{ fontWeight: 800, color: colorScheme.text.primary }}>Meta (assinaturas):</Text>
                 <TextInput
-                    style={[styles.input, { borderColor: colorScheme.Button.buttonPrimary, color: colorScheme.Text.textPrimary }]}
-                    placeholderTextColor={colorScheme.Text.textPlaceHolder}
+                    style={[styles.input, { borderColor: colorScheme.button.primary, color: colorScheme.text.dark }]}
+                    placeholderTextColor={colorScheme.text.placeholder}
                     keyboardType="numeric"
                     placeholder="Ex: 1000"
                     value={String(goal)}
                     onChangeText={(value) => setGoal(Number(value))}
                 />
 
-                <Text style={{ fontWeight: 800, color: colorScheme.Text.title }}>Informe um local:</Text>
+                <Text style={{ fontWeight: 800, color: colorScheme.text.primary }}>Informe um local:</Text>
 
                 <CustomMap
                     initialRegion={region}
@@ -113,17 +113,17 @@ export default function CriaPeticao({ navigation }) {
                     ]}
                 />
 
-                {/* <Text style={{ color: colorScheme.Text.textPrimary, marginBottom: 15 }} >Coordenadas selecionadas: {`${marker.latitude.toFixed(2)} x ${marker.longitude.toFixed(2)}`}</Text> */}
+                {/* <Text style={{ color: colorScheme.text.dark, marginBottom: 15 }} >Coordenadas selecionadas: {`${marker.latitude.toFixed(2)} x ${marker.longitude.toFixed(2)}`}</Text> */}
 
                 <TouchableOpacity
-                    style={[styles.btn, { backgroundColor: colorScheme.Button.buttonPrimary }]}
+                    style={[styles.btn, { backgroundColor: colorScheme.button.primary }]}
                     onPress={handleSubmit}
                 >
-                    <Text style={{ color: colorScheme.Text.textSecondary }}>
+                    <Text style={{ color: colorScheme.text.secondary }}>
                         Enviar Petição
                     </Text>
                 </TouchableOpacity>
-                <Text style={[styles.footerText, { color: colorScheme.Text.textPrimary }]}>(As suas petições serão públicas!)</Text>
+                <Text style={[styles.footerText, { color: colorScheme.text.dark }]}>(As suas petições serão públicas!)</Text>
 
             </View>
 
@@ -144,12 +144,12 @@ export default function CriaPeticao({ navigation }) {
                     <Text style={{ marginLeft: 10 }}>Estou ciente de como esse processo funciona</Text>
                 </View>
                 <Dialog.Button
-                    color={colorScheme.Text.title}
+                    color={colorScheme.text.primary}
                     label="Cancel"
                     onPress={handleCancel}
                 />
                 <Dialog.Button
-                    color={!isAccepted ? colorScheme.Text.textPlaceHolder : colorScheme.Text.title}
+                    color={!isAccepted ? colorScheme.text.placeholder : colorScheme.text.primary}
                     disabled={!isAccepted}
                     label="Continuar"
                     onPress={() => {

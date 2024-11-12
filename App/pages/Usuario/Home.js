@@ -35,14 +35,14 @@ export default function Home({ navigation }) {
 
 
     return (
-        <View style={[styles.container, { backgroundColor: colorScheme.Screen.background }]}>
+        <View style={[styles.container, { backgroundColor: colorScheme.background.default }]}>
             <ScrollView >
                 <View style={styles.containerHome}>
                     <TouchableOpacity
                         onPress={() => {
                             navigation.navigate('Reportar')
                         }}
-                        style={[styles.btnSqr, { backgroundColor: colorScheme.Button.buttonPrimary }]}
+                        style={[styles.btnSqr, { backgroundColor: colorScheme.button.primary }]}
                     >
                         <Image source={require('../../assets/Exclama.png')} resizeMode='cover' />
                         <Text style={styles.text}>Nova</Text>
@@ -50,7 +50,7 @@ export default function Home({ navigation }) {
                     </TouchableOpacity>
 
 
-                    <TouchableOpacity style={[styles.btnSqr, { backgroundColor: colorScheme.Button.buttonPrimary }]}
+                    <TouchableOpacity style={[styles.btnSqr, { backgroundColor: colorScheme.button.primary }]}
                         onPress={() => {
                             navigation.navigate('Criar Petição')
                         }}>
@@ -59,7 +59,7 @@ export default function Home({ navigation }) {
                         <Text style={styles.text}>Petição</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={[styles.btnSqr, { backgroundColor: colorScheme.Button.buttonPrimary }]}
+                    <TouchableOpacity style={[styles.btnSqr, { backgroundColor: colorScheme.button.primary }]}
                         onPress={() => {
                             navigation.navigate('Reclamações')
                         }}>
@@ -72,7 +72,7 @@ export default function Home({ navigation }) {
                         onPress={() => {
                             navigation.navigate('Petições')
                         }}
-                        style={[styles.btnSqr, { backgroundColor: colorScheme.Button.buttonPrimary }]}
+                        style={[styles.btnSqr, { backgroundColor: colorScheme.button.primary }]}
                     >
                         <Image source={require('../../assets/Lapis.png')} resizeMode='cover' />
                         <Text style={styles.text}> </Text>
@@ -81,9 +81,9 @@ export default function Home({ navigation }) {
                 </View>
 
                 <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <View style={{ height: 2, width: '80%', backgroundColor: colorScheme.Screen.panelBackground, margin: 20 }}></View>
+                    <View style={{ height: 2, width: '80%', backgroundColor: colorScheme.background.panel, margin: 20 }}></View>
 
-                    <Text style={{ color: colorScheme.Text.title, fontWeight: '800', fontSize: 20, marginBottom: 20 }}>
+                    <Text style={{ color: colorScheme.text.primary, fontWeight: '800', fontSize: 20, marginBottom: 20 }}>
                         Reclamações na sua área
                     </Text>
 
@@ -102,7 +102,7 @@ export default function Home({ navigation }) {
                                     scrollEnabled={false}
                                     zoomEnabled={false}
                                 />
-                            ) : <View style={styles.container} ><ActivityIndicator size="large" color={colorScheme.Button.buttonPrimary} />
+                            ) : <View style={styles.container} ><ActivityIndicator size="large" color={colorScheme.button.primary} />
                             </View>
                         }
                     </Pressable>

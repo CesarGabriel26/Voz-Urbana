@@ -38,10 +38,10 @@ export default function Settings({ navigation }) {
     }
 
     return (
-        <View style={[styles.container, { backgroundColor: colorScheme.Screen.background }]}>
-            <View style={[styles.option, { borderColor: colorScheme.Screen.backgroundInverse, backgroundColor: colorScheme.Screen.background }]}>
+        <View style={[styles.container, { backgroundColor: colorScheme.background.default }]}>
+            <View style={[styles.option, { borderColor: colorScheme.background.inverse, backgroundColor: colorScheme.background.default }]}>
                 <View style={styles.Icon}>
-                    <Ionicons name="color-palette" size={40} color={colorScheme.Text.textPrimary} />
+                    <Ionicons name="color-palette" size={40} color={colorScheme.text.dark} />
                 </View>
 
                 <View style={styles.dropdownContainer}>
@@ -51,37 +51,37 @@ export default function Settings({ navigation }) {
                         valueField="value"
                         value={theme}
                         placeholder="Selecione um tema"
-                        placeholderStyle={{ color: colorScheme.Text.textPrimary }}
-                        selectedTextStyle={{ color: colorScheme.Text.textPrimary }}
+                        placeholderStyle={{ color: colorScheme.text.dark }}
+                        selectedTextStyle={{ color: colorScheme.text.dark }}
                         onChange={item => {
                             setTheme(item.value);
                             changeTheme(item.value);
                         }}
-                        style={[styles.dropdown, { backgroundColor: colorScheme.Screen.background }]}
+                        style={[styles.dropdown, { backgroundColor: colorScheme.background.default }]}
                     />
                 </View>
             </View>
 
-            <TouchableOpacity style={[styles.option, { borderColor: colorScheme.Screen.backgroundInverse, backgroundColor: colorScheme.Screen.background }]}
+            <TouchableOpacity style={[styles.option, { borderColor: colorScheme.background.inverse, backgroundColor: colorScheme.background.default }]}
                 onPress={() => { setModalVisible(true) }}
             >
                 <View style={styles.Icon}>
-                    <FontAwesome6 name="circle-user" size={40} color={colorScheme.Text.textPrimary} />
+                    <FontAwesome6 name="circle-user" size={40} color={colorScheme.text.dark} />
                 </View>
-                <Text style={{ color: colorScheme.Text.textPrimary }} >Informações do usuario</Text>
+                <Text style={{ color: colorScheme.text.dark }} >Informações do usuario</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.option, { borderColor: colorScheme.Screen.backgroundInverse, backgroundColor: colorScheme.Screen.background }]}
+            <TouchableOpacity style={[styles.option, { borderColor: colorScheme.background.inverse, backgroundColor: colorScheme.background.default }]}
                 onPress={logOut}
             >
                 <View style={styles.Icon}>
-                    <MaterialIcons name="logout" size={40} color={colorScheme.Text.textPrimary} />
+                    <MaterialIcons name="logout" size={40} color={colorScheme.text.dark} />
                 </View>
-                <Text style={{ color: colorScheme.Text.textPrimary }} >Sair</Text>
+                <Text style={{ color: colorScheme.text.dark }} >Sair</Text>
             </TouchableOpacity>
 
             {/* <View>
-                <Text style={{ color: colorScheme.Text.textPrimary }} >Ainda estamos trabalhando nisso</Text>
+                <Text style={{ color: colorScheme.text.dark }} >Ainda estamos trabalhando nisso</Text>
                 <Image source={require('../assets/merp.gif')} style={{ width: '100%', height: 200 }} resizeMode="contain" />
             </View> */}
 

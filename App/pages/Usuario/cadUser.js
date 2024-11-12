@@ -67,7 +67,7 @@ export default function CadUser({ navigation, setUser }) {
     }
 
     return (
-        <View style={[styles.container, { backgroundColor: colorScheme.Screen.background }]} >
+        <View style={[styles.container, { backgroundColor: colorScheme.background.default }]} >
             <ScrollView>
 
                 <View style={{ gap: 25 }} >
@@ -85,8 +85,8 @@ export default function CadUser({ navigation, setUser }) {
                                 placeholder='Carlão'
                                 onChangeText={setNome}
                                 value={Nome}
-                                style={[styles.input, { borderColor: colorScheme.Button.buttonPrimary, color: colorScheme.Text.textPrimary }]}
-                                placeholderTextColor={colorScheme.Text.textPlaceHolder}
+                                style={[styles.input, { borderColor: colorScheme.button.primary, color: colorScheme.text.dark }]}
+                                placeholderTextColor={colorScheme.text.placeholder}
                             />
                         </View>
                         <View>
@@ -95,8 +95,8 @@ export default function CadUser({ navigation, setUser }) {
                                 placeholder='Exemplo@exemplo.com'
                                 onChangeText={setEmail}
                                 value={Email}
-                                style={[styles.input, { borderColor: colorScheme.Button.buttonPrimary, color: colorScheme.Text.textPrimary }]}
-                                placeholderTextColor={colorScheme.Text.textPlaceHolder}
+                                style={[styles.input, { borderColor: colorScheme.button.primary, color: colorScheme.text.dark }]}
+                                placeholderTextColor={colorScheme.text.placeholder}
                             />
                         </View>
                         <View>
@@ -105,8 +105,8 @@ export default function CadUser({ navigation, setUser }) {
                                 placeholder='000.000.000-00'
                                 onChangeText={setCpf}
                                 value={Cpf}
-                                style={[styles.input, { borderColor: colorScheme.Button.buttonPrimary, color: colorScheme.Text.textPrimary }]}
-                                placeholderTextColor={colorScheme.Text.textPlaceHolder}
+                                style={[styles.input, { borderColor: colorScheme.button.primary, color: colorScheme.text.dark }]}
+                                placeholderTextColor={colorScheme.text.placeholder}
                             />
                         </View>
                         <View>
@@ -115,8 +115,8 @@ export default function CadUser({ navigation, setUser }) {
                                 placeholder='jorge12320'
                                 onChangeText={setSenha}
                                 value={Senha}
-                                style={[styles.input, { borderColor: colorScheme.Button.buttonPrimary, color: colorScheme.Text.textPrimary }]}
-                                placeholderTextColor={colorScheme.Text.textPlaceHolder}
+                                style={[styles.input, { borderColor: colorScheme.button.primary, color: colorScheme.text.dark }]}
+                                placeholderTextColor={colorScheme.text.placeholder}
                             />
                         </View>
                         <View>
@@ -125,8 +125,8 @@ export default function CadUser({ navigation, setUser }) {
                                 placeholder='jorge12320'
                                 onChangeText={setConfirmarSenha}
                                 value={ConfirmarSenha}
-                                style={[styles.input, { borderColor: colorScheme.Button.buttonPrimary, color: colorScheme.Text.textPrimary }]}
-                                placeholderTextColor={colorScheme.Text.textPlaceHolder}
+                                style={[styles.input, { borderColor: colorScheme.button.primary, color: colorScheme.text.dark }]}
+                                placeholderTextColor={colorScheme.text.placeholder}
                             />
                         </View>
                     </View>
@@ -136,10 +136,10 @@ export default function CadUser({ navigation, setUser }) {
                             <Text style={{ color: 'red' }} >{Erro}</Text>
                         </View>
                         <TouchableOpacity
-                            style={[styles.btnL, styles.btnE, { backgroundColor: colorScheme.Button.buttonPrimary }]}
+                            style={[styles.btnL, styles.btnE, { backgroundColor: colorScheme.button.primary }]}
                             onPress={Confirmar}
                         >
-                            <Text style={{ color: colorScheme.Text.textPrimary }} >Criar usuario</Text>
+                            <Text style={{ color: colorScheme.text.dark }} >Criar usuario</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

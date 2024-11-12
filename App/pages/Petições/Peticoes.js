@@ -41,8 +41,8 @@ export default function Peticoes({ navigation }) {
     }, [])
 
     return (
-        <View style={[styles.container, { backgroundColor: colorScheme.Screen.background }]}>
-            <Text style={{ color: colorScheme.Text.title, fontWeight: '800', fontSize: 20, margin: 20 }}>
+        <View style={[styles.container, { backgroundColor: colorScheme.background.default }]}>
+            <Text style={{ color: colorScheme.text.primary, fontWeight: '800', fontSize: 20, margin: 20 }}>
                 Petições Recentes
             </Text>
 
@@ -52,7 +52,7 @@ export default function Peticoes({ navigation }) {
                     navigation.navigate('Suas Petições')
                 }}
             >
-                <Text style={{ color: colorScheme.Text.title, fontWeight: '400', fontSize: 15 }}>
+                <Text style={{ color: colorScheme.text.primary, fontWeight: '400', fontSize: 15 }}>
                     Ver minhas Petições
                 </Text>
             </TouchableOpacity>

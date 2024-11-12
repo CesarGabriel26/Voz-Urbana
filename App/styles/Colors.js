@@ -4,33 +4,55 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const Colors = {
     // Tema Claro
     MainTheme: {
-        Text: {
-            textPrimary: '#000000',           // Texto principal
-            textSecondary: '#FFFFFF',          // Texto secundário
-            textPlaceHolder: '#ACACAC',        // Texto de placeholder
-            title: '#0A62AC',                  // Título destacado
-            error: '#FF4949'                   // Texto de erro
+        // Cores principais
+        primary: '#0A62AC',
+        secondary: '#FFFFFF',
+        success: '#25B92F',
+        warning: '#FFB400',
+        danger: '#FF4949',
+        info: '#2b83cc',
+
+        // Texto
+        text: {
+            primary: '#0A62AC',
+            secondary: '#FFFFFF',
+            success: '#25B92F',
+            warning: '#FFB400',
+            danger: '#FF4949',
+            info: '#2b83cc',
+            placeholder: '#ACACAC',
+            // Texto em tom suave
+            muted: '#6C757D',
+            light: '#FFFFFF',
+            dark: '#000000',
+            highlight: '#000000'
         },
 
-        Screen: {
-            background: '#FFFFFF',             // Fundo principal
-            backgroundInverse: '#000000',      // Fundo inverso (ex.: modo escuro)
-            panelBackground: '#0A62AC',        // Fundo de painéis
+        // Fundo
+        background: {
+            default: '#FFFFFF',
+            inverse: '#000000',
+            panel: '#0A62AC',
+            card: '#FFFFFF'
         },
 
-        Card: {
-            cardBackground: '#0A62AC',         // Fundo dos cartões
-            cardBorder: '#D3D3D3',             // Borda dos cartões
-            cardLight: '#ffffff',
-            cardShadow: '#2b83cc',             // Sombra dos cartões
+        // Borda
+        border: {
+            default: '#D3D3D3',
+            light: '#EAEAEA',
+            dark: '#CED4DA',
+            accent: '#0A62AC'
         },
 
-        Button: {
-            buttonPrimary: '#0A62AC',          // Botão principal
-            buttonSecondary: '#FFFFFF',        // Botão secundário
+        // Botão
+        button: {
+            primary: '#0A62AC',
+            secondary: '#FFFFFF',
+            success: '#25B92F',
+            danger: '#FF4949'
         },
 
-        Switch: {
+        switch: {
             ios_backgroundColor: '#FFFFFF',    // Fundo do switch no iOS
             thumbColor: {
                 true: '#0A62AC',               // Cor da "bolinha" do switch (ativo)
@@ -38,12 +60,14 @@ export const Colors = {
             }
         },
 
-        Icons: {
-            loader: '#0A62AC',                 // Cor do ícone de carregamento
-            check: '#25B92F'                   // Cor do ícone de verificação
+        // Ícones
+        icon: {
+            loader: '#0A62AC',
+            check: '#25B92F'
         },
 
-        PetitionStatus: {
+        // Stepper Status
+        stepper: {
             stepStrokeFinishedColor: '#0A62AC',
             stepIndicatorFinishedColor: '#0A62AC',
             separatorFinishedColor: '#0A62AC',
@@ -65,63 +89,68 @@ export const Colors = {
 
     // Tema Escuro
     DarkMode: {
-        Text: {
-            textPrimary: '#FFFFFF',            // Texto principal
-            textSecondary: '#FFFFFF',          // Texto secundário
-            textPlaceHolder: '#C9C9C9',        // Texto de placeholder
-            title: '#0A8CAC',                  // Título destacado
-            error: '#FF4949'                   // Texto de erro (presente no MainTheme)
+        primary: '#0A62AC',
+        secondary: '#FFFFFF',
+        success: '#3DFF4A',
+        warning: '#FFB400',
+        danger: '#FF4949',
+        info: '#1A73E8',
+
+        text: {
+            primary: '#FFFFFF',
+            secondary: '#FFFFFF',
+            placeholder: '#C9C9C9',
+            muted: '#A1A1A1',
+            title: '#0A8CAC',
+            error: '#FF4949'
         },
 
-        Screen: {
-            background: '#000000',             // Fundo principal
-            backgroundInverse: '#FFFFFF',      // Fundo inverso (ex.: modo claro)
-            panelBackground: '#1A1A1A',        // Fundo de painéis
+        background: {
+            default: '#000000',
+            inverse: '#FFFFFF',
+            panel: '#1A1A1A',
+            card: '#0A62AC'
         },
 
-        Card: {
-            cardBackground: '#0A62AC',         // Fundo dos cartões
-            cardBorder: '#444444',             // Borda dos cartões
-            cardShadow: '#222222',             // Sombra dos cartões
+        border: {
+            default: '#444444',
+            light: '#555555',
+            dark: '#333333',
+            accent: '#0A62AC'
         },
 
-        Button: {
-            buttonPrimary: '#0A62AC',          // Botão principal
-            buttonSecondary: '#FFFFFF',        // Botão secundário
+        button: {
+            primary: '#0A62AC',
+            secondary: '#FFFFFF',
+            success: '#3DFF4A',
+            danger: '#FF4949'
         },
 
-        Switch: {
-            ios_backgroundColor: '#1A1A1A',    // Fundo do switch no iOS
-            thumbColor: {
-                true: '#0A62AC',               // Cor da "bolinha" do switch (ativo)
-                false: '#444444'               // Cor da "bolinha" do switch (inativo)
-            }
+        icon: {
+            loader: '#0A62AC',
+            check: '#3DFF4A'
         },
 
-        Icons: {
-            loader: '#0A62AC',                 // Cor do ícone de carregamento
-            check: '#3DFF4A'                   // Cor do ícone de verificação
-        },
-
-        PetitionStatus: {
-            stepStrokeFinishedColor: '#0A62AC',
-            stepIndicatorFinishedColor: '#0A62AC',
-            separatorFinishedColor: '#0A62AC',
-            stepIndicatorLabelFinishedColor: '#FFFFFF',
-
-            stepStrokeUnFinishedColor: '#AAAAAA',
-            separatorUnFinishedColor: '#AAAAAA',
-            stepIndicatorUnFinishedColor: '#AAAAAA',
-            stepIndicatorLabelUnFinishedColor: '#FFFFFF',
-
-            stepStrokeCurrentColor: '#0A62AC',
-            stepIndicatorCurrentColor: '#FFFFFF',
-            stepIndicatorLabelCurrentColor: '#0A62AC',
-
+        stepper: {
+            finished: {
+                stroke: '#0A62AC',
+                label: '#FFFFFF',
+                background: '#0A62AC'
+            },
+            unfinished: {
+                stroke: '#AAAAAA',
+                label: '#FFFFFF',
+                background: '#AAAAAA'
+            },
+            current: {
+                stroke: '#0A62AC',
+                label: '#0A62AC',
+                background: '#FFFFFF'
+            },
             labelColor: '#999999',
-            currentStepLabelColor: '#0A62AC',
+            currentStepLabelColor: '#0A62AC'
         }
-    },
+    }
 };
 
 // Funções utilitárias para gerenciamento de esquemas de cores

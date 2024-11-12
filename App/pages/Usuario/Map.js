@@ -34,7 +34,7 @@ export default function Map({ navigation }) {
     } else {
         return (
             <View style={styles.container}>
-                <ActivityIndicator size="large" color={colorScheme.Button.buttonPrimary} />
+                <ActivityIndicator size="large" color={colorScheme.button.primary} />
             </View>
         )
     }
