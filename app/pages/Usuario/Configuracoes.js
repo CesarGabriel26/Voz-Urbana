@@ -7,6 +7,7 @@ import MainContainer from '../../components/MainContainer';
 import { updateUser, checkUserPassword } from '../../utils/Api';
 import decodeUserToken from '../../utils/JWT';
 import { colorSchemas } from '../../styles/Colors';
+import Separator from '../../components/Separator';
 
 export default function Perfil({ navigation }) {
     const { changeTheme, colorScheme } = useTheme();
@@ -116,9 +117,26 @@ export default function Perfil({ navigation }) {
                     </View>
                 </View>
 
-                <View>
-                    <View />
+
+                <Separator texto='Informações do Usuário' />
+
+                <View  >
+                    <Text>CPF:</Text><Text>{userData.cpf}</Text>
                 </View>
+
+                <View>
+                    <Text>Tipo:</Text> <Text>{userData.type === 1 ? "Admin" : "User"}</Text>
+                </View>
+
+                <View>
+                    <Text>Última Atualização:</Text><Text>{new Date(userData.last_update).toLocaleDateString()}</Text>
+                </View>
+
+                <View>
+                    <Text>Data de Criação:</Text><Text>{new Date(userData.created_at).toLocaleDateString()}</Text>
+                </View>
+
+                <Separator texto='Configurações' />
 
                 {/* Configurações */}
                 <View style={styles.options}>
@@ -148,6 +166,8 @@ export default function Perfil({ navigation }) {
                     />
                     <Button title="Sair" onPress={logOut} color="gray" />
                 </View>
+
+                <Separator />
 
                 {/* Edição de Perfil */}
                 {editing && (
