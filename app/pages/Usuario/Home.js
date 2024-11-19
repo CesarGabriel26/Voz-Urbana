@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, Pressable, ActivityIndicator } from 'react-native';
-import { Marker } from 'react-native-maps';
 import { useTheme } from '../../utils/ThemeContext';
 import { listReports } from '../../utils/Api';
 import { getUserLocation } from '../../utils/permissions/LocationPermtion';
 import CustomMapProvider from '../../components/CustomMap';
+import MainContainer from '../../components/MainContainer'
 
 export default function Home({ navigation }) {
     const [complaints, setComplaints] = useState([]);
@@ -35,66 +35,67 @@ export default function Home({ navigation }) {
 
 
     return (
-        <View style={[styles.container, { backgroundColor: colorScheme.Body_bg_light }]}>
-            <ScrollView >
-                <View style={styles.containerHome}>
-                    <TouchableOpacity
-                        onPress={() => {
-                            navigation.navigate('Reportar')
-                        }}
-                        style={[styles.btnSqr,colorScheme.Buttons.Primary ]}
-                    >
-                        <Image source={require('../../assets/Exclama.png')} resizeMode='cover' />
-                        <Text style={[styles.text, colorScheme.Buttons.Primary ]}>Nova</Text>
-                        <Text style={[styles.text, colorScheme.Buttons.Primary ]}>reclamação</Text>
-                    </TouchableOpacity>
+        <MainContainer>
+            <View style={[styles.containerHome, {marginTop: 20}]}>
+                <TouchableOpacity
+                    onPress={() => {
+                        navigation.navigate('NovaReclamacao')
+                    }}
+                    style={[styles.btnSqr, colorScheme.Buttons.Primary]}
+                >
+                    <Image source={require('../../assets/Exclama.png')} resizeMode='cover' />
+                    <Text style={[styles.text, colorScheme.Buttons.Primary]}>Nova</Text>
+                    <Text style={[styles.text, colorScheme.Buttons.Primary]}>reclamação</Text>
+                </TouchableOpacity>
 
 
-                    <TouchableOpacity style={[styles.btnSqr, colorScheme.Buttons.Primary]}
-                        onPress={() => {
-                            navigation.navigate('Criar Petição')
-                        }}>
-                        <Image source={require('../../assets/Megafone.png')} resizeMode='cover' />
-                        <Text style={[styles.text, colorScheme.Buttons.Primary ]}>Nova</Text>
-                        <Text style={[styles.text, colorScheme.Buttons.Primary ]}>Petição</Text>
-                    </TouchableOpacity>
+                <TouchableOpacity style={[styles.btnSqr, colorScheme.Buttons.Primary]}
+                    onPress={() => {
+                        navigation.navigate('NovaPeticao')
+                    }}>
+                    <Image source={require('../../assets/Megafone.png')} resizeMode='cover' />
+                    <Text style={[styles.text, colorScheme.Buttons.Primary]}>Nova</Text>
+                    <Text style={[styles.text, colorScheme.Buttons.Primary]}>Petição</Text>
+                </TouchableOpacity>
 
-                    <TouchableOpacity style={[styles.btnSqr, colorScheme.Buttons.Primary ]}
-                        onPress={() => {
-                            navigation.navigate('Reclamações')
-                        }}>
-                        <Image source={require('../../assets/Megafone.png')} resizeMode='cover' />
-                        <Text style={[styles.text, colorScheme.Buttons.Primary ]}> </Text>
-                        <Text style={[styles.text, colorScheme.Buttons.Primary ]}>Reclamações</Text>
-                    </TouchableOpacity>
+                <TouchableOpacity style={[styles.btnSqr, colorScheme.Buttons.Primary]}
+                    onPress={() => {
+                        navigation.navigate('Reclamações')
+                    }}>
+                    <Image source={require('../../assets/Megafone.png')} resizeMode='cover' />
+                    <Text style={[styles.text, colorScheme.Buttons.Primary]}> </Text>
+                    <Text style={[styles.text, colorScheme.Buttons.Primary]}>Reclamações</Text>
+                </TouchableOpacity>
 
-                    <TouchableOpacity
-                        onPress={() => {
-                            navigation.navigate('Petições')
-                        }}
-                        style={[styles.btnSqr, colorScheme.Buttons.Primary ]}
-                    >
-                        <Image source={require('../../assets/Lapis.png')} resizeMode='cover' />
-                        <Text style={[styles.text, colorScheme.Buttons.Primary ]}> </Text>
-                        <Text style={[styles.text, colorScheme.Buttons.Primary ]}>Petições</Text>
-                    </TouchableOpacity>
-                </View>
+                <TouchableOpacity
+                    onPress={() => {
+                        navigation.navigate('Petições')
+                    }}
+                    style={[styles.btnSqr, colorScheme.Buttons.Primary]}
+                >
+                    <Image source={require('../../assets/Lapis.png')} resizeMode='cover' />
+                    <Text style={[styles.text, colorScheme.Buttons.Primary]}> </Text>
+                    <Text style={[styles.text, colorScheme.Buttons.Primary]}>Petições</Text>
+                </TouchableOpacity>
+            </View>
 
-                <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <View style={{ height: 2, width: '80%', backgroundColor: colorScheme.Body_bg, margin: 20 }}></View>
+            <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <View style={{ height: 2, width: '80%', backgroundColor: colorScheme.Body_bg, margin: 20 }}></View>
 
-                    <Text style={{ color: colorScheme.Text.title, fontWeight: '800', fontSize: 20, marginBottom: 20 }}>
-                        Reclamações na sua área
-                    </Text>
+                <Text style={{ color: colorScheme.Text.title, fontWeight: '800', fontSize: 20, marginBottom: 20 }}>
+                    Reclamações na sua área
+                </Text>
 
-                    <Pressable
-                        style={{ height: 200, width: 300, marginBottom: 35 }}
-                        onPress={() => {
-                            navigation.navigate('Mapa')
-                        }}
-                    >
-                        {
-                            location ? (
+                <Pressable
+                    style={{ height: 200, width: 300, marginBottom: 35 }}
+                    onPress={() => {
+                        navigation.navigate('Mapa')
+                    }}
+                    disabled={location ? false : true}
+                >
+                    {
+                        location ? (
+                            <View>
                                 <CustomMapProvider
                                     style={styles.map}
                                     location={location}
@@ -102,34 +103,31 @@ export default function Home({ navigation }) {
                                     scrollEnabled={false}
                                     zoomEnabled={false}
                                 />
-                            ) : <View style={styles.container} ><ActivityIndicator size="large" color="red" />
                             </View>
-                        }
-                    </Pressable>
-                </View>
-            </ScrollView >
-        </View >
+                        ) : <View style={styles.container} ><ActivityIndicator size="large" color={colorScheme.Icons.loader.Primary} />
+                        </View>
+                    }
+                </Pressable>
+            </View>
+        </MainContainer>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        display: 'flex',
-    },
     containerHome: {
+        marginTop: 20,
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         width: '100%',
         flexWrap: 'wrap',
         gap: 20,
-        marginTop: 30,
-        paddingHorizontal: 30
     },
     map: {
         width: '100%',
         height: '100%',
+        borderRadius: 20,
+        overflow: 'hidden'
     },
     btnSqr: {
         width: 140,

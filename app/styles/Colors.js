@@ -4,13 +4,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const Colors = {
     Light: {
         Body_bg: "#0A62AC",
-        Body_bg_light: "#ffffff",
-        Body_bg_dark: "#000000",
+        Body_bg_second: "#ffffff",
+        Body_bg_third: "#000000",
+
         Danger: "#ff9393",
 
         Text: {
             title: "#0A62AC",
-            text: "#FFFFFF"
+            text: "#FFFFFF",
+            dark: "#000000",
         },
 
         Buttons: {
@@ -18,69 +20,66 @@ export const Colors = {
                 color: '#FFFFFF',
                 backgroundColor: '#0A62AC',
             },
+            Secondary: {
+                color: '#FFFFFF',
+                backgroundColor: '#FFFFFF',
+                borderWidth: 2,
+                borderColor: '#0A62AC'
+            },
             Light: {
                 color: '#000000',
-                textTransform: "uppercase",
                 backgroundColor: '#FFFFFF',
-                width: '100%',
-                textAlign: 'center',
-                paddingHorizontal: 10,
+
             },
             LightGhost: {
                 color: '#FFFFFF',
-                textTransform: "uppercase",
                 borderColor: '#FFFFFF',
-                width: '100%',
-                textAlign: 'center',
-                paddingHorizontal: 10,
             },
             Dark: {
                 color: '#FFFFFF',
-                textTransform: "uppercase",
                 backgroundColor: '#000000',
-                width: '100%',
-                textAlign: 'center',
-                paddingHorizontal: 10,
             },
             DarktGhost: {
                 color: '#000000',
-                textTransform: "uppercase",
                 borderColor: '#000000',
-                width: '100%',
-                textAlign: 'center',
-                paddingHorizontal: 10,
             },
         },
 
         Inputs: {
+            PrimaryGhost: {
+                borderColor: '#0A62AC',
+            },
             Light: {
                 color: '#000000',
                 backgroundColor: '#FFFFFF',
+                placeHolder: '#adadad',
                 width: '100%',
-                placeHolder: '#adadad'
             },
             LightGhost: {
                 color: '#FFFFFF',
                 borderColor: '#FFFFFF',
+                placeHolder: '#adadad',
                 width: '100%',
-                placeHolder: '#adadad'
             },
             Dark: {
                 color: '#FFFFFF',
                 backgroundColor: '#000000',
+                placeHolder: '#adadad',
                 width: '100%',
-                placeHolder: '#adadad'
             },
             DarktGhost: {
                 color: '#000000',
                 borderColor: '#000000',
+                placeHolder: '#adadad',
                 width: '100%',
-                placeHolder: '#adadad'
             },
         },
 
         Icons: {
-            loader: '#fff',
+            loader: {
+                Light: '#fff',
+                Primary: '#0A62AC'
+            },
             check: '#198754',
         },
 

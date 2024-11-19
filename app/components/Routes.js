@@ -1,14 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StatusBar, Platform, TouchableOpacity } from 'react-native';
+import { useTheme } from '../utils/ThemeContext';
 
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 import Login from '../pages/Iniciais/Login';
 import SingUp from '../pages/Iniciais/SingUp';
+
 import Home from '../pages/Usuario/Home';
-import { useTheme } from '../utils/ThemeContext';
+import Configuracoes from '../pages/Usuario/Configuracoes';
+
+import NovaReclamacao from '../pages/Reclamacoes/Nova';
+
+import NovaPeticao from '../pages/Peticoes/Nova';
+
 
 const Stack = createStackNavigator();
 
@@ -21,6 +28,7 @@ export default function Routes() {
       StatusBar.setBarStyle('light-content');
     } else if (Platform.OS === 'ios') {
       StatusBar.setBarStyle('light-content');
+      StatusBar.setBackgroundColor('#0A62AC');
     }
   }, []);
 
@@ -30,11 +38,11 @@ export default function Routes() {
 
       <Stack.Navigator
         screenOptions={({ navigation }) => ({
-            headerTintColor: colorScheme.Text.text,
-            headerStyle: {
-              backgroundColor: colorScheme.Body_bg,
-              height: 80,
-            },
+          headerTintColor: colorScheme.Text.text,
+          headerStyle: {
+            backgroundColor: colorScheme.Body_bg,
+            height: 80,
+          },
           headerTitleAlign: 'center',
           headerRight: () => (
             <TouchableOpacity
@@ -69,6 +77,21 @@ export default function Routes() {
           name="Home"
           component={Home}
         />
+
+        <Stack.Screen
+          name="Configurações"
+          component={Configuracoes}
+        />
+        
+        <Stack.Screen
+          name="NovaReclamacao"
+          component={NovaReclamacao}
+        />
+        <Stack.Screen
+          name="NovaPeticao"
+          component={NovaPeticao}
+        />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

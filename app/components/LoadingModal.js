@@ -13,7 +13,7 @@ export default function LoadingModal ({ visible }) {
         >
             <View style={[styles.container, {backgroundColor: colorScheme.Body_bg_dark}]}>
                 <View style={styles.modalContent}>
-                    <ActivityIndicator size="large" color={colorScheme.Icons.loader}/>
+                    <ActivityIndicator size="large" color={colorScheme.Icons.loader.Light}/>
                 </View>
             </View>
         </Modal>

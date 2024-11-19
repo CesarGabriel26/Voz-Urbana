@@ -104,11 +104,11 @@ export default function Login({ navigation, route }) {
                     </View>
 
                     <View style={{ gap: 15, display: 'flex', alignItems: 'center' }}>
-                        <TouchableOpacity style={[ButtonsStyles.j_betwen, colorScheme.Buttons.Light]}>
+                        <TouchableOpacity style={[ButtonsStyles.btn, ButtonsStyles.j_betwen, colorScheme.Buttons.Light]}>
                             <Text>Login com Google</Text>
                             <Ionicons name='logo-google' size={25} />
                         </TouchableOpacity>
-                        <TouchableOpacity style={[ButtonsStyles.j_betwen, colorScheme.Buttons.Light]}>
+                        <TouchableOpacity style={[ButtonsStyles.btn, ButtonsStyles.j_betwen, colorScheme.Buttons.Light]}>
                             <Text>Login com Facebook</Text>
                             <Ionicons name='logo-facebook' size={25} />
                         </TouchableOpacity>
@@ -121,13 +121,13 @@ export default function Login({ navigation, route }) {
                         </View>
 
                         <TouchableOpacity
-                            style={[ButtonsStyles.default, colorScheme.Buttons.Light]}
+                            style={[ButtonsStyles.btn, ButtonsStyles.default, colorScheme.Buttons.Light]}
                             onPress={Confirmar}>
                             <Text style={colorScheme.Buttons.Light}>entrar</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
-                            style={[ButtonsStyles.default, colorScheme.Buttons.Light]}
+                            style={[ButtonsStyles.btn, ButtonsStyles.default, colorScheme.Buttons.Light]}
                             onPress={() => {
                                 navigation.navigate('SingUp');
                             }}>
