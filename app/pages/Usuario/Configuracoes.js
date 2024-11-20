@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TextInput, Button, Image, Alert, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, TextInput, Button, Image, Alert, ScrollView, TouchableOpacity, Switch } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Dropdown } from 'react-native-element-dropdown';
 import { useTheme } from '../../utils/ThemeContext';
@@ -8,13 +8,18 @@ import { updateUser, checkUserPassword } from '../../utils/Api';
 import decodeUserToken from '../../utils/JWT';
 import { colorSchemas } from '../../styles/Colors';
 import Separator from '../../components/Separator';
+import { ButtonsStyles } from '../../styles/Buttons';
 
 export default function Perfil({ navigation }) {
     const { changeTheme, colorScheme } = useTheme();
+
     const [themes, setThemes] = useState([]);
     const [theme, setTheme] = useState('');
     const [editing, setEditing] = useState(false);
     const [canEdit, setCanEdit] = useState(false);
+
+    const [isEnabled, setIsEnabled] = useState(false);
+
     const [formData, setFormData] = useState({
         nome: '',
         email: '',
@@ -102,6 +107,8 @@ export default function Perfil({ navigation }) {
         }
     };
 
+    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+
     return (
         <MainContainer>
             <ScrollView style={styles.container}>
@@ -118,56 +125,122 @@ export default function Perfil({ navigation }) {
                 </View>
 
 
-                <Separator texto='Informações do Usuário' />
+                <Separator texto='Informações do Usuário' color={colorScheme.Text.placeHolder} />
 
-                <View  >
-                    <Text>CPF:</Text><Text>{userData.cpf}</Text>
+                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Text style={{ maxWidth: 100 }}>CPF: </Text>
+                    <Text style={{ maxWidth: 100 }}>{userData.cpf}</Text>
                 </View>
 
-                <View>
-                    <Text>Tipo:</Text> <Text>{userData.type === 1 ? "Admin" : "User"}</Text>
+                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Text style={{ maxWidth: 100 }}>Tipo: </Text>
+                    <Text style={{ maxWidth: 100 }}>{userData.type === 1 ? "Admin" : "User"}</Text>
                 </View>
 
-                <View>
-                    <Text>Última Atualização:</Text><Text>{new Date(userData.last_update).toLocaleDateString()}</Text>
+                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Text style={{ maxWidth: 200 }}>Última Atualização: </Text>
+                    <Text style={{ maxWidth: 100 }}>{new Date(userData.last_update).toLocaleDateString()}</Text>
                 </View>
 
-                <View>
-                    <Text>Data de Criação:</Text><Text>{new Date(userData.created_at).toLocaleDateString()}</Text>
+                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Text style={{ maxWidth: 200 }}>Data de Criação: </Text>
+                    <Text style={{ maxWidth: 100 }}>{new Date(userData.created_at).toLocaleDateString()}</Text>
                 </View>
 
-                <Separator texto='Configurações' />
+                <Separator texto='Configurações' color={colorScheme.Text.placeHolder} />
 
                 {/* Configurações */}
-                <View style={styles.options}>
-                    <Text style={styles.label}>Tema:</Text>
-                    <Dropdown
-                        data={themes.map((theme) => ({ label: theme, value: theme }))}
-                        labelField="label"
-                        valueField="value"
-                        value={theme}
-                        placeholder="Selecione um tema"
-                        placeholderStyle={{ color: colorScheme.Text.dark }}
-                        selectedTextStyle={{ color: colorScheme.Text.dark }}
-                        onChange={(item) => {
-                            setTheme(item.value);
-                            changeTheme(item.value);
-                        }}
-                        style={styles.dropdown}
-                    />
+                <View style={{ gap: 10 }} >
+                    <View>
+                        <Text style={styles.label}>Tema:</Text>
+                        <Dropdown
+                            data={themes.map((theme) => ({ label: theme, value: theme }))}
+                            labelField="label"
+                            valueField="value"
+                            value={theme}
+                            placeholder="Selecione um tema"
+                            placeholderStyle={{ color: colorScheme.Text.dark }}
+                            selectedTextStyle={{ color: colorScheme.Text.dark }}
+                            onChange={(item) => {
+                                setTheme(item.value);
+                                changeTheme(item.value);
+                            }}
+                            style={styles.dropdown}
+                        />
+                    </View>
+                    <View>
+                        <Text style={styles.label}>Lingua:</Text>
+                        <Dropdown
+                            data={[
+                                "Portugues",
+                                "Ingles",
+                                "Espanhol"
+                            ].map((theme) => ({ label: theme, value: theme }))}
+                            labelField="label"
+                            valueField="value"
+                            value={"Portugues"}
+                            placeholder="Selecione uma linguagem"
+                            placeholderStyle={{ color: colorScheme.Text.dark }}
+                            selectedTextStyle={{ color: colorScheme.Text.dark }}
+                            onChange={(item) => {
+                                console.log(item);
+                            }}
+                            style={styles.dropdown}
+                        />
+                    </View>
+                    <View>
+                        <View style={[styles.dropdown, {display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}]}>
+                            <Text style={[styles.label, {maxWidth: 150}]}>Usuario Anonimo:</Text>
+                            <Switch
+                                trackColor={{ false: 'gray', true: 'gray' }}
+                                thumbColor={colorScheme.Switch.thumbColor[isEnabled]}
+                                ios_backgroundColor={colorScheme.Switch.ios_backgroundColor}
+                                onValueChange={toggleSwitch}
+                                value={isEnabled}
+                                style={{
+                                    margin: 0,
+                                    width: 50,
+                                    height: 20,
+                                }}
+                            />
+                        </View>
+                    </View>
                 </View>
+
+                <Separator color={colorScheme.Text.placeHolder} style={{ marginVertical: 20 }} />
 
                 {/* Botões de ação */}
                 <View style={styles.actions}>
-                    <Button
-                        title={editing ? 'Cancelar' : 'Editar Perfil'}
+                    <TouchableOpacity
+
                         onPress={toggleEditing}
-                        color={editing ? 'red' : 'blue'}
-                    />
-                    <Button title="Sair" onPress={logOut} color="gray" />
+                        style={[
+                            ButtonsStyles.default,
+                            colorScheme.Buttons.Primary,
+                            { backgroundColor: "#0d6efd" }
+                        ]}
+                    >
+                        <Text
+                            style={{ color: 'white' }}
+                        >
+                            {editing ? 'Cancelar' : 'Editar Perfil'}
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={logOut}
+                        style={[
+                            ButtonsStyles.default,
+                            { backgroundColor: colorScheme.Danger }
+                        ]}
+                    >
+                        <Text
+                            style={{ color: 'white' }}
+                        >
+                            Sair
+                        </Text>
+                    </TouchableOpacity>
                 </View>
 
-                <Separator />
 
                 {/* Edição de Perfil */}
                 {editing && (
@@ -242,9 +315,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: 'gray',
     },
-    options: {
-        marginBottom: 20,
-    },
     label: {
         fontSize: 16,
         marginBottom: 5,
@@ -257,7 +327,7 @@ const styles = StyleSheet.create({
     },
     actions: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        gap: 10,
         marginBottom: 20,
     },
     editForm: {

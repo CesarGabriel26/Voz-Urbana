@@ -8,6 +8,7 @@ import { useTheme } from '../../utils/ThemeContext';
 import MainContainer from '../../components/MainContainer'
 import { InputStyles } from '../../styles/Inputs';
 import { ButtonsStyles } from '../../styles/Buttons';
+import Separator from '../../components/Separator';
 
 
 export default function NovaReclamacao({ navigation }) {
@@ -69,9 +70,20 @@ export default function NovaReclamacao({ navigation }) {
                     placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
                 />
 
-                <Text style={{ color: colorScheme.Text.title, fontWeight: '600', fontSize: 20, marginTop: 20 }}>
-                    Informações do local
-                </Text>
+                <Separator
+                    style={{ 
+                        marginVertical: 20 
+                    }}
+                    textStyle={{
+                        fontWeight: '600',
+                        textTransform: 'captalize',
+                        fontSize: 20,
+                        color: colorScheme.Text.title
+                    }}
+                    color={colorScheme.Text.title}
+                    texto='Informações do local'
+                />
+
                 <TextInput
                     placeholder='INSIRA COMPONENTE DE MAPA AQUI'
                     style={[InputStyles.inputTall, colorScheme.Inputs.PrimaryGhost]}
@@ -79,7 +91,7 @@ export default function NovaReclamacao({ navigation }) {
                 />
 
                 <Text style={{ color: colorScheme.Text.title, fontWeight: '600', fontSize: 20, marginTop: 20 }}>
-                    Número da casa
+                    Número do local
                 </Text>
                 <TextInput
                     placeholder='Uma descrição curta sobre o problema'
@@ -87,7 +99,7 @@ export default function NovaReclamacao({ navigation }) {
                     placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
                 />
                 <Text style={{ color: colorScheme.Text.title, fontWeight: '600', fontSize: 20, marginTop: 20 }}>
-                    Rua
+                    Rua *
                 </Text>
                 <TextInput
                     placeholder='Uma descrição curta sobre o problema'
@@ -103,7 +115,7 @@ export default function NovaReclamacao({ navigation }) {
                     placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
                 />
                 <Text style={{ color: colorScheme.Text.title, fontWeight: '600', fontSize: 20, marginTop: 20 }}>
-                    Cidade
+                    Cidade *
                 </Text>
                 <TextInput
                     placeholder='Uma descrição curta sobre o problema'
@@ -111,7 +123,7 @@ export default function NovaReclamacao({ navigation }) {
                     placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
                 />
                 <Text style={{ color: colorScheme.Text.title, fontWeight: '600', fontSize: 20, marginTop: 20 }}>
-                    Estado
+                    Estado *
                 </Text>
                 <TextInput
                     placeholder='Uma descrição curta sobre o problema'
@@ -119,7 +131,7 @@ export default function NovaReclamacao({ navigation }) {
                     placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
                 />
                 <Text style={{ color: colorScheme.Text.title, fontWeight: '600', fontSize: 20, marginTop: 20 }}>
-                    País
+                    País *
                 </Text>
                 <TextInput
                     placeholder='Uma descrição curta sobre o problema'
@@ -127,7 +139,7 @@ export default function NovaReclamacao({ navigation }) {
                     placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
                 />
 
-                <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <TouchableOpacity
                         style={[ButtonsStyles.default, colorScheme.Buttons.Primary, { marginVertical: 15, width: '45%' }]}
                     >

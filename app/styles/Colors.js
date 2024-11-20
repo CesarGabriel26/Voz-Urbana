@@ -7,12 +7,13 @@ export const Colors = {
         Body_bg_second: "#ffffff",
         Body_bg_third: "#000000",
 
-        Danger: "#ff9393",
+        Danger: "#dc3545",
 
         Text: {
             title: "#0A62AC",
             text: "#FFFFFF",
             dark: "#000000",
+            placeHolder: '#adadad',
         },
 
         Buttons: {

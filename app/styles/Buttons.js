@@ -11,6 +11,7 @@ export const ButtonsStyles = {
     default: {
         display: 'flex',
         paddingVertical: 10,
+        paddingHorizontal: 10,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 10,
