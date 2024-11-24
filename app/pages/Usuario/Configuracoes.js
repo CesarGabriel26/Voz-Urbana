@@ -9,6 +9,7 @@ import decodeUserToken from '../../utils/JWT';
 import { colorSchemas } from '../../styles/Colors';
 import Separator from '../../components/Separator';
 import { ButtonsStyles } from '../../styles/Buttons';
+import Avatar from '../../components/UserAvatar';
 
 export default function Perfil({ navigation }) {
     const { changeTheme, colorScheme } = useTheme();
@@ -40,7 +41,6 @@ export default function Perfil({ navigation }) {
             setTheme(currentTheme);
 
             const user = decodeUserToken(await AsyncStorage.getItem('usuario')) || {};
-
             setUserData(user);
             setFormData({
                 nome: user.nome || '',
@@ -114,10 +114,13 @@ export default function Perfil({ navigation }) {
             <ScrollView style={styles.container}>
                 {/* Informações do Usuário */}
                 <View style={styles.profileHeader}>
-                    <Image
-                        source={userData.pfp ? { uri: userData.pfp } : require('../../assets/LogoHightResolution.png')}
-                        style={styles.avatar}
+                    <Avatar
+                        uri = {userData.pfp}
+                        text={userData.nome + " profile pcture"}
+                        size="md"
+                        shape="square"
                     />
+
                     <View>
                         <Text style={styles.userName}>{userData.nome}</Text>
                         <Text style={styles.userEmail}>{userData.email}</Text>
@@ -139,7 +142,7 @@ export default function Perfil({ navigation }) {
 
                 <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text style={{ maxWidth: 200 }}>Última Atualização: </Text>
-                    <Text style={{ maxWidth: 100 }}>{new Date(userData.last_update).toLocaleDateString()}</Text>
+                    <Text style={{ maxWidth: 100 }}>{new Date(userData.updated_at).toLocaleDateString()}</Text>
                 </View>
 
                 <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -189,8 +192,8 @@ export default function Perfil({ navigation }) {
                         />
                     </View>
                     <View>
-                        <View style={[styles.dropdown, {display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}]}>
-                            <Text style={[styles.label, {maxWidth: 150}]}>Usuario Anonimo:</Text>
+                        <View style={[styles.dropdown, { display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
+                            <Text style={[styles.label, { maxWidth: 150 }]}>Usuario Anonimo:</Text>
                             <Switch
                                 trackColor={{ false: 'gray', true: 'gray' }}
                                 thumbColor={colorScheme.Switch.thumbColor[isEnabled]}
@@ -300,12 +303,6 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         gap: 15
-    },
-    avatar: {
-        width: 100,
-        height: 100,
-        borderRadius: 20,
-        marginBottom: 10,
     },
     userName: {
         fontSize: 18,

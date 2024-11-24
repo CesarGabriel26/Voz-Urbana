@@ -1,8 +1,8 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import MapView, { Marker, UrlTile } from 'react-native-maps';
 import { ActivityIndicator, View } from 'react-native';
 
-export default function CustomMapProvider(
+export default React.forwardRef(function CustomMapProvider(
     {
         style = {},
         location,
@@ -10,9 +10,27 @@ export default function CustomMapProvider(
         children,
         anim = true,
         ...props
-    }
+    },
+    ref
 ) {
     const mapRef = useRef(null);
+
+
+    React.useImperativeHandle(ref, () => ({
+        focusOnRegion: (latitude, longitude) => {
+            if (mapRef.current) {
+                mapRef.current.animateToRegion(
+                    {
+                        latitude: latitude,
+                        longitude: longitude,
+                        latitudeDelta: 0.005,
+                        longitudeDelta: 0.005,
+                    },
+                    anim ? 1000 : 1
+                );
+            }
+        },
+    }));
 
     const focus = () => {
         if (location && mapRef.current) {
@@ -24,6 +42,10 @@ export default function CustomMapProvider(
             }, anim ? 1000 : 1);
         }
     }
+
+    useEffect(() => {
+        focus();
+    }, [location]);
 
     return (
         location ? (
@@ -39,18 +61,24 @@ export default function CustomMapProvider(
                     tileSize={256}
                 />
                 {
-                    children ? children : markers.map((marker, index) => (
-                        (marker.latitude) ? (
+                    children
+                }
+                {
+                    markers.map((marker, index) => (
+                        (marker && marker.latitude) ? (
                             <Marker
                                 key={index}
+
                                 coordinate={{
                                     latitude: parseFloat(marker.latitude),
                                     longitude: parseFloat(marker.longitude)
                                 }}
-                                title={marker.title ? marker.title : marker.text}
-                                description={marker.descricao ? marker.descricao : "Reclamação registrada"}
-                                {...marker.props}
+
+                                title={marker.title ? marker.title : marker.titulo}
+                                description={marker.descricao ? marker.descricao : marker.conteudo}
                                 onClick={marker.onClick}
+
+                                {...marker.props}
                             />
                         ) : null
                     ))
@@ -62,4 +90,4 @@ export default function CustomMapProvider(
             </View>
         )
     );
-};
+});

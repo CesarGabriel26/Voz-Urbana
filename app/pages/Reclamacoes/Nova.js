@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TextInput, Pressable, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TextInput, SafeAreaView, TouchableOpacity } from 'react-native';
+import { useForm, Controller } from 'react-hook-form';
 
 import { getUserLocation } from '../../utils/permissions/LocationPermtion';
 import CustomMapProvider from '../../components/CustomMap';
@@ -9,58 +10,85 @@ import MainContainer from '../../components/MainContainer'
 import { InputStyles } from '../../styles/Inputs';
 import { ButtonsStyles } from '../../styles/Buttons';
 import Separator from '../../components/Separator';
+import AddressInput from '../../components/AdressModel';
+import FormInput from '../../components/forms/input';
 
 
 export default function NovaReclamacao({ navigation }) {
-    const [complaints, setComplaints] = useState([]);
+    const { colorScheme } = useTheme();
+    const [loading, setLoading] = useState(false);
+
+    const [complaint, setComplaint] = useState({});
     const [location, setLocation] = useState(null);
 
-    const { colorScheme } = useTheme();
+    // Para o formulário de endereço
+    const [AdressModalVisible, setAdressModalVisible] = useState(false);
+    const [AdressData, setAdressData] = useState(null);
+
+    // Para o formulário de reclamação
+    const {
+        control: complaintControl,
+        handleSubmit: handleComplaintSubmit,
+        formState: { errors: complaintErrors }
+    } = useForm();
 
     const getLocation = async () => {
+        setLoading(true)
         try {
             let loc = await getUserLocation();
-            setLocation(loc);
+            setLocation(loc)
         } catch (error) {
             console.error("Erro ao obter localização:", error);
         }
+        setLoading(false)
     };
 
-    const loadList = async () => {
-        let resp = await listReports()
-        if (resp.content) {
-            setComplaints(resp.content)
-        }
+    const onSubmit = async (data) => {
+        setLoading(true);
+
+        setLoading(false);
     }
 
     useEffect(() => {
-        loadList()
         getLocation();
     }, []);
 
     return (
         <MainContainer>
-            <View>
+            <SafeAreaView>
                 <Text style={{ color: colorScheme.Text.title, fontWeight: '700', fontSize: 24, margin: 20 }}>
                     Crie uma nova reclamação
                 </Text>
-                <Text style={{ color: colorScheme.Text.title, fontWeight: '600', fontSize: 20 }}>
-                    Título
-                </Text>
-                <TextInput
-                    placeholder='Uma descrição curta sobre o problema'
-                    style={[InputStyles.input, colorScheme.Inputs.PrimaryGhost]}
-                    placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
-                />
+                <View style={{ gap: 5 }} >
+                    <Text style={{ color: colorScheme.Text.title, fontWeight: '600', fontSize: 20 }}>
+                        Título
+                    </Text>
+                    <FormInput
+                        control={complaintControl}
+                        errors={complaintErrors}
+                        name="Titulo"
+                        defaultValue=""
+                        style={[InputStyles.input, colorScheme.Inputs.PrimaryGhost]}
+                        placeholder="Digite o titulo da sua reclamação"
+                        placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
+                    />
+                </View>
 
-                <Text style={{ color: colorScheme.Text.title, fontWeight: '600', fontSize: 20, marginTop: 20 }}>
-                    Informe seu problema
-                </Text>
-                <TextInput
-                    placeholder=''
-                    style={[InputStyles.inputTall, colorScheme.Inputs.PrimaryGhost]}
-                    placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
-                />
+                <View style={{ gap: 5 }} >
+                    <Text style={{ color: colorScheme.Text.title, fontWeight: '600', fontSize: 20, marginTop: 20 }}>
+                        Informe seu problema
+                    </Text>
+                    <FormInput
+                        control={complaintControl}
+                        errors={complaintErrors}
+                        name="Conteudo"
+                        defaultValue=""
+                        style={[InputStyles.inputTall, colorScheme.Inputs.PrimaryGhost]}
+                        placeholder="Descreva o seu problema"
+                        placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
+                    />
+                </View>
+
                 <Text style={{ color: colorScheme.Text.title, fontWeight: '600', fontSize: 20, marginTop: 20 }}>
                     Carregue uma imagem do local e/ou problema
                 </Text>
@@ -71,8 +99,8 @@ export default function NovaReclamacao({ navigation }) {
                 />
 
                 <Separator
-                    style={{ 
-                        marginVertical: 20 
+                    style={{
+                        marginVertical: 20
                     }}
                     textStyle={{
                         fontWeight: '600',
@@ -84,78 +112,68 @@ export default function NovaReclamacao({ navigation }) {
                     texto='Informações do local'
                 />
 
-                <TextInput
-                    placeholder='INSIRA COMPONENTE DE MAPA AQUI'
-                    style={[InputStyles.inputTall, colorScheme.Inputs.PrimaryGhost]}
-                    placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
-                />
+                <View style={{ gap: 15 }} >
+                    <View style={{ height: 200 }}>
+                        <CustomMapProvider
+                            location={location}
+                            style={styles.map}
+                            scrollEnabled={false}
+                            zoomEnabled={false}
+                            markers={
+                                [
+                                    {
+                                        latitude: location ? location.latitude : null,
+                                        longitude: location ? location.longitude : null,
+                                        title: "Esse será o local",
+                                        descricao: "Sua reclamação sera registrada aqui",
+                                        props: {
+                                            pinColor: colorScheme.Danger
+                                        }
+                                    }
+                                ]
+                            }
+                        />
+                    </View>
 
-                <Text style={{ color: colorScheme.Text.title, fontWeight: '600', fontSize: 20, marginTop: 20 }}>
-                    Número do local
-                </Text>
-                <TextInput
-                    placeholder='Uma descrição curta sobre o problema'
-                    style={[InputStyles.input, colorScheme.Inputs.PrimaryGhost]}
-                    placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
-                />
-                <Text style={{ color: colorScheme.Text.title, fontWeight: '600', fontSize: 20, marginTop: 20 }}>
-                    Rua *
-                </Text>
-                <TextInput
-                    placeholder='Uma descrição curta sobre o problema'
-                    style={[InputStyles.input, colorScheme.Inputs.PrimaryGhost]}
-                    placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
-                />
-                <Text style={{ color: colorScheme.Text.title, fontWeight: '600', fontSize: 20, marginTop: 20 }}>
-                    CEP
-                </Text>
-                <TextInput
-                    placeholder='Uma descrição curta sobre o problema'
-                    style={[InputStyles.input, colorScheme.Inputs.PrimaryGhost]}
-                    placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
-                />
-                <Text style={{ color: colorScheme.Text.title, fontWeight: '600', fontSize: 20, marginTop: 20 }}>
-                    Cidade *
-                </Text>
-                <TextInput
-                    placeholder='Uma descrição curta sobre o problema'
-                    style={[InputStyles.input, colorScheme.Inputs.PrimaryGhost]}
-                    placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
-                />
-                <Text style={{ color: colorScheme.Text.title, fontWeight: '600', fontSize: 20, marginTop: 20 }}>
-                    Estado *
-                </Text>
-                <TextInput
-                    placeholder='Uma descrição curta sobre o problema'
-                    style={[InputStyles.input, colorScheme.Inputs.PrimaryGhost]}
-                    placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
-                />
-                <Text style={{ color: colorScheme.Text.title, fontWeight: '600', fontSize: 20, marginTop: 20 }}>
-                    País *
-                </Text>
-                <TextInput
-                    placeholder='Uma descrição curta sobre o problema'
-                    style={[InputStyles.input, colorScheme.Inputs.PrimaryGhost]}
-                    placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
-                />
-
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <TouchableOpacity
-                        style={[ButtonsStyles.default, colorScheme.Buttons.Primary, { marginVertical: 15, width: '45%' }]}
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            marginBottom: 15
+                        }}
                     >
-                        <Text style={{ color: 'white' }}> Enviar </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={[ButtonsStyles.default, colorScheme.Buttons.Secondary, { marginVertical: 15, width: '45%' }]}
-                    >
-                        <Text style={{ color: 'black' }}> Verificar endereço </Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[ButtonsStyles.default, colorScheme.Buttons.Primary]}
+                            onPress={handleComplaintSubmit(onSubmit)}
+                        >
+                            <Text style={{ color: 'white' }}> Enviar </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[ButtonsStyles.default, colorScheme.Buttons.Secondary]}
+                            onPress={() => { setAdressModalVisible(true) }}
+                        >
+                            <Text style={{ color: 'black' }}> Inserir Endereço </Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </View>
+
+                <AddressInput
+                    setModalVisible={setAdressModalVisible}
+                    modalVisible={AdressModalVisible}
+                    setAdress={setAdressData}
+                    setLocation={setLocation}
+                />
+            </SafeAreaView>
         </MainContainer>
     );
 }
 
 const styles = StyleSheet.create({
-
+    map: {
+        width: '100%',
+        height: '100%',
+        borderRadius: 20,
+        overflow: 'hidden'
+    },
 });
+

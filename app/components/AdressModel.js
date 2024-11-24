@@ -1,57 +1,102 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Modal, TouchableOpacity, ActivityIndicator, TextInput, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Modal, TouchableOpacity, ActivityIndicator, TextInput } from 'react-native';
+import { useForm, Controller } from 'react-hook-form';
+
 import { useTheme } from '../utils/ThemeContext';
-import Icon from '@expo/vector-icons/Ionicons';
-import { Picker } from '@react-native-picker/picker';
-import { getLatLongFromAddress } from '../utils/LocationPermition';
+import { getLatLongFromAddress } from '../utils/permissions/LocationPermtion';
+import MainContainer from './MainContainer';
+import ModalDropDown from './ModalDropDown';
+import { onAddressSubmit } from '../managers/NovaReclamacao';
+import { InputStyles } from '../styles/Inputs';
+import { ButtonsStyles } from '../styles/Buttons';
+import { getCities, getCountries, getStates } from '../utils/permissions/LocationSearch';
 
 export default function AddressInput({ setModalVisible, modalVisible, setAdress, setLocation }) {
     const { colorScheme } = useTheme();
-
-    const [street, setStreet] = useState("");
-    const [number, setNumber] = useState("");
-    const [state, setState] = useState('São Paulo');
-    const [city, setCity] = useState("");
-    const [zipCode, setZipCode] = useState("");
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
 
-    // Lista de estados e cidades
-    const states = [
-        { label: 'São Paulo', value: 'São Paulo' },
-        { label: 'Rio de Janeiro', value: 'Rio de Janeiro' },
-        { label: 'Minas Gerais', value: 'Minas Gerais' },
-        { label: 'Espírito Santo', value: 'Espírito Santo' },
-    ];
+    const [paisesSelectModalVisible, setPaisesSelectModalVisible] = useState(false);
+    const [paisSelecionado, setPaisSelecionado] = useState("BR");
+    const [paises, setPaises] = useState([]);
 
-    const citiesByState = {
-        'São Paulo': ["São Paulo", "Campinas", "Santos", "Sorocaba", "Andradina"],
-        'Rio de Janeiro': ["Rio de Janeiro", "Niterói", "Petrópolis", "Volta Redonda"],
-        'Minas Gerais': ["Belo Horizonte", "Uberlândia", "Contagem", "Juiz de Fora"],
-        'Espírito Santo': ["Vitória", "Vila Velha", "Serra", "Cariacica"]
+    const [estadosSelectModalVisible, setEstadosSelectModalVisible] = useState(false);
+    const [estadoSelecionado, setEstadoSelecionado] = useState("SP");
+    const [estados, setEstados] = useState([]);
+
+    const [cidasdeSelectModalVisible, setCidasdeSelectModalVisible] = useState(false);
+    const [cidadeSelecionada, setCidadeSelecionada] = useState("Andradina");
+    const [cidades, setCidades] = useState([]);
+
+    const getLocation = async () => {
+        setLoading(true)
+        await loadCountries()
+        await  loadStates()
+        await  loadCities()
+        setLoading(false)
     };
 
-    const handleSubmit = async () => {
+    const loadCountries = async() => {
+        try {
+            const _countries = await getCountries();
+            setPaises(_countries)
+        } catch (error) {
+            console.error("Erro ao obter paises:", error);
+        }
+    }
+    const loadStates = async() => {
+        try {
+            const _states = await getStates();
+            setEstados(_states)
+        } catch (error) {
+            console.error("Erro ao obter estados", error);
+        }
+    }
+    const loadCities = async() => {
+        try {
+            const _cities = await getCities(estadoSelecionado);
+            setCidades(_cities)
+        } catch (error) {
+            console.error("Erro ao obter cidades:", error);
+        }
+    }
+
+    const onSubmit = async (data) => {
         setLoading(true);
 
-        let location = await getLatLongFromAddress(street, number, city, state, "Brasil")
-        setLocation(location)
+        const { NumeroDoLocal, Rua, CEP, Cidade, Estado, Pais } = data;
 
-        await setAdress(
-            JSON.stringify(
-                {
-                    "street": street,
-                    "number": number,
-                    "city": city,
-                    "state": state,
-                    "Country": "Brasil",
-                    "zipCode": zipCode,
-                }
-            )
-        )
+        try {
+            const location = await getLatLongFromAddress(Rua, NumeroDoLocal, Cidade, Estado, Pais);
+            setLocation(location);
+
+            // Aqui, você pode usar `setAdress` para armazenar o endereço formatado
+            setAdress(JSON.stringify({
+                street: Rua,
+                number: NumeroDoLocal,
+                city: Cidade,
+                state: Estado,
+                country: Pais,
+                zipCode: CEP,
+            }));
+
+            setModalVisible(false);
+        } catch (error) {
+            console.error("Erro ao processar o endereço:", error);
+        }
+
         setLoading(false);
-        setModalVisible(false);
-    };
+    }
+
+    useEffect(() => {
+        getLocation()
+    }, [paisSelecionado, estadoSelecionado])
+
+    const {
+        control: addressControl,
+        handleSubmit: handleAddressSubmit,
+        formState: { errors: addressErrors }
+    } = useForm();
+
 
     return (
         <Modal
@@ -60,182 +105,234 @@ export default function AddressInput({ setModalVisible, modalVisible, setAdress,
             visible={modalVisible}
             onRequestClose={() => setModalVisible(!modalVisible)}
         >
-            <View style={styles.modalOverlay}>
-                <View style={[styles.modalView, { backgroundColor: colorScheme.Screen.background }]}>
-                    <View style={[styles.header]}>
-                        <View style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                        }}>
-                            <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
-                                <Icon name='arrow-back' size={25} color={colorScheme.Text.textPrimary} />
-                            </TouchableOpacity>
-                            <Text style={[styles.title, { color: colorScheme.Text.textPrimary }]}>Endereço</Text>
-                        </View>
-                        <View style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                        }}>
-                            <Text style={[{ color: colorScheme.Text.textPlaceHolder }]}>todos os campos com</Text>
-                            <Text style={[{ color: "orange" }]}> * </Text>
-                            <Text style={[{ color: colorScheme.Text.textPlaceHolder }]}>são obrigatorios</Text>
-                        </View>
+            <MainContainer>
+                <View style={styles.body} >
+                    <View style={{ gap: 5 }} >
+                        <Text style={{ color: colorScheme.Text.title, fontWeight: '600', fontSize: 20 }}>
+                            Número do local
+                        </Text>
+                        <Controller
+                            control={addressControl}
+                            name="NumeroDoLocal"
+                            defaultValue=""
+                            render={({ field: { onChange, onBlur, value } }) => (
+                                <TextInput
+                                    placeholder="Informe o número do local"
+                                    style={[InputStyles.input, colorScheme.Inputs.PrimaryGhost]}
+                                    placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
+                                    onBlur={onBlur}
+                                    onChangeText={onChange}
+                                    value={value}
+                                    keyboardType='number-pad'
+                                />
+                            )}
+                        />
+                        {addressErrors.NumeroDoLocal && (
+                            <Text style={{ color: "red" }}>{addressErrors.NumeroDoLocal.message}</Text>
+                        )}
                     </View>
 
-                    <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
-                        <View style={styles.inputContainer}>
-                            <View style={{
-                                flexDirection: 'row',
-                            }}>
-                                <Text style={[styles.label, { color: colorScheme.Text.textPrimary }]}>Rua</Text>
-                                <Text style={[{ color: "orange" }]}> * </Text>
-                            </View>
-                            <TextInput
-                                style={[styles.input, { borderBottomColor: colorScheme.Body_bg, color: colorScheme.Text.textPrimary }]}
-                                value={street}
-                                onChangeText={setStreet}
-                                placeholder="Rua Exemplo"
-                                placeholderTextColor={colorScheme.Text.textPlaceHolder}
-                            />
-                        </View>
-                        <View style={styles.inputContainer}>
-                            <Text style={[styles.label, { color: colorScheme.Text.textPrimary }]}>Número</Text>
-                            <TextInput
-                                style={[styles.input, { borderBottomColor: colorScheme.Body_bg, color: colorScheme.Text.textPrimary }]}
-                                value={number}
-                                onChangeText={setNumber}
-                                placeholder="123"
-                                keyboardType="numeric"
-                                placeholderTextColor={colorScheme.Text.textPlaceHolder}
-                            />
-                        </View>
-                        <View style={styles.inputContainer}>
-                            <Text style={[styles.label, { color: colorScheme.Text.textPrimary }]}>CEP</Text>
-                            <TextInput
-                                style={[styles.input, { borderBottomColor: colorScheme.Body_bg, color: colorScheme.Text.textPrimary }]}
-                                value={zipCode}
-                                onChangeText={setZipCode}
-                                placeholder="00000-000"
-                                keyboardType="numeric"
-                                placeholderTextColor={colorScheme.Text.textPlaceHolder}
-                            />
-                        </View>
-                        <View style={styles.inputContainer}>
-                            <View style={{
-                                flexDirection: 'row',
-                            }}>
-                                <Text style={[styles.label, { color: colorScheme.Text.textPrimary }]}>Estado</Text>
-                                <Text style={[{ color: "orange" }]}> * </Text>
-                            </View>
-                            <Picker
-                                selectedValue={state}
-                                onValueChange={(value) => {
-                                    setState(value);
-                                    setCity("");  // Reseta a cidade ao mudar o estado
-                                }}
-                                style={[styles.picker, { color: colorScheme.Text.textPrimary }]}
-                            >
-                                {states.sort().map((state) => (
-                                    <Picker.Item key={state.value} label={state.label} value={state.value} />
-                                ))}
-                            </Picker>
-                        </View>
-                        <View style={styles.inputContainer}>
-                            <View style={{
-                                flexDirection: 'row',
-                            }}>
-                                <Text style={[styles.label, { color: colorScheme.Text.textPrimary }]}>Cidade</Text>
-                                <Text style={[{ color: "orange" }]}> * </Text>
-                            </View>
-                            <Picker
-                                selectedValue={city}
-                                onValueChange={(value) => setCity(value)}
-                                style={[styles.picker, { color: colorScheme.Text.textPrimary }]}
-                            >
-                                <Picker.Item label="Selecione a cidade" value="" />
-                                {citiesByState[state]?.sort().map((city) => (
-                                    <Picker.Item key={city} label={city} value={city} />
-                                ))}
-                            </Picker>
-                        </View>
+                    <View style={{ gap: 5 }} >
+                        <Text style={{ color: colorScheme.Text.title, fontWeight: '600', fontSize: 20 }}>
+                            Rua *
+                        </Text>
+                        <Controller
+                            control={addressControl}
+                            name="Rua"
+                            defaultValue=""
+                            rules={{
+                                required: "A Rua do local é obrigatória.",
+                            }}
+                            render={({ field: { onChange, onBlur, value } }) => (
+                                <TextInput
+                                    placeholder='Informe a Rua'
+                                    style={[InputStyles.input, colorScheme.Inputs.PrimaryGhost]}
+                                    placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
+                                    onBlur={onBlur}
+                                    onChangeText={onChange}
+                                    value={value}
+                                />
+                            )}
+                        />
+                        {addressErrors.Rua && (
+                            <Text style={{ color: "red" }}>{addressErrors.Rua.message}</Text>
+                        )}
+                    </View>
 
-                        {loading && <ActivityIndicator size="small" color={colorScheme.Body_bg} style={styles.loadingIndicator} />}
-                        {error ? <Text style={[styles.errorText, { color: colorScheme.Text.error }]}>{error}</Text> : null}
-                    </ScrollView>
+                    <View style={{ gap: 5 }} >
+                        <Text style={{ color: colorScheme.Text.title, fontWeight: '600', fontSize: 20 }}>
+                            CEP
+                        </Text>
+                        <Controller
+                            control={addressControl}
+                            name="CEP"
+                            defaultValue=""
+                            render={({ field: { onChange, onBlur, value } }) => (
+                                <TextInput
+                                    placeholder="Informe o CEP do local"
+                                    style={[InputStyles.input, colorScheme.Inputs.PrimaryGhost]}
+                                    placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
+                                    onBlur={onBlur}
+                                    onChangeText={onChange}
+                                    value={value}
+                                    keyboardType='number-pad'
+                                />
+                            )}
+                        />
+                        {addressErrors.CEP && (
+                            <Text style={{ color: "red" }}>{addressErrors.CEP.message}</Text>
+                        )}
+                    </View>
 
-                    <TouchableOpacity
-                        style={[styles.confirmButton, { backgroundColor: colorScheme.Button.primary }]}
-                        onPress={handleSubmit}
-                        disabled={loading}
+                    <View style={{ gap: 5 }} >
+                        <Text style={{ color: colorScheme.Text.title, fontWeight: '600', fontSize: 20 }}>
+                            Cidade *
+                        </Text>
+                        <TouchableOpacity
+                            disabled={loading}
+                            style={[InputStyles.input, colorScheme.Inputs.PrimaryGhost]} // Cor do borda para indicar seleção
+                            onPress={() => setCidasdeSelectModalVisible(true)} // Abre o modal quando pressionado
+                        >
+                            <Text style={styles.placeholderText}>
+                                {cidadeSelecionada ? `Cidade Selecionado: ${cidadeSelecionada}` : 'Selecione uma Cidade'}
+                            </Text>
+                        </TouchableOpacity>
+                        <Controller
+                            control={addressControl}
+                            name="Cidade"
+                            defaultValue="Andradina"
+                            rules={{
+                                required: "A Cidade é obrigatória.",
+                            }}
+                            render={({ field: { onChange, value } }) => (
+                                <>
+                                    <ModalDropDown
+                                        visible={cidasdeSelectModalVisible}
+                                        setVisible={setCidasdeSelectModalVisible}
+                                        items={cidades.map((cidade) => ({ label: cidade, value: cidade }))}
+                                        value={value}
+                                        onChange={(val) => {
+                                            onChange(val)
+                                            setCidadeSelecionada(val)
+                                        }}
+                                        placeholder="Selecione uma Cidade"
+                                        title="Selecione a cidade onde você está"
+                                    />
+                                </>
+                            )}
+                        />
+                        {addressErrors.Cidade && (
+                            <Text style={{ color: "red" }}>{addressErrors.Cidade.message}</Text>
+                        )}
+                    </View>
+
+                    <View style={{ gap: 5 }} >
+                        <Text style={{ color: colorScheme.Text.title, fontWeight: '600', fontSize: 20 }}>
+                            Estado *
+                        </Text>
+                        <TouchableOpacity
+                            disabled={loading}
+                            style={[InputStyles.input, colorScheme.Inputs.PrimaryGhost]} // Cor do borda para indicar seleção
+                            onPress={() => setEstadosSelectModalVisible(true)} // Abre o modal quando pressionado
+                        >
+                            <Text style={styles.placeholderText}>
+                                {estadoSelecionado ? `Estado Selecionado: ${estadoSelecionado}` : 'Selecione um Estado'}
+                            </Text>
+                        </TouchableOpacity>
+                        <Controller
+                            control={addressControl}
+                            name="Estado"
+                            defaultValue="SP"
+                            rules={{
+                                required: "Estado é obrigatório.",
+                            }}
+                            render={({ field: { onChange, value } }) => (
+                                <>
+                                    <ModalDropDown
+                                        visible={estadosSelectModalVisible}
+                                        setVisible={setEstadosSelectModalVisible}
+                                        items={estados.map((estado) => ({ label: estado.name, value: estado.code }))}
+                                        value={value}
+                                        onChange={(val) => {
+                                            onChange(val)
+                                            setEstadoSelecionado(val)
+                                        }}
+                                        placeholder="Selecione um Estado"
+                                        title="Selecione o estado onde você está"
+                                    />
+                                </>
+                            )}
+                        />
+                        {addressErrors.Estado && (
+                            <Text style={{ color: "red" }}>{addressErrors.Estado.message}</Text>
+                        )}
+                    </View>
+
+                    <View style={{ gap: 5 }} >
+                        <Text style={{ color: colorScheme.Text.title, fontWeight: '600', fontSize: 20 }}>
+                            País *
+                        </Text>
+                        <TouchableOpacity
+                            disabled={loading}
+                            style={[InputStyles.input, colorScheme.Inputs.PrimaryGhost]} // Cor do borda para indicar seleção
+                            onPress={() => setPaisesSelectModalVisible(true)} // Abre o modal quando pressionado
+                        >
+                            <Text style={styles.placeholderText}>
+                                {paisSelecionado ? `País Selecionado: ${paisSelecionado}` : 'Selecione um País'}
+                            </Text>
+                        </TouchableOpacity>
+
+
+                        <Controller
+                            control={addressControl}
+                            name="Pais"
+                            defaultValue="BR"
+                            rules={{ required: 'O país é obrigatório.' }}
+                            render={({ field: { onChange, value } }) => (
+                                <>
+                                    <ModalDropDown
+                                        visible={paisesSelectModalVisible}
+                                        setVisible={setPaisesSelectModalVisible}
+                                        items={paises.map((paise) => ({ label: paise.name, value: paise.code }))}
+                                        value={value}
+                                        onChange={(val) => {
+                                            onChange(val)
+                                            setPaisSelecionado(val)
+                                        }}
+                                        placeholder="Selecione um País"
+                                        title="Selecione o país onde você está"
+                                    />
+                                </>
+                            )}
+                        />
+                        {addressErrors.Pais && <Text style={{ color: 'red' }}>{addressErrors.Pais.message}</Text>}
+                    </View>
+
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            marginTop: 15
+                        }}
                     >
-                        <Text style={[styles.buttonText, { color: colorScheme.Text.onPrimary }]}>Confirmar</Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[ButtonsStyles.default, colorScheme.Buttons.Primary]}
+                            onPress={handleAddressSubmit(onSubmit)}
+                        >
+                            <Text style={{ color: 'white' }}> Checar Endereço </Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </View>
+            </MainContainer>
         </Modal>
     );
 }
 
 const styles = StyleSheet.create({
-    modalOverlay: {
-        flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    modalView: {
-        width: '90%',
-        borderRadius: 8,
-        padding: 20,
-        alignItems: 'center',
-    },
-    header: {
-        width: '100%',
-        paddingBottom: 12,
-        marginBottom: 20,
-    },
-    title: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginLeft: 10,
-    },
     body: {
-        width: '100%',
-        marginBottom: 20,
-    },
-    inputContainer: {
-        marginBottom: 15,
-    },
-    label: {
-        fontSize: 14,
-        marginBottom: 5,
-    },
-    input: {
-        width: '100%',
-        height: 40,
-        borderBottomWidth: 1.5,
-        fontSize: 16,
-        paddingHorizontal: 8,
-    },
-    picker: {
-        height: 40,
-        width: '100%',
-    },
-    loadingIndicator: {
-        marginTop: 10,
-    },
-    errorText: {
-        fontSize: 14,
-        marginTop: 5,
-    },
-    confirmButton: {
-        width: '100%',
-        paddingVertical: 12,
-        borderRadius: 6,
-        alignItems: 'center',
-    },
-    buttonText: {
-        fontSize: 16,
-        fontWeight: '600',
-    },
+        marginTop: 20,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+    }
 });

@@ -59,7 +59,7 @@ export const Colors = {
             LightGhost: {
                 color: '#FFFFFF',
                 borderColor: '#FFFFFF',
-                placeHolder: '#adadad',
+                placeHolder: '#aaaaaaaa',
                 width: '100%',
             },
             Dark: {

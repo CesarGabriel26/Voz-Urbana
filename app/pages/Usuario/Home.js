@@ -5,6 +5,7 @@ import { listReports } from '../../utils/Api';
 import { getUserLocation } from '../../utils/permissions/LocationPermtion';
 import CustomMapProvider from '../../components/CustomMap';
 import MainContainer from '../../components/MainContainer'
+import Separator from '../../components/Separator';
 
 export default function Home({ navigation }) {
     const [complaints, setComplaints] = useState([]);
@@ -35,8 +36,8 @@ export default function Home({ navigation }) {
 
 
     return (
-        <MainContainer>
-            <View style={[styles.containerHome, {marginTop: 20}]}>
+        <MainContainer canScroll={false} style={{ display: 'flex', flexDirection: 'column', flex: 1 }} >
+            <View style={[styles.containerHome, { marginTop: 20 }]}>
                 <TouchableOpacity
                     onPress={() => {
                         navigation.navigate('NovaReclamacao')
@@ -79,15 +80,15 @@ export default function Home({ navigation }) {
                 </TouchableOpacity>
             </View>
 
-            <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <View style={{ height: 2, width: '80%', backgroundColor: colorScheme.Body_bg, margin: 20 }}></View>
+            <Separator color={colorScheme.Body_bg} style={{ marginVertical: 20 }} />
 
+            <View style={{ display: 'flex', alignItems: 'center', flex: 1, paddingBottom: 100 }}>
                 <Text style={{ color: colorScheme.Text.title, fontWeight: '800', fontSize: 20, marginBottom: 20 }}>
                     Reclamações na sua área
                 </Text>
 
                 <Pressable
-                    style={{ height: 200, width: 300, marginBottom: 35 }}
+                    style={{ width: '100%' }}
                     onPress={() => {
                         navigation.navigate('Mapa')
                     }}
@@ -95,15 +96,13 @@ export default function Home({ navigation }) {
                 >
                     {
                         location ? (
-                            <View>
-                                <CustomMapProvider
-                                    style={styles.map}
-                                    location={location}
-                                    markers={complaints}
-                                    scrollEnabled={false}
-                                    zoomEnabled={false}
-                                />
-                            </View>
+                            <CustomMapProvider
+                                style={styles.map}
+                                location={location}
+                                markers={complaints}
+                                scrollEnabled={false}
+                                zoomEnabled={false}
+                            />
                         ) : <View style={styles.container} ><ActivityIndicator size="large" color={colorScheme.Icons.loader.Primary} />
                         </View>
                     }

@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StatusBar, Platform, TouchableOpacity } from 'react-native';
 import { useTheme } from '../utils/ThemeContext';
-
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Login from '../pages/Iniciais/Login';
 import SingUp from '../pages/Iniciais/SingUp';
@@ -15,22 +14,42 @@ import Configuracoes from '../pages/Usuario/Configuracoes';
 import NovaReclamacao from '../pages/Reclamacoes/Nova';
 
 import NovaPeticao from '../pages/Peticoes/Nova';
+import Avatar from './UserAvatar';
+import decodeUserToken from '../utils/JWT';
+import Mapa from '../pages/Extra/Map';
 
 
 const Stack = createStackNavigator();
 
 export default function Routes() {
   const { colorScheme } = useTheme();
+  const [userData, setUserData] = useState();
 
   useEffect(() => {
+    const initializeUser = async () => {
+      try {
+        const token = await AsyncStorage.getItem('usuario');
+        if (token) {
+          const user = decodeUserToken(token) || {};
+          setUserData(user)
+        } else {
+          console.log('No token found');
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    initializeUser();
+
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor('#0A62AC');
-      StatusBar.setBarStyle('light-content');
+      StatusBar.setBarStyle('dark-content');
     } else if (Platform.OS === 'ios') {
       StatusBar.setBarStyle('light-content');
-      StatusBar.setBackgroundColor('#0A62AC');
     }
   }, []);
+
 
   return (
     <NavigationContainer>
@@ -51,7 +70,19 @@ export default function Routes() {
                 marginRight: 25
               }}
             >
-              <FontAwesome name="gear" size={30} color="white" />
+              {/* <FontAwesome name="gear" size={30} color="white" /> */}
+
+              {
+                userData ? (
+                  <Avatar
+                    uri={userData.pfp ? userData.pfp : null}
+                    text={userData.name || "?"}
+                    size={40}
+                    shape="square"
+                  />
+                ) : null
+              }
+
             </TouchableOpacity>
           ),
         })}
@@ -82,7 +113,12 @@ export default function Routes() {
           name="Configurações"
           component={Configuracoes}
         />
-        
+
+        <Stack.Screen
+          name="Mapa"
+          component={Mapa}
+        />
+
         <Stack.Screen
           name="NovaReclamacao"
           component={NovaReclamacao}
