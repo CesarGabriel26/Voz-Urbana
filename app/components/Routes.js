@@ -20,6 +20,8 @@ import Mapa from '../pages/Extra/Map';
 import Lista from '../pages/Peticoes/Lista';
 import Detalhes from '../pages/Peticoes/Detalhes';
 
+import ListaReclamacao from '../pages/Reclamacoes/Lista';
+
 
 const Stack = createStackNavigator();
 
@@ -49,6 +51,7 @@ export default function Routes() {
       StatusBar.setBarStyle('dark-content');
     } else if (Platform.OS === 'ios') {
       StatusBar.setBarStyle('light-content');
+      
     }
   }, []);
 
@@ -139,6 +142,11 @@ export default function Routes() {
          <Stack.Screen
           name="Detalhes Da Petição"
           component={Detalhes}
+        />
+
+         <Stack.Screen
+          name="Reclamações"
+          component={ListaReclamacao}
         />
 
       </Stack.Navigator>

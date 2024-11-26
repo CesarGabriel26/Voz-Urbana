@@ -6,6 +6,7 @@ export const Colors = {
         Body_bg: "#0A62AC",
         Body_bg_second: "#ffffff",
         Body_bg_third: "#000000",
+        list_item_bg: "#fff", //"#333",
 
         Danger: "#dc3545",
 
@@ -30,7 +31,6 @@ export const Colors = {
             Light: {
                 color: '#000000',
                 backgroundColor: '#FFFFFF',
-
             },
             LightGhost: {
                 color: '#FFFFFF',
@@ -40,11 +40,44 @@ export const Colors = {
                 color: '#FFFFFF',
                 backgroundColor: '#000000',
             },
-            DarktGhost: {
+            DarkGhost: {
                 color: '#000000',
                 borderColor: '#000000',
             },
+            BootstrapPrimary: {
+                color: '#FFFFFF',
+                backgroundColor: '#007bff',
+            },
+            BootstrapSecondary: {
+                color: '#FFFFFF',
+                backgroundColor: '#6c757d',
+            },
+            BootstrapSuccess: {
+                color: '#FFFFFF',
+                backgroundColor: '#28a745',
+            },
+            BootstrapDanger: {
+                color: '#FFFFFF',
+                backgroundColor: '#dc3545',
+            },
+            BootstrapWarning: {
+                color: '#000000',
+                backgroundColor: '#ffc107',
+            },
+            BootstrapInfo: {
+                color: '#FFFFFF',
+                backgroundColor: '#17a2b8',
+            },
+            BootstrapLight: {
+                color: '#000000',
+                backgroundColor: '#f8f9fa',
+            },
+            BootstrapDark: {
+                color: '#FFFFFF',
+                backgroundColor: '#343a40',
+            },
         },
+        
 
         Inputs: {
             PrimaryGhost: {

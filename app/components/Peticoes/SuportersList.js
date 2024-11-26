@@ -3,8 +3,11 @@ import { View, Text, FlatList, StyleSheet, Dimensions } from 'react-native';
 import PagerView from 'react-native-pager-view';
 import Avatar from '../UserAvatar';
 import { getUserById } from '../../utils/Api';
+import { useTheme } from '../../utils/ThemeContext';
 
 export default function SupportersList({ petition, theme }) {
+    const { colorScheme } = useTheme();
+
     const [supporters, setSupporters] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
 
@@ -27,6 +30,7 @@ export default function SupportersList({ petition, theme }) {
                 const fetchedSupporters = await Promise.all(promises);
 
                 setSupporters(fetchedSupporters);
+
                 setCurrentPage(0); // Reseta para a primeira página
             } catch (error) {
                 console.error('Erro ao buscar apoiadores:', error);
@@ -45,69 +49,61 @@ export default function SupportersList({ petition, theme }) {
         return supporters.slice(startIndex, endIndex);
     };
 
-    // Estilos dinâmicos com base no tema
-    const textStyle = {
-        color: theme === 'dark' ? '#FFF' : '#000',
-    };
-
     const listItemStyle = {
         ...styles.listItem,
-        backgroundColor: theme === 'dark' ? '#333' : '#f9f9f9',
+        backgroundColor: colorScheme.list_item_bg
     };
 
     return (
         <View style={styles.container}>
-            <Text style={[styles.title, textStyle]}>
+            <Text style={[styles.title, { color: colorScheme.Text.dark }]}>
                 Apoiadores:
             </Text>
 
-            {supporters.length > 0 ? (
-                <FlatList
-                    data={getCurrentSupportersList()}
-                    keyExtractor={(item, index) => index.toString()}
-                    nestedScrollEnabled={true}
-                    numColumns={2}
-                    columnWrapperStyle={styles.row}
-                    renderItem={({ item }) => (
-                        <View style={listItemStyle}>
+            <View style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }} >
+                {supporters.length > 0 ? (
+                    getCurrentSupportersList().map((item, i) => (
+                        <View key={i} style={listItemStyle}>
                             <Avatar
                                 uri={item.content.pfp}
                                 size={60}
                                 style={styles.avatar}
                             />
-                            <Text style={[styles.supporterName, textStyle, { fontWeight: 'bold' }]}>
+                            <Text style={[styles.supporterName, { color: colorScheme.Text.dark }, { fontWeight: 'bold' }]}>
                                 {item.content.nome}
                             </Text>
-                            <Text style={[styles.supporterEmail, textStyle]}>
+                            <Text style={[styles.supporterEmail, { color: colorScheme.Text.dark }]}>
                                 {item.content.email}
                             </Text>
                         </View>
-                    )}
-                />
-            ) : (
-                <Text style={[styles.noSupportersText, textStyle]}>
-                    Ninguém apoiou ainda
-                </Text>
-            )}
+                    ))
+                ) : (
+                    <Text style={[styles.noSupportersText, { color: colorScheme.Text.dark }]}>
+                        Ninguém apoiou ainda
+                    </Text>
+                )}
+            </View>
 
             <PagerView
                 style={styles.pagination}
                 initialPage={0}
                 onPageSelected={(e) => setCurrentPage(e.nativeEvent.position)}
             >
-                {Array.from({ length: numberOfPages }).map((_, index) => (
-                    <View key={index} style={styles.pageIndicator}>
-                        <Text
-                            style={[
-                                styles.pageNumber,
-                                currentPage === index && styles.activePage,
-                                textStyle,
-                            ]}
-                        >
-                            {index + 1}
-                        </Text>
-                    </View>
-                ))}
+                {
+                    Array.from({ length: numberOfPages }).map((_, index) => (
+                        <View key={index} style={styles.pageIndicator}>
+                            <Text
+                                style={[
+                                    styles.pageNumber,
+                                    currentPage === index && styles.activePage,
+                                    { color: colorScheme.Text.dark },
+                                ]}
+                            >
+                                {index + 1}
+                            </Text>
+                        </View>
+                    ))
+                }
             </PagerView>
         </View>
     );

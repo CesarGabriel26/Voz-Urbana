@@ -1,60 +1,133 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TextInput } from 'react-native';
 import { useTheme } from '../../utils/ThemeContext';
-import { listPetitions } from '../../utils/Api';
+import { listPetitions, listReports } from '../../utils/Api';
 import MainContainer from '../../components/MainContainer'
-import { formatDate } from '../../utils/Parser';
-import { PrioritiesColors } from "../../utils/Constantes";
-import { CardStyles } from '../../styles/CardStyles';
+import PriorityCard from '../../components/PriorityCard';
+import { Dropdown } from 'react-native-element-dropdown';
+import { priorities } from '../../utils/Constantes';
 
 export default function Lista({ navigation }) {
     const { colorScheme } = useTheme();
-
     const [Petitions, setPetitions] = useState([]);
+    const [filteredPetitions, setFilteredPetitions] = useState([]);
+    const [searchText, setSearchText] = useState('');
+    const [filterOption, setFilterOption] = useState('Data ▲');
+    const [filterPriorityOption, setFilterPriorityOption] = useState(0);
 
     const loadList = async () => {
-        let resp = await listPetitions()
+        let resp = await listPetitions();
         if (resp.content) {
-            let a = []
-
-            for (let index = 0; index < 10; index++) {
-                a = [...a, ...resp.content]
-            }
-
-            setPetitions(a)
+            setPetitions(resp.content);
+            setFilteredPetitions(resp.content);
         }
-    }
+    };
 
     useEffect(() => {
         loadList()
     }, []);
 
+    const applyFilters = () => {
+        let filtered = [...Petitions];
+
+        // Filtro de texto
+        if (searchText.trim()) {
+            filtered = filtered.filter(petition =>
+                petition.titulo.toLowerCase().includes(searchText.toLowerCase()) ||
+                petition.content.toLowerCase().includes(searchText.toLowerCase())
+            );
+        }
+
+        // Filtro por prioridade(><) ou data
+        if (filterOption) {
+            switch (filterOption) {
+                case 'novo':
+                    filtered.sort((a, b) => new Date(b.data) - new Date(a.data));
+                    break;
+                case 'antigo':
+                    filtered.sort((a, b) => new Date(a.data) - new Date(b.data));
+                    break;
+                case 'prioridade_alta':
+                    filtered.sort((a, b) => b.prioridade - a.prioridade);
+                    break;
+                case 'prioridade_baixa':
+                    filtered.sort((a, b) => a.prioridade - b.prioridade);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        // Filtro por prioridade 0 a 10
+        if (filterPriorityOption) {
+            
+        }
+
+        setFilteredPetitions(filtered);
+    };
+
+    useEffect(() => {
+        applyFilters();
+    }, [searchText, filterOption]);
 
     return (
         <MainContainer  >
-            {
-                Petitions.map((petition, i) => (
-                    <View
-                        key={i}
-                        style={[CardStyles.card, { borderColor: PrioritiesColors[petition.prioridade], marginTop: i == 0 ? 20 : 0 }]}
-                    >
-                        <View
-                            style={[CardStyles.colorIndicator, { backgroundColor: PrioritiesColors[petition.prioridade] }]}
-                        />
-                        <Text style={CardStyles.level}>{petition.titulo}</Text>
-                        <Text numberOfLines={3} style={CardStyles.description}>{petition.content}</Text>
-                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
-                            <Text style={[CardStyles.example, { flex: 1, }]}>{formatDate(petition.data)}</Text>
+            <View style={{ marginVertical: 20 }} >
+                <TextInput
+                    style={{
+                        borderWidth: 1,
+                        borderColor: colorScheme.Body_bg,
+                        padding: 10,
+                        borderRadius: 8,
+                        marginVertical: 10,
+                        color: colorScheme.Text.primary
+                    }}
+                    placeholder="Buscar por título ou conteúdo"
+                    placeholderTextColor={colorScheme.Text.secondary}
+                    value={searchText}
+                    onChangeText={setSearchText}
+                />
+                <Dropdown
+                    data={[
+                        "Data ▼",
+                        "Data ▲",
+                        "Prioridade ▼",
+                        "Prioridade ▲",
+                    ].map((theme) => ({ label: theme, value: theme }))}
+                    labelField="label"
+                    valueField="value"
+                    value={filterOption}
+                    placeholder="Selecione um tema"
+                    placeholderStyle={{ color: colorScheme.Text.dark }}
+                    selectedTextStyle={{ color: colorScheme.Text.dark }}
+                    onChange={setFilterOption}
+                />
+                <Dropdown
+                    data={priorities.map((Item) => ({ label: `prioridade ${Item.level}`, value: Item.level }))}
+                    labelField="label"
+                    valueField="value"
+                    value={filterPriorityOption}
+                    placeholder=""
+                    placeholderStyle={{ color: colorScheme.Text.dark }}
+                    selectedTextStyle={{ color: colorScheme.Text.dark }}
+                    onChange={setFilterPriorityOption}
+                />
+            </View>
 
-                            <TouchableOpacity
-                                onPress={()=>{
-                                    navigation.navigate("Detalhes Da Petição", { id: petition.id })
-                                }}
-                            >
-                                <Text style={{ flex: 1, textAlign: 'right' }}>ver mais</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
+            {
+                filteredPetitions.map((petition, i) => (
+                    <PriorityCard
+                        key={i}
+                        prioridade={petition.prioridade}
+                        tittle={petition.titulo}
+                        date={petition.data}
+                        content={petition.content}
+                        onPress={() => {
+                            navigation.navigate("Detalhes Da Petição", { id: petition.id })
+                        }}
+                        pressableText="ver main"
+                        style={{ marginTop: i == 0 ? 20 : 0 }}
+                    />
                 ))
             }
         </MainContainer>
