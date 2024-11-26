@@ -40,7 +40,7 @@ export default function Home({ navigation }) {
             <View style={[styles.containerHome, { marginTop: 20 }]}>
                 <TouchableOpacity
                     onPress={() => {
-                        navigation.navigate('NovaReclamacao')
+                        navigation.navigate('Nova Reclamaçao')
                     }}
                     style={[styles.btnSqr, colorScheme.Buttons.Primary]}
                 >
@@ -52,7 +52,7 @@ export default function Home({ navigation }) {
 
                 <TouchableOpacity style={[styles.btnSqr, colorScheme.Buttons.Primary]}
                     onPress={() => {
-                        navigation.navigate('NovaPeticao')
+                        navigation.navigate('Nova Petiçao')
                     }}>
                     <Image source={require('../../assets/Megafone.png')} resizeMode='cover' />
                     <Text style={[styles.text, colorScheme.Buttons.Primary]}>Nova</Text>

@@ -17,6 +17,8 @@ import NovaPeticao from '../pages/Peticoes/Nova';
 import Avatar from './UserAvatar';
 import decodeUserToken from '../utils/JWT';
 import Mapa from '../pages/Extra/Map';
+import Lista from '../pages/Peticoes/Lista';
+import Detalhes from '../pages/Peticoes/Detalhes';
 
 
 const Stack = createStackNavigator();
@@ -120,12 +122,23 @@ export default function Routes() {
         />
 
         <Stack.Screen
-          name="NovaReclamacao"
+          name="Nova Reclamaçao"
           component={NovaReclamacao}
         />
+
+
+
         <Stack.Screen
-          name="NovaPeticao"
+          name="Nova Petiçao"
           component={NovaPeticao}
+        />
+        <Stack.Screen
+          name="Petições"
+          component={Lista}
+        />
+         <Stack.Screen
+          name="Detalhes Da Petição"
+          component={Detalhes}
         />
 
       </Stack.Navigator>
