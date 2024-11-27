@@ -30,12 +30,12 @@ export default function AddressInput({ setModalVisible, modalVisible, setAdress,
     const getLocation = async () => {
         setLoading(true)
         await loadCountries()
-        await  loadStates()
-        await  loadCities()
+        await loadStates()
+        await loadCities()
         setLoading(false)
     };
 
-    const loadCountries = async() => {
+    const loadCountries = async () => {
         try {
             const _countries = await getCountries();
             setPaises(_countries)
@@ -43,7 +43,7 @@ export default function AddressInput({ setModalVisible, modalVisible, setAdress,
             console.error("Erro ao obter paises:", error);
         }
     }
-    const loadStates = async() => {
+    const loadStates = async () => {
         try {
             const _states = await getStates();
             setEstados(_states)
@@ -51,7 +51,7 @@ export default function AddressInput({ setModalVisible, modalVisible, setAdress,
             console.error("Erro ao obter estados", error);
         }
     }
-    const loadCities = async() => {
+    const loadCities = async () => {
         try {
             const _cities = await getCities(estadoSelecionado);
             setCidades(_cities)
@@ -320,6 +320,14 @@ export default function AddressInput({ setModalVisible, modalVisible, setAdress,
                             onPress={handleAddressSubmit(onSubmit)}
                         >
                             <Text style={{ color: 'white' }}> Checar Endereço </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[ButtonsStyles.default, colorScheme.Buttons.BootstrapDanger]}
+                            onPress={() => {
+                                setModalVisible(false)
+                            }}
+                        >
+                            <Text style={{ color: 'white' }}> Cancelar </Text>
                         </TouchableOpacity>
                     </View>
                 </View>

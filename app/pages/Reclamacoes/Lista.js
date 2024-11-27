@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {  getReportsByUser, listReports } from '../../utils/Api';
+import { getReportsByUser, listReports } from '../../utils/Api';
 import MainContainer from '../../components/MainContainer'
 import PriorityCard from '../../components/PriorityCard';
 import FilterForm from '../../components/forms/FilterForm';
@@ -13,6 +13,7 @@ export default function Lista({ navigation }) {
     const [filterOption, setFilterOption] = useState('Data-menor-maior');
     const [loadOption, setLoadOption] = useState('all');
     const [filterPriorityOption, setFilterPriorityOption] = useState("Todas");
+    const [filterCategoryOption, setFilterCategoryOption] = useState('Não Especificada');
 
     const loadList = async () => {
         let resp = [];
@@ -46,6 +47,11 @@ export default function Lista({ navigation }) {
             }
         }
 
+        if (filterCategoryOption !== null && filterCategoryOption !== "Não Especificada") {
+            filtered = filtered.filter(petition => petition.categoria === filterCategoryOption);
+        }
+
+
         // Filtro por prioridade(><) ou data
         if (filterOption) {
             switch (filterOption) {
@@ -75,7 +81,7 @@ export default function Lista({ navigation }) {
 
     useEffect(() => {
         applyFilters();
-    }, [searchText, filterOption, filterPriorityOption]);
+    }, [searchText, filterOption, filterPriorityOption, filterCategoryOption]);
 
     return (
         <MainContainer  >
@@ -90,6 +96,8 @@ export default function Lista({ navigation }) {
                 navigation={navigation}
                 loadOption={loadOption}
                 setLoadOption={setLoadOption}
+                filterCategoryOption={filterCategoryOption}
+                setFilterCategoryOption={setFilterCategoryOption}
             />
             {
                 filteredPetitions.map((petition, i) => (
@@ -100,7 +108,7 @@ export default function Lista({ navigation }) {
                         date={petition.data}
                         content={petition.content}
                         onPress={() => {
-                            navigation.navigate("Detalhes Da Petição", { id: petition.id })
+                            navigation.navigate("Detalhes Da Reclamação", { id: petition.id })
                         }}
                         pressableText="ver main"
                         style={{ marginTop: i == 0 ? 20 : 0 }}

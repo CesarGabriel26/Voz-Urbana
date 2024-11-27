@@ -11,6 +11,9 @@ export default function FormInput({
     style = [InputStyles.input],
     placeholderTextColor,
     keyboardType = "defaults",
+    numberOfLines=1,
+    multiline=false,
+    rules
 }) {
     return (
         <>
@@ -18,6 +21,7 @@ export default function FormInput({
                 control={control}
                 name={name}
                 defaultValue={defaultValue}
+                rules={rules}
                 render={({ field: { onChange, onBlur, value } }) => (
                     <TextInput
                         placeholder={placeholder}
@@ -27,6 +31,8 @@ export default function FormInput({
                         onChangeText={onChange}
                         value={value}
                         keyboardType={keyboardType}
+                        numberOfLines={numberOfLines}
+                        multiline={multiline}
                     />
                 )}
             />

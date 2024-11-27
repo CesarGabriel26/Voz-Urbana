@@ -22,6 +22,7 @@ import Detalhes from '../pages/Peticoes/Detalhes';
 
 import ListaReclamacao from '../pages/Reclamacoes/Lista';
 import EscalaDePrioridade from '../pages/Extra/EscalaDePrioridade';
+import VerReclamacao from '../pages/Reclamacoes/Detalhes';
 
 
 const Stack = createStackNavigator();
@@ -30,22 +31,22 @@ export default function Routes() {
   const { colorScheme } = useTheme();
   const [userData, setUserData] = useState();
 
-  useEffect(() => {
-    const initializeUser = async () => {
-      try {
-        const token = await AsyncStorage.getItem('usuario');
-        if (token) {
-          const user = decodeUserToken(token) || {};
-          setUserData(user)
-        } else {
-          console.log('No token found');
-        }
-      } catch (error) {
-        console.error('Error fetching user data:', error);
+  const initializeUser = async () => {
+    try {
+      const token = await AsyncStorage.getItem('usuario');
+      if (token) {
+        const user = decodeUserToken(token) || {};
+        setUserData(user)
+      } else {
+        console.log('No token found');
       }
-    };
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
 
-    initializeUser();
+  useEffect(() => {
+    // initializeUser()
 
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor('#0A62AC');
@@ -99,6 +100,9 @@ export default function Routes() {
           options={{
             headerShown: false
           }}
+          initialParams={{
+            initializeUser: initializeUser
+          }}
         />
 
         <Stack.Screen
@@ -129,13 +133,20 @@ export default function Routes() {
           name="Escala de Prioridades"
           component={EscalaDePrioridade}
         />
-       
+
 
         <Stack.Screen
           name="Nova Reclamaçao"
           component={NovaReclamacao}
         />
-
+        <Stack.Screen
+          name="Reclamações"
+          component={ListaReclamacao}
+        />
+        <Stack.Screen
+          name="Detalhes Da Reclamação"
+          component={VerReclamacao}
+        />
 
 
         <Stack.Screen
@@ -149,11 +160,6 @@ export default function Routes() {
         <Stack.Screen
           name="Detalhes Da Petição"
           component={Detalhes}
-        />
-
-        <Stack.Screen
-          name="Reclamações"
-          component={ListaReclamacao}
         />
 
       </Stack.Navigator>

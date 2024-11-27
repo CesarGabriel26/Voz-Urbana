@@ -21,6 +21,8 @@ export default function Login({ navigation, route }) {
     const checkUser = async () => {
         let User = await AsyncStorage.getItem('usuario');
         if (User != null) {
+            route.params.initializeUser()
+            
             navigation.reset({
                 index: 0,
                 routes: [{ name: 'Home' }],

@@ -20,6 +20,15 @@ export const FILTROS = [
     },
 ]
 
+export const categories = [
+    'Não Especificada',
+    'Iluminação Pública', 'Buraco na Rua', 'Poluição', 'Transporte Público',
+    'Saúde Pública', 'Árvore Caída', 'Lixo Acumulado', 'Obras Irregulares',
+    'Coleta de Lixo', 'Calçadas danificadas', 'Vandalismo', 'Escola Pública',
+    'Maus-Tratos a Animais', 'Desigualdade Social', 'Moradores de Rua',
+    'Internet Pública', 'Documentação', 'Parques e Praças', 'Sinalização'
+];
+
 export const PrioritiesColors = [
     "hsl(207, 89.00%, 35.70%)",  // #0A62AC
     "hsl(150, 100%, 45%)",  // #33FF99
