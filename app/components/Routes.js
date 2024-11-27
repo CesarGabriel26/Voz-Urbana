@@ -21,6 +21,7 @@ import Lista from '../pages/Peticoes/Lista';
 import Detalhes from '../pages/Peticoes/Detalhes';
 
 import ListaReclamacao from '../pages/Reclamacoes/Lista';
+import EscalaDePrioridade from '../pages/Extra/EscalaDePrioridade';
 
 
 const Stack = createStackNavigator();
@@ -51,7 +52,7 @@ export default function Routes() {
       StatusBar.setBarStyle('dark-content');
     } else if (Platform.OS === 'ios') {
       StatusBar.setBarStyle('light-content');
-      
+
     }
   }, []);
 
@@ -125,6 +126,12 @@ export default function Routes() {
         />
 
         <Stack.Screen
+          name="Escala de Prioridades"
+          component={EscalaDePrioridade}
+        />
+       
+
+        <Stack.Screen
           name="Nova Reclamaçao"
           component={NovaReclamacao}
         />
@@ -139,12 +146,12 @@ export default function Routes() {
           name="Petições"
           component={Lista}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="Detalhes Da Petição"
           component={Detalhes}
         />
 
-         <Stack.Screen
+        <Stack.Screen
           name="Reclamações"
           component={ListaReclamacao}
         />

@@ -1,74 +1,24 @@
 export const NORMAL_USER_TYPE = 0
 export const ADMIN_USER_TYPE = 1
 
-export const priorities = [
+export const FILTROS = [
     {
-        level: 10,
-        color: "#FF0000",
-        description: "Situações extremamente perigosas ou críticas.",
-        example: "Rua completamente alagada, bloqueando acesso a residências.",
+        label : "Data ▼",
+        value : 'Data-menor-maior'
     },
     {
-        level: 9,
-        color: "#FF3300",
-        description: "Situações muito graves, próximas de urgência máxima.",
-        example: "Cabo elétrico rompido solto no meio da estrada.",
+        label : "Data ▲",
+        value : 'Data-maior-menor'
     },
     {
-        level: 8,
-        color: "#FF6600",
-        description: "Problemas graves que precisam de atenção rápida.",
-        example: "Buraco grande na via principal, risco de acidentes.",
+        label : "Prioridade ▼",
+        value : 'Prioridade-menor-maior'
     },
     {
-        level: 7,
-        color: "#FF9900",
-        description: "Problemas consideráveis, mas sem risco imediato grave.",
-        example: "Poste de luz piscando próximo de uma área movimentada.",
+        label : "Prioridade ▲",
+        value : 'Prioridade-maior-menor'
     },
-    {
-        level: 6,
-        color: "#FFCC00",
-        description: "Moderadamente importante, exige atenção em breve.",
-        example: "Sinais de trânsito apagados em cruzamentos menos movimentados.",
-    },
-    {
-        level: 5,
-        color: "#FFD700",
-        description: "Questões importantes, mas sem risco imediato.",
-        example: "Semáforo intermitente em um cruzamento.",
-    },
-    {
-        level: 4,
-        color: "#CCE700",
-        description: "Problemas menores, mas que podem causar desconforto.",
-        example: "Calçada quebrada em frente a uma escola.",
-    },
-    {
-        level: 3,
-        color: "#99FF33",
-        description: "Problemas pouco significativos, mas visíveis.",
-        example: "Lâmpada queimada em uma praça pública.",
-    },
-    {
-        level: 2,
-        color: "#66FF66",
-        description: "Problemas menores que afetam pouquíssimas pessoas.",
-        example: "Rachadura superficial em um banco público.",
-    },
-    {
-        level: 1,
-        color: "#33FF99",
-        description: "Problemas de baixa relevância ou somente estéticos.",
-        example: "Pequenas manchas de ferrugem em uma grade.",
-    },
-    {
-        level: 0,
-        color: "#00FFFF",
-        description: "Questões insignificantes ou meramente informativas.",
-        example: "Grafite em uma parede pública sem impacto no ambiente.",
-    },
-];
+]
 
 export const PrioritiesColors = [
     "hsl(207, 89.00%, 35.70%)",  // #0A62AC
@@ -82,4 +32,76 @@ export const PrioritiesColors = [
     "hsl(15, 100%, 45%)",   // #FF6600
     "hsl(0, 100%, 45%)",    // #FF3300
     "hsl(0, 100%, 45%)",    // #FF0000
+];
+
+export const priorities = [
+    {
+        level: 'Todas'
+    },
+    {
+        level: 0,
+        color: PrioritiesColors[0],
+        description: "Questões insignificantes ou meramente informativas.",
+        example: "Grafite em uma parede pública sem impacto no ambiente.",
+    },
+    {
+        level: 1,
+        color: PrioritiesColors[1],
+        description: "Problemas de baixa relevância ou somente estéticos.",
+        example: "Pequenas manchas de ferrugem em uma grade.",
+    },
+    {
+        level: 2,
+        color: PrioritiesColors[2],
+        description: "Problemas menores que afetam pouquíssimas pessoas.",
+        example: "Rachadura superficial em um banco público.",
+    },
+    {
+        level: 3,
+        color: PrioritiesColors[3],
+        description: "Problemas pouco significativos, mas visíveis.",
+        example: "Lâmpada queimada em uma praça pública.",
+    },
+    {
+        level: 4,
+        color: PrioritiesColors[4],
+        description: "Problemas menores, mas que podem causar desconforto.",
+        example: "Calçada quebrada em frente a uma escola.",
+    },
+    {
+        level: 5,
+        color: PrioritiesColors[5],
+        description: "Questões importantes, mas sem risco imediato.",
+        example: "Semáforo intermitente em um cruzamento.",
+    },
+    {
+        level: 6,
+        color: PrioritiesColors[6],
+        description: "Moderadamente importante, exige atenção em breve.",
+        example: "Sinais de trânsito apagados em cruzamentos menos movimentados.",
+    },
+    {
+        level: 7,
+        color: PrioritiesColors[7],
+        description: "Problemas consideráveis, mas sem risco imediato grave.",
+        example: "Poste de luz piscando próximo de uma área movimentada.",
+    },
+    {
+        level: 8,
+        color: PrioritiesColors[8],
+        description: "Problemas graves que precisam de atenção rápida.",
+        example: "Buraco grande na via principal, risco de acidentes.",
+    },
+    {
+        level: 9,
+        color: PrioritiesColors[9],
+        description: "Situações muito graves, próximas de urgência máxima.",
+        example: "Cabo elétrico rompido solto no meio da estrada.",
+    },
+    {
+        level: 10,
+        color: PrioritiesColors[10],
+        description: "Situações extremamente perigosas ou críticas.",
+        example: "Rua completamente alagada, bloqueando acesso a residências.",
+    },
 ];

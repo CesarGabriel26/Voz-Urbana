@@ -83,7 +83,7 @@ export default function VerPeticaoApp({ navigation, route }) {
 
     const handleDelete = async () => {
         await deletePetitionControl(petition, () => {
-            navigation.navigate('Home');
+            navigation.navigate('Petições');
         });
     };
 
@@ -244,13 +244,17 @@ export default function VerPeticaoApp({ navigation, route }) {
                                 ) : null
                             )
                         }
-                        <CustomButton
-                            text="Apagar"
-                            textColor={colorScheme.Buttons.BootstrapDanger.color}
-                            bgColor={colorScheme.Buttons.BootstrapDanger.backgroundColor}
-                            buttonStyle={ButtonsStyles.default}
-                            onPress={handleDelete}
-                        />
+                        {
+                            currentUser.type == ADMIN_USER_TYPE ? (
+                                <CustomButton
+                                    text="Apagar"
+                                    textColor={colorScheme.Buttons.BootstrapDanger.color}
+                                    bgColor={colorScheme.Buttons.BootstrapDanger.backgroundColor}
+                                    buttonStyle={ButtonsStyles.default}
+                                    onPress={handleDelete}
+                                />
+                            ) : null
+                        }
                     </View>
 
                 </View>

@@ -1,31 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TextInput } from 'react-native';
-import { useTheme } from '../../utils/ThemeContext';
-import { listPetitions, listReports } from '../../utils/Api';
+import { getPetitionsByUser, listPetitions } from '../../utils/Api';
 import MainContainer from '../../components/MainContainer'
 import PriorityCard from '../../components/PriorityCard';
-import { Dropdown } from 'react-native-element-dropdown';
-import { priorities } from '../../utils/Constantes';
+import FilterForm from '../../components/forms/FilterForm';
+import { loadCurrentUserData } from '../../managers/userController';
+
 
 export default function Lista({ navigation }) {
-    const { colorScheme } = useTheme();
     const [Petitions, setPetitions] = useState([]);
     const [filteredPetitions, setFilteredPetitions] = useState([]);
     const [searchText, setSearchText] = useState('');
-    const [filterOption, setFilterOption] = useState('Data ▲');
-    const [filterPriorityOption, setFilterPriorityOption] = useState(0);
+    const [filterOption, setFilterOption] = useState('Data-menor-maior');
+    const [loadOption, setLoadOption] = useState('all');
+    const [filterPriorityOption, setFilterPriorityOption] = useState("Todas");
 
     const loadList = async () => {
-        let resp = await listPetitions();
+        let resp = [];
+
+        if (loadOption == 'all') {
+            resp = await listPetitions()
+        } else {
+            let userData = await loadCurrentUserData()
+            resp = await getPetitionsByUser(userData[0].id)
+        }
+
         if (resp.content) {
             setPetitions(resp.content);
             setFilteredPetitions(resp.content);
         }
     };
-
-    useEffect(() => {
-        loadList()
-    }, []);
 
     const applyFilters = () => {
         let filtered = [...Petitions];
@@ -38,19 +41,25 @@ export default function Lista({ navigation }) {
             );
         }
 
+        if (filterPriorityOption !== null && filterPriorityOption !== undefined) {
+            if (filterPriorityOption != "Todas") {
+                filtered = filtered.filter(petition => petition.prioridade === filterPriorityOption);
+            }
+        }
+
         // Filtro por prioridade(><) ou data
         if (filterOption) {
             switch (filterOption) {
-                case 'novo':
+                case 'Data-menor-maior':
                     filtered.sort((a, b) => new Date(b.data) - new Date(a.data));
                     break;
-                case 'antigo':
+                case 'Data-maior-menor':
                     filtered.sort((a, b) => new Date(a.data) - new Date(b.data));
                     break;
-                case 'prioridade_alta':
+                case 'Prioridade-maior-menor':
                     filtered.sort((a, b) => b.prioridade - a.prioridade);
                     break;
-                case 'prioridade_baixa':
+                case 'Prioridade-menor-maior':
                     filtered.sort((a, b) => a.prioridade - b.prioridade);
                     break;
                 default:
@@ -58,62 +67,31 @@ export default function Lista({ navigation }) {
             }
         }
 
-        // Filtro por prioridade 0 a 10
-        if (filterPriorityOption) {
-            
-        }
-
         setFilteredPetitions(filtered);
     };
 
     useEffect(() => {
+        loadList()
+    }, [loadOption]);
+
+    useEffect(() => {
         applyFilters();
-    }, [searchText, filterOption]);
+    }, [searchText, filterOption, filterPriorityOption]);
 
     return (
         <MainContainer  >
-            <View style={{ marginVertical: 20 }} >
-                <TextInput
-                    style={{
-                        borderWidth: 1,
-                        borderColor: colorScheme.Body_bg,
-                        padding: 10,
-                        borderRadius: 8,
-                        marginVertical: 10,
-                        color: colorScheme.Text.primary
-                    }}
-                    placeholder="Buscar por título ou conteúdo"
-                    placeholderTextColor={colorScheme.Text.secondary}
-                    value={searchText}
-                    onChangeText={setSearchText}
-                />
-                <Dropdown
-                    data={[
-                        "Data ▼",
-                        "Data ▲",
-                        "Prioridade ▼",
-                        "Prioridade ▲",
-                    ].map((theme) => ({ label: theme, value: theme }))}
-                    labelField="label"
-                    valueField="value"
-                    value={filterOption}
-                    placeholder="Selecione um tema"
-                    placeholderStyle={{ color: colorScheme.Text.dark }}
-                    selectedTextStyle={{ color: colorScheme.Text.dark }}
-                    onChange={setFilterOption}
-                />
-                <Dropdown
-                    data={priorities.map((Item) => ({ label: `prioridade ${Item.level}`, value: Item.level }))}
-                    labelField="label"
-                    valueField="value"
-                    value={filterPriorityOption}
-                    placeholder=""
-                    placeholderStyle={{ color: colorScheme.Text.dark }}
-                    selectedTextStyle={{ color: colorScheme.Text.dark }}
-                    onChange={setFilterPriorityOption}
-                />
-            </View>
-
+            <FilterForm
+                style={{ marginVertical: 20 }}
+                searchText={searchText}
+                setSearchText={setSearchText}
+                filterOption={filterOption}
+                setFilterOption={setFilterOption}
+                filterPriorityOption={filterPriorityOption}
+                setFilterPriorityOption={setFilterPriorityOption}
+                navigation={navigation}
+                loadOption={loadOption}
+                setLoadOption={setLoadOption}
+            />
             {
                 filteredPetitions.map((petition, i) => (
                     <PriorityCard
@@ -133,6 +111,7 @@ export default function Lista({ navigation }) {
         </MainContainer>
     );
 }
+
 
 
 

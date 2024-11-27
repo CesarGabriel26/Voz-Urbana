@@ -1,4 +1,4 @@
-import { updatePetition } from "../utils/Api";
+import { deletePetition, updatePetition } from "../utils/Api";
 
 export const updatePetitionStatus = async (petition, status, aberto, loadList) => {
     try {

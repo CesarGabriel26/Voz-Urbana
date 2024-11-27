@@ -1,65 +1,112 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { useTheme } from '../../utils/ThemeContext';
-import { listPetitions } from '../../utils/Api';
+import {  getReportsByUser, listReports } from '../../utils/Api';
 import MainContainer from '../../components/MainContainer'
-import { formatDate } from '../../utils/Parser';
-import { PrioritiesColors } from "../../utils/Constantes";
-import { CardStyles } from '../../styles/CardStyles';
+import PriorityCard from '../../components/PriorityCard';
+import FilterForm from '../../components/forms/FilterForm';
+import { loadCurrentUserData } from '../../managers/userController';
 
-export default function ListaReclamacao({ navigation }) {
-    const { colorScheme } = useTheme();
 
+export default function Lista({ navigation }) {
     const [Petitions, setPetitions] = useState([]);
+    const [filteredPetitions, setFilteredPetitions] = useState([]);
+    const [searchText, setSearchText] = useState('');
+    const [filterOption, setFilterOption] = useState('Data-menor-maior');
+    const [loadOption, setLoadOption] = useState('all');
+    const [filterPriorityOption, setFilterPriorityOption] = useState("Todas");
 
     const loadList = async () => {
-        let resp = await lista()
-        if (resp.content) {
-            let a = []
-
-            for (let index = 0; index < 10; index++) {
-                a = [...a, ...resp.content]
-            }
-
-            setPetitions(a)
+        let resp = [];
+        if (loadOption == 'all') {
+            resp = await listReports()
+        } else {
+            let userData = await loadCurrentUserData()
+            resp = await getReportsByUser(userData[0].id)
         }
-    }
+
+        if (resp.content) {
+            setPetitions(resp.content);
+            setFilteredPetitions(resp.content);
+        }
+    };
+
+    const applyFilters = () => {
+        let filtered = [...Petitions];
+
+        // Filtro de texto
+        if (searchText.trim()) {
+            filtered = filtered.filter(petition =>
+                petition.titulo.toLowerCase().includes(searchText.toLowerCase()) ||
+                petition.content.toLowerCase().includes(searchText.toLowerCase())
+            );
+        }
+
+        if (filterPriorityOption !== null && filterPriorityOption !== undefined) {
+            if (filterPriorityOption != "Todas") {
+                filtered = filtered.filter(petition => petition.prioridade === filterPriorityOption);
+            }
+        }
+
+        // Filtro por prioridade(><) ou data
+        if (filterOption) {
+            switch (filterOption) {
+                case 'Data-menor-maior':
+                    filtered.sort((a, b) => new Date(b.data) - new Date(a.data));
+                    break;
+                case 'Data-maior-menor':
+                    filtered.sort((a, b) => new Date(a.data) - new Date(b.data));
+                    break;
+                case 'Prioridade-maior-menor':
+                    filtered.sort((a, b) => b.prioridade - a.prioridade);
+                    break;
+                case 'Prioridade-menor-maior':
+                    filtered.sort((a, b) => a.prioridade - b.prioridade);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        setFilteredPetitions(filtered);
+    };
 
     useEffect(() => {
         loadList()
-    }, []);
+    }, [loadOption]);
 
+    useEffect(() => {
+        applyFilters();
+    }, [searchText, filterOption, filterPriorityOption]);
 
     return (
         <MainContainer  >
+            <FilterForm
+                style={{ marginVertical: 20 }}
+                searchText={searchText}
+                setSearchText={setSearchText}
+                filterOption={filterOption}
+                setFilterOption={setFilterOption}
+                filterPriorityOption={filterPriorityOption}
+                setFilterPriorityOption={setFilterPriorityOption}
+                navigation={navigation}
+                loadOption={loadOption}
+                setLoadOption={setLoadOption}
+            />
             {
-                Petitions.map((petition, i) => (
-                    <View
+                filteredPetitions.map((petition, i) => (
+                    <PriorityCard
                         key={i}
-                        style={[CardStyles.card, { borderColor: PrioritiesColors[petition.prioridade], marginTop: i == 0 ? 20 : 0 }]}
-                    >
-                        <View
-                            style={[CardStyles.colorIndicator, { backgroundColor: PrioritiesColors[petition.prioridade] }]}
-                        />
-                        <Text style={CardStyles.level}>{petition.titulo}</Text>
-                        <Text numberOfLines={3} style={CardStyles.description}>{petition.content}</Text>
-                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }} >
-                            <Text style={[CardStyles.example, { flex: 1, }]}>{formatDate(petition.data)}</Text>
-
-                            <TouchableOpacity
-                                onPress={()=>{
-                                    navigation.navigate("Detalhes Da Petição", { id: petition.id })
-                                }}
-                            >
-                                <Text style={{ flex: 1, textAlign: 'right' }}>ver mais</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
+                        prioridade={petition.prioridade}
+                        tittle={petition.titulo}
+                        date={petition.data}
+                        content={petition.content}
+                        onPress={() => {
+                            navigation.navigate("Detalhes Da Petição", { id: petition.id })
+                        }}
+                        pressableText="ver main"
+                        style={{ marginTop: i == 0 ? 20 : 0 }}
+                    />
                 ))
             }
         </MainContainer>
     );
 }
-
-
-
