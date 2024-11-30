@@ -193,7 +193,7 @@ export default function AddressInput({ setModalVisible, modalVisible, setAdress,
                             style={[InputStyles.input, colorScheme.Inputs.PrimaryGhost]} // Cor do borda para indicar seleção
                             onPress={() => setCidasdeSelectModalVisible(true)} // Abre o modal quando pressionado
                         >
-                            <Text style={styles.placeholderText}>
+                            <Text style={{ color: colorScheme.Text.text }}>
                                 {cidadeSelecionada ? `Cidade Selecionado: ${cidadeSelecionada}` : 'Selecione uma Cidade'}
                             </Text>
                         </TouchableOpacity>
@@ -235,7 +235,7 @@ export default function AddressInput({ setModalVisible, modalVisible, setAdress,
                             style={[InputStyles.input, colorScheme.Inputs.PrimaryGhost]} // Cor do borda para indicar seleção
                             onPress={() => setEstadosSelectModalVisible(true)} // Abre o modal quando pressionado
                         >
-                            <Text style={styles.placeholderText}>
+                            <Text style={{ color: colorScheme.Text.text }}>
                                 {estadoSelecionado ? `Estado Selecionado: ${estadoSelecionado}` : 'Selecione um Estado'}
                             </Text>
                         </TouchableOpacity>
@@ -277,7 +277,7 @@ export default function AddressInput({ setModalVisible, modalVisible, setAdress,
                             style={[InputStyles.input, colorScheme.Inputs.PrimaryGhost]} // Cor do borda para indicar seleção
                             onPress={() => setPaisesSelectModalVisible(true)} // Abre o modal quando pressionado
                         >
-                            <Text style={styles.placeholderText}>
+                            <Text style={{ color: colorScheme.Text.text }}>
                                 {paisSelecionado ? `País Selecionado: ${paisSelecionado}` : 'Selecione um País'}
                             </Text>
                         </TouchableOpacity>

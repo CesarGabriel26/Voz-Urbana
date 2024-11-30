@@ -314,7 +314,7 @@ export default function UserProfile({ setModalVisible, modalVisible }) {
                             )}
                             <Dialog.Description style={{ color: 'red' }}>
                                 {loading ? (
-                                    <ActivityIndicator size="large" color={colorScheme.Buttons.Primary} />
+                                    <ActivityIndicator size="large" color={colorScheme.Icons.loader.light} />
                                 ) : erro}
                             </Dialog.Description>
                         </>
@@ -324,7 +324,7 @@ export default function UserProfile({ setModalVisible, modalVisible }) {
                             <Dialog.Description>Digite sua senha atual</Dialog.Description>
                             <Dialog.Description style={{ color: 'red' }}>
                                 {loading ? (
-                                    <ActivityIndicator size="large" color={colorScheme.Buttons.Primary} />
+                                    <ActivityIndicator size="large" color={colorScheme.Icons.loader.light} />
                                 ) : erro}
                             </Dialog.Description>
                             <Dialog.Input

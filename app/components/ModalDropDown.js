@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Modal, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { useTheme } from '../utils/ThemeContext';
 
 const ModalDropDown = ({
     visible,
@@ -12,6 +13,7 @@ const ModalDropDown = ({
     title,
 }) => {
     const [open, setOpen] = useState(false); // Controla o estado interno do dropdown
+    const { colorScheme } = useTheme();
 
     return (
         <Modal
@@ -22,7 +24,7 @@ const ModalDropDown = ({
         >
             <View style={styles.modalOverlay}>
                 <View style={styles.modalContent}>
-                    {title && <Text style={styles.title}>{title}</Text>}
+                    {title && <Text style={[styles.title]}>{title}</Text>}
 
                     <DropDownPicker
                         searchable={true}

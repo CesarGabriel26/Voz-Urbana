@@ -9,6 +9,7 @@ import Separator from '../../components/Separator';
 
 export default function Home({ navigation }) {
     const [complaints, setComplaints] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [location, setLocation] = useState(null);
 
     const { colorScheme } = useTheme();
@@ -18,22 +19,26 @@ export default function Home({ navigation }) {
             let loc = await getUserLocation();
             setLocation(loc);
         } catch (error) {
-            console.error("Erro ao obter localização:", error);
+            // console.error("Erro ao obter localização:", error);
+            setLocation({
+                err: "Verifique se a localização esta ativada"
+            })
         }
     };
 
     const loadList = async () => {
+        setLoading(true)
         let resp = await listReports()
         if (resp.content) {
             setComplaints(resp.content)
         }
+        await getLocation();
+        setLoading(false)
     }
 
     useEffect(() => {
         loadList()
-        getLocation();
     }, []);
-
 
     return (
         <MainContainer canScroll={false} style={{ display: 'flex', flexDirection: 'column', flex: 1 }} >
@@ -95,16 +100,18 @@ export default function Home({ navigation }) {
                     disabled={location ? false : true}
                 >
                     {
-                        location ? (
+                        loading ? (
+                            <ActivityIndicator size="large" color={colorScheme.Icons.loader.light} />
+                        ) : (
                             <CustomMapProvider
                                 style={styles.map}
                                 location={location}
                                 markers={complaints}
                                 scrollEnabled={false}
                                 zoomEnabled={false}
+                                loading={loading}
                             />
-                        ) : <View style={styles.container} ><ActivityIndicator size="large" color={colorScheme.Icons.loader.Primary} />
-                        </View>
+                        )
                     }
                 </Pressable>
             </View>
@@ -126,7 +133,9 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         borderRadius: 20,
-        overflow: 'hidden'
+        overflow: 'hidden',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     btnSqr: {
         width: 140,

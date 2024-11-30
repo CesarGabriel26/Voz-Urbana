@@ -4,18 +4,26 @@ import MainContainer from '../../components/MainContainer'
 import PriorityCard from '../../components/PriorityCard';
 import FilterForm from '../../components/forms/FilterForm';
 import { loadCurrentUserData } from '../../managers/userController';
+import { ActivityIndicator } from 'react-native';
+import { useTheme } from '../../utils/ThemeContext';
 
 
 export default function Lista({ navigation }) {
+    const { colorScheme } = useTheme();
+
     const [Petitions, setPetitions] = useState([]);
     const [filteredPetitions, setFilteredPetitions] = useState([]);
+
     const [searchText, setSearchText] = useState('');
     const [filterOption, setFilterOption] = useState('Data-menor-maior');
     const [loadOption, setLoadOption] = useState('all');
     const [filterPriorityOption, setFilterPriorityOption] = useState("Todas");
     const [filterCategoryOption, setFilterCategoryOption] = useState('Não Especificada');
 
+    const [loading, setLoading] = useState(true);
+
     const loadList = async () => {
+        setLoading(true)
         let resp = [];
         if (loadOption == 'all') {
             resp = await listReports()
@@ -28,6 +36,7 @@ export default function Lista({ navigation }) {
             setPetitions(resp.content);
             setFilteredPetitions(resp.content);
         }
+        setLoading(false)
     };
 
     const applyFilters = () => {
@@ -100,20 +109,24 @@ export default function Lista({ navigation }) {
                 setFilterCategoryOption={setFilterCategoryOption}
             />
             {
-                filteredPetitions.map((petition, i) => (
-                    <PriorityCard
-                        key={i}
-                        prioridade={petition.prioridade}
-                        tittle={petition.titulo}
-                        date={petition.data}
-                        content={petition.content}
-                        onPress={() => {
-                            navigation.navigate("Detalhes Da Reclamação", { id: petition.id })
-                        }}
-                        pressableText="ver main"
-                        style={{ marginTop: i == 0 ? 20 : 0 }}
-                    />
-                ))
+                loading ? (
+                    <ActivityIndicator size="large" color={colorScheme.Icons.loader.Primary} />
+                ) : (
+                    filteredPetitions.map((petition, i) => (
+                        <PriorityCard
+                            key={i}
+                            prioridade={petition.prioridade}
+                            tittle={petition.titulo}
+                            date={petition.data}
+                            content={petition.content}
+                            onPress={() => {
+                                navigation.navigate("Detalhes Da Reclamação", { id: petition.id })
+                            }}
+                            pressableText="ver main"
+                            style={{ marginTop: i == 0 ? 20 : 0 }}
+                        />
+                    ))
+                )
             }
         </MainContainer>
     );

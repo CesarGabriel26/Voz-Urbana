@@ -18,11 +18,13 @@ import { loadCurrentUserData } from '../../managers/userController';
 import LoadingModal from '../../components/LoadingModal';
 import { createReport } from '../../utils/Api';
 import { categories } from '../../utils/Constantes';
+import { ActivityIndicator } from 'react-native';
 
 export default function NovaReclamacao({ navigation }) {
     const { colorScheme } = useTheme();
-    
+
     const [loading, setLoading] = useState(false);
+    const [MAPloading, setMAPLoading] = useState(false);
 
     const [location, setLocation] = useState(null);
 
@@ -46,30 +48,35 @@ export default function NovaReclamacao({ navigation }) {
     } = useForm();
 
     const getLocation = async () => {
-        setLoading(true)
+        setMAPLoading(true)
+        let loc
         try {
-            let loc = await getUserLocation();
+            loc = await getUserLocation();
             setLocation(loc)
         } catch (error) {
             console.error("Erro ao obter localização:", error);
+            setLocation({
+                err: "Verifique se a localização esta ativada"
+            })
         }
-        setLoading(false)
+        console.log(MAPloading);
+        setMAPLoading(false)
     };
 
     const onSubmit = async (data) => {
         setLoading(true);
         let currentUserData = await loadCurrentUserData()
-        
+
         let complaintData = {
             user_id: currentUserData[0].id,
             latitude: location.latitude,
             longitude: location.longitude,
-            titulo: data.titulo, // Mantendo conforme seu projeto
+            titulo: data.titulo,
             conteudo: data.conteudo, // Descrição ou conteúdo
-            imagem: selectedImage.uri? selectedImage.uri: selectedImage, // Acesso ao URI da imagem
+            imagem: selectedImage.uri ? selectedImage.uri : selectedImage, // Acesso ao URI da imagem
             data: new Date().toISOString(), // Formato ISO para a data
-            adress: AdressData? `${AdressData.number} ${AdressData.street}, ${AdressData.city}, ${AdressData.state}, ${AdressData.zipCode}, ${AdressData.country}` : 'Não especificado',
-            prioridade: 0, // Setando prioridade como no exemplo
+            adress: AdressData ? `${AdressData.number} ${AdressData.street}, ${AdressData.city}, ${AdressData.state}, ${AdressData.zipCode}, ${AdressData.country}` : 'Não especificado',
+            prioridade: 0,
             categoria: selectedCategory,
         };
 
@@ -135,11 +142,11 @@ export default function NovaReclamacao({ navigation }) {
                         <Picker
                             selectedValue={selectedCategory}
                             onValueChange={(itemValue) => setSelectedCategory(itemValue)}
-                            style={{ width: '100%', height: 50, padding: 0, overflow: 'hidden' }} // Garante que o Picker ocupe todo o espaço da View
-                            dropdownIconColor={colorScheme.Text.title}
+                            style={{ width: '100%', height: 50, color: colorScheme.DropDown.color }}
+                            dropdownIconColor={colorScheme.DropDown.color}
                         >
                             {categories.map((category) => (
-                                <Picker.Item key={category} label={category} value={category} />
+                                <Picker.Item key={category} style={{ color: colorScheme.DropDown.itemColor }} label={category} value={category} />
                             ))}
                         </Picker>
                     </View>
@@ -183,25 +190,33 @@ export default function NovaReclamacao({ navigation }) {
 
                 <View style={{ gap: 15 }} >
                     <View style={{ height: 200 }}>
-                        <CustomMapProvider
-                            location={location}
-                            style={styles.map}
-                            scrollEnabled={false}
-                            zoomEnabled={false}
-                            markers={
-                                [
-                                    {
-                                        latitude: location ? location.latitude : null,
-                                        longitude: location ? location.longitude : null,
-                                        title: "Esse será o local",
-                                        descricao: "Sua reclamação sera registrada aqui",
-                                        props: {
-                                            pinColor: colorScheme.Danger
-                                        }
+                        {
+                            MAPloading ? (
+                                <View style={styles.map}>
+                                    <ActivityIndicator size="large" color={colorScheme.Icons.loader.light} />
+                                </View>
+                            ) : (
+                                <CustomMapProvider
+                                    location={location}
+                                    style={styles.map}
+                                    scrollEnabled={false}
+                                    zoomEnabled={false}
+                                    markers={
+                                        [
+                                            {
+                                                latitude: location ? location.latitude : null,
+                                                longitude: location ? location.longitude : null,
+                                                title: "Esse será o local",
+                                                descricao: "Sua reclamação sera registrada aqui",
+                                                props: {
+                                                    pinColor: colorScheme.Danger
+                                                }
+                                            }
+                                        ]
                                     }
-                                ]
-                            }
-                        />
+                                />
+                            )
+                        }
                     </View>
 
                     <View
@@ -215,24 +230,25 @@ export default function NovaReclamacao({ navigation }) {
                             style={[ButtonsStyles.default, colorScheme.Buttons.Primary]}
                             onPress={handleComplaintSubmit(onSubmit)}
                         >
-                            <Text style={{ color: 'white' }}> Enviar </Text>
+                            <Text style={colorScheme.Buttons.Primary}> Enviar </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            style={[ButtonsStyles.default, colorScheme.Buttons.Secondary]}
+                            style={[ButtonsStyles.ghost, colorScheme.Buttons.LightGhost]}
                             onPress={() => { setAdressModalVisible(true) }}
                         >
-                            <Text style={{ color: 'black' }}> Inserir Endereço </Text>
+                            <Text style={colorScheme.Buttons.LightGhost}> Inserir Endereço </Text>
                         </TouchableOpacity>
                     </View>
                 </View>
 
-                <AddressInput
-                    setModalVisible={setAdressModalVisible}
-                    modalVisible={AdressModalVisible}
-                    setAdress={setAdressData}
-                    setLocation={setLocation}
-                />
+
             </SafeAreaView>
+            <AddressInput
+                setModalVisible={setAdressModalVisible}
+                modalVisible={AdressModalVisible}
+                setAdress={setAdressData}
+                setLocation={setLocation}
+            />
 
             <TakePhotoOrChooseFromGallery
                 setImage={setSelectedImage}
@@ -249,7 +265,9 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         borderRadius: 20,
-        overflow: 'hidden'
+        overflow: 'hidden',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
 });
 

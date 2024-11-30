@@ -56,7 +56,7 @@ export default function SupportersList({ petition, theme }) {
 
     return (
         <View style={styles.container}>
-            <Text style={[styles.title, { color: colorScheme.Text.dark }]}>
+            <Text style={[styles.title, { color: colorScheme.Text.text }]}>
                 Apoiadores:
             </Text>
 
@@ -69,16 +69,16 @@ export default function SupportersList({ petition, theme }) {
                                 size={60}
                                 style={styles.avatar}
                             />
-                            <Text style={[styles.supporterName, { color: colorScheme.Text.dark }, { fontWeight: 'bold' }]}>
+                            <Text style={[styles.supporterName, { color: colorScheme.Text.text }, { fontWeight: 'bold' }]}>
                                 {item.content.nome}
                             </Text>
-                            <Text style={[styles.supporterEmail, { color: colorScheme.Text.dark }]}>
+                            <Text style={[styles.supporterEmail, { color: colorScheme.Text.text }]}>
                                 {item.content.email}
                             </Text>
                         </View>
                     ))
                 ) : (
-                    <Text style={[styles.noSupportersText, { color: colorScheme.Text.dark }]}>
+                    <Text style={[styles.noSupportersText, { color: colorScheme.Text.text }]}>
                         Ninguém apoiou ainda
                     </Text>
                 )}
@@ -96,7 +96,7 @@ export default function SupportersList({ petition, theme }) {
                                 style={[
                                     styles.pageNumber,
                                     currentPage === index && styles.activePage,
-                                    { color: colorScheme.Text.dark },
+                                    { color: colorScheme.Text.text },
                                 ]}
                             >
                                 {index + 1}

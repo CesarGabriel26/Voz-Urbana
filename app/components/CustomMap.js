@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import MapView, { Marker, UrlTile } from 'react-native-maps';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
+import { useTheme } from '../utils/ThemeContext';
 
 export default React.forwardRef(function CustomMapProvider(
     {
@@ -9,11 +10,13 @@ export default React.forwardRef(function CustomMapProvider(
         markers = [],
         children,
         anim = true,
+        loading,
         ...props
     },
     ref
 ) {
     const mapRef = useRef(null);
+    const { colorScheme } = useTheme();
 
 
     React.useImperativeHandle(ref, () => ({
@@ -48,7 +51,13 @@ export default React.forwardRef(function CustomMapProvider(
     }, [location]);
 
     return (
-        location ? (
+        location?.err ? (
+            <View style={[style, { borderWidth: 2, borderColor: 'red' }]}>
+                <Text style={{ width: 300, textAlign: 'center', color: colorScheme.Text.text }} >
+                    Erro ao carregar mapa {location.err}
+                </Text>
+            </View>
+        ) : (
             <MapView
                 onMapLoaded={focus}
                 ref={mapRef}
@@ -84,10 +93,7 @@ export default React.forwardRef(function CustomMapProvider(
                     ))
                 }
             </MapView>
-        ) : (
-            <View style={style}>
-                <ActivityIndicator size="large" color="blue" />
-            </View>
         )
+
     );
 });

@@ -28,17 +28,18 @@ export default function FilterForm({
         <View style={style} >
             <View style={{ display: 'flex', flexDirection: 'row' }} >
                 <TextInput
-                    style={{
-                        borderWidth: 1,
-                        borderColor: colorScheme.Body_bg,
-                        padding: 10,
-                        borderRadius: 8,
-                        marginVertical: 10,
-                        color: colorScheme.Text.primary,
-                        flex: 6
-                    }}
+                    style={[
+                        colorScheme.Inputs.PrimaryGhost,
+                        {
+                            borderWidth: 1,
+                            padding: 10,
+                            borderRadius: 8,
+                            marginVertical: 10,
+                            flex: 6
+                        }
+                    ]}
                     placeholder="Buscar por título ou conteúdo"
-                    placeholderTextColor={colorScheme.Text.secondary}
+                    placeholderTextColor={colorScheme.Inputs.PrimaryGhost.placeHolder}
                     value={searchText}
                     onChangeText={setSearchText}
                 />
@@ -49,7 +50,7 @@ export default function FilterForm({
                         setVisible(true)
                     }}
                 >
-                    <Icon name="list" size={30} color={colorScheme.Body_bg} />
+                    <Icon name="list" size={30} color={colorScheme.Icons.filter} />
                 </TouchableOpacity>
             </View>
 
@@ -85,8 +86,8 @@ export default function FilterForm({
                                 valueField="value"
                                 value={loadOption}
                                 placeholder="Selecione um tema"
-                                placeholderStyle={{ color: colorScheme.Text.dark }}
-                                selectedTextStyle={{ color: colorScheme.Text.dark }}
+                                placeholderStyle={{ color: colorScheme.Text.placeHolder }}
+                                selectedTextStyle={{ color: colorScheme.Text.text }}
                                 onChange={(item) => { setLoadOption(item.value) }}
                                 style={InputStyles.input}
                             />
@@ -102,8 +103,8 @@ export default function FilterForm({
                                 valueField="value"
                                 value={filterOption}
                                 placeholder="Selecione um tema"
-                                placeholderStyle={{ color: colorScheme.Text.dark }}
-                                selectedTextStyle={{ color: colorScheme.Text.dark }}
+                                placeholderStyle={{ color: colorScheme.Text.placeHolder }}
+                                selectedTextStyle={{ color: colorScheme.Text.text }}
                                 onChange={(item) => { setFilterOption(item.value) }}
                                 style={InputStyles.input}
                             />
@@ -119,8 +120,8 @@ export default function FilterForm({
                                 valueField="value"
                                 value={filterPriorityOption}
                                 placeholder=""
-                                placeholderStyle={{ color: colorScheme.Text.dark }}
-                                selectedTextStyle={{ color: colorScheme.Text.dark }}
+                                placeholderStyle={{ color: colorScheme.Text.placeHolder }}
+                                selectedTextStyle={{ color: colorScheme.Text.text }}
                                 onChange={(item) => { setFilterPriorityOption(item.value) }}
                                 style={InputStyles.input}
                             />
@@ -144,8 +145,8 @@ export default function FilterForm({
                                 valueField="value"
                                 value={filterCategoryOption}
                                 placeholder=""
-                                placeholderStyle={{ color: colorScheme.Text.dark }}
-                                selectedTextStyle={{ color: colorScheme.Text.dark }}
+                                placeholderStyle={{ color: colorScheme.Text.placeHolder }}
+                                selectedTextStyle={{ color: colorScheme.Text.text }}
                                 onChange={(item) => { setFilterCategoryOption(item.value) }}
                                 style={InputStyles.input}
                             />

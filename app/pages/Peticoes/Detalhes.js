@@ -12,13 +12,16 @@ import { useTheme } from '../../utils/ThemeContext';
 import StepIndicator from 'react-native-step-indicator';
 import { ButtonsStyles } from '../../styles/Buttons';
 import CustomButton from '../../components/forms/button';
-import { ADMIN_USER_TYPE } from '../../utils/Constantes';
+import { ADMIN_USER_TYPE, priorities } from '../../utils/Constantes';
 import { updateComplaintStatus } from '../../managers/complaintController';
 import { deletePetitionControl, updatePetitionSignatures, updatePetitionStatus } from '../../managers/petitionController';
 
 export default function VerPeticaoApp({ navigation, route }) {
     const { colorScheme } = useTheme();
+    let prioridades = [...priorities]
+    prioridades.shift()
 
+    const [customSteps, setCustomSteps] = useState(null);
     const [petition, setPetition] = useState(null);
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState({});
@@ -34,10 +37,20 @@ export default function VerPeticaoApp({ navigation, route }) {
                 const remainingTime = await getRemainingTimeForPetition(id);
 
                 if (petitionDetails.content) {
-                    setPetition({ ...petitionDetails.content, ...remainingTime });
+                    let petitionContent = { ...petitionDetails.content, ...remainingTime }
 
-                    const userData = await getUserById(petitionDetails.content.user_id);
+                    const userData = await getUserById(petitionContent.user_id);
+
+                    setCustomSteps({
+                        ...colorScheme.Steps,
+                        stepStrokeFinishedColor: prioridades[petitionContent.prioridade].color,
+                        stepIndicatorFinishedColor: prioridades[petitionContent.prioridade].color,
+                        separatorFinishedColor: prioridades[petitionContent.prioridade].color,
+                        stepStrokeCurrentColor: prioridades[petitionContent.prioridade].color,
+                    })
+
                     setUser(userData.content);
+                    setPetition(petitionContent);
                 }
             }
 
@@ -99,82 +112,105 @@ export default function VerPeticaoApp({ navigation, route }) {
         <MainContainer>
             {loading ? (
                 null
-            ) : petition ? (
+            ) : petition && customSteps ? (
                 <View style={styles.panel}>
                     <>
-                        {/* User Information */}
-                        <View style={styles.flexRow}>
-                            <Avatar
-                                uri={user.anonimo ? randomPhoto() : user.pfp}
-                                size='xl'
-                                shape='square'
-                            />
-                            <View style={styles.flexText}>
-                                <Text style={[{ color: colorScheme.Text.dark }, styles.text]}>
-                                    Petição criada por: <Text style={styles.bold}>{user.anonimo ? "XXXXXXXX" : user.nome}</Text>
-                                </Text>
-                                <Text style={[{ color: colorScheme.Text.dark }, styles.text]}>
-                                    Em: {formatDate(petition.data, true)}
-                                </Text>
+                            {/* User Information */}
+                            <View style={styles.flexRow}>
+                                <Avatar
+                                    uri={user.anonimo ? randomPhoto() : user.pfp}
+                                    size='xl'
+                                    shape='square'
+                                />
+                                <View style={styles.flexText}>
+                                    <Text style={[{ color: colorScheme.Text.text }, styles.text]}>
+                                        Petição criada por: <Text style={styles.bold}>{user.anonimo ? "XXXXXXXX" : user.nome}</Text>
+                                    </Text>
+                                    <Text style={[{ color: colorScheme.Text.text }, styles.text]}>
+                                        Em: {formatDate(petition.data, true)}
+                                    </Text>
+                                </View>
                             </View>
-                        </View>
 
-                        {/* Petition Details */}
-                        <Text style={[{ color: colorScheme.Text.dark }, styles.title]}>{petition.titulo || 'Título da Petição'}</Text>
-                        <Text style={[{ color: colorScheme.Text.dark }, styles.description]}>{petition.content || 'Descrição da causa.'}</Text>
+                            {/* Petition Details */}
+                            <Text style={[{ color: colorScheme.Text.text }, styles.title]}>{petition.titulo || 'Título da Petição'}</Text>
+                            <Text style={[{ color: colorScheme.Text.text }, styles.description]}>{petition.content || 'Descrição da causa.'}</Text>
 
-                        {/* Status */}
-                        <Separator textStyle={{ fontSize: 20 }} texto='Status da Petição' color={colorScheme.Body_bg} style={{ marginVertical: 20 }} />
+                            {/* Status */}
+                            <Separator textStyle={{ fontSize: 20 }} texto='Status da Petição' color={prioridades[petition.prioridade].color} style={{ marginVertical: 20 }} />
 
-                        <View style={{ marginBottom: 20 }} >
-                            <StepIndicator
-                                currentPosition={petition.status < 0 ? 3 : petition.status}
-                                labels={
-                                    petition.status < 0 ?
-                                        ['Aguardando Aprovação', 'Coleta de assinaturas', 'Cancelada']
-                                        :
-                                        ['Aguardando Aprovação', 'Coleta de assinaturas', 'Encerrada']
-                                }
-                                stepCount={3}
-                                customStyles={colorScheme.Steps}
+                            <View style={{
+                                display: 'flex',
+                                width: '100%',
+                            }} >
+                                <View style={{
+                                    backgroundColor: prioridades[petition.prioridade].color,
+                                    paddingHorizontal: 10,
+                                    paddingVertical: 5,
+                                    borderRadius: 20, // Faz com que a tag tenha bordas arredondadas
+                                    alignSelf: 'center', // Ajusta a altura da tag de acordo com o conteúdo
+                                    marginBottom: 20,
+                                }}>
+                                    <Text style={[
+                                        styles.text,
+                                        {
+                                            textAlign: 'center',
+                                        }
+                                    ]}>
+                                        Prioridade : {prioridades[petition.prioridade].title}
+                                    </Text>
+                                </View>
+                            </View>
+
+                            <View style={{ marginBottom: 20 }} >
+                                <StepIndicator
+                                    currentPosition={petition.status < 0 ? 3 : petition.status}
+                                    labels={
+                                        petition.status < 0 ?
+                                            ['Aguardando Aprovação', 'Coleta de assinaturas', 'Cancelada']
+                                            :
+                                            ['Aguardando Aprovação', 'Coleta de assinaturas', 'Encerrada']
+                                    }
+                                    stepCount={3}
+                                    customStyles={customSteps}
+                                />
+                            </View>
+
+                            <Text style={[{ color: colorScheme.Text.text }, styles.text]}>
+                                {petition.signatures} de {petition.required_signatures} assinaturas
+                            </Text>
+                            <ProgressBar
+                                progress={(petition.signatures / petition.required_signatures < 0.01) ? 0 : petition.signatures / petition.required_signatures}
+                                color={prioridades[petition.prioridade].color}
+                                style={styles.progressBar}
                             />
-                        </View>
+                            <Text style={[{ color: colorScheme.Text.text }, styles.text]}>
+                                <Text style={styles.bold}>Tempo Restante:</Text>{' '}
+                                {petition.tempo_restante.dias_restantes} dias,{' '}
+                                {petition.tempo_restante.horas_restantes} horas,{' '}
+                                {petition.tempo_restante.minutos_restantes} minutos
+                            </Text>
 
-                        <Text style={[{ color: colorScheme.Text.dark }, styles.text]}>
-                            {petition.signatures} de {petition.required_signatures} assinaturas
-                        </Text>
-                        <ProgressBar
-                            progress={(petition.signatures / petition.required_signatures < 0.01) ? 0 : petition.signatures / petition.required_signatures}
-                            color={colorScheme.Body_bg}
-                            style={styles.progressBar}
-                        />
-                        <Text style={[{ color: colorScheme.Text.dark }, styles.text]}>
-                            <Text style={styles.bold}>Tempo Restante:</Text>{' '}
-                            {petition.tempo_restante.dias_restantes} dias,{' '}
-                            {petition.tempo_restante.horas_restantes} horas,{' '}
-                            {petition.tempo_restante.minutos_restantes} minutos
-                        </Text>
+                            {/* Additional Info */}
+                            <Separator textStyle={{ fontSize: 20 }} texto='Informações Adicionais' color={prioridades[petition.prioridade].color} style={{ marginVertical: 20 }} />
 
-                        {/* Additional Info */}
-                        <Separator textStyle={{ fontSize: 20 }} texto='Informações Adicionais' color={colorScheme.Body_bg} style={{ marginVertical: 20 }} />
-
-                        <Text style={[{ color: colorScheme.Text.dark }, styles.text]}>
-                            <Text style={styles.bold}>Data Limite:</Text> {formatDate(petition.data_limite)}
-                        </Text>
-                        <Text style={[{ color: colorScheme.Text.dark }, styles.text]}>
-                            <Text style={styles.bold}>Atualizado em:</Text> {formatDate(petition.data_ultima_atualizacao)}
-                        </Text>
-                        <Text style={[{ color: colorScheme.Text.dark }, styles.text]}>
-                            <Text style={styles.bold}>Data de Conclusão:</Text> {petition.data_conclusao ? formatDate(petition.data_limite) : "Em andamento"}
-                        </Text>
-                        <Text style={[{ color: colorScheme.Text.dark }, styles.text]}>
-                            <Text style={styles.bold}>Data Limite:</Text> {petition.Categoria ? petition.Categoria : 'Não especificada'}
-                        </Text>
-                        <Text style={[{ color: colorScheme.Text.dark }, styles.text]}>
-                            <Text style={styles.bold}>Local:</Text> {petition.local}
-                        </Text>
+                            <Text style={[{ color: colorScheme.Text.text }, styles.text]}>
+                                <Text style={styles.bold}>Data Limite:</Text> {formatDate(petition.data_limite)}
+                            </Text>
+                            <Text style={[{ color: colorScheme.Text.text }, styles.text]}>
+                                <Text style={styles.bold}>Atualizado em:</Text> {formatDate(petition.data_ultima_atualizacao)}
+                            </Text>
+                            <Text style={[{ color: colorScheme.Text.text }, styles.text]}>
+                                <Text style={styles.bold}>Data de Conclusão:</Text> {petition.data_conclusao ? formatDate(petition.data_limite) : "Em andamento"}
+                            </Text>
+                            <Text style={[{ color: colorScheme.Text.text }, styles.text]}>
+                                <Text style={styles.bold}>Data Limite:</Text> {petition.Categoria ? petition.Categoria : 'Não especificada'}
+                            </Text>
+                            <Text style={[{ color: colorScheme.Text.text }, styles.text]}>
+                                <Text style={styles.bold}>Local:</Text> {petition.local}
+                            </Text>
+                        <SupportersList petition={petition} />
                     </>
-                    <SupportersList petition={petition} />
 
                     <View
                         style={{
@@ -193,7 +229,8 @@ export default function VerPeticaoApp({ navigation, route }) {
                                         bgColor={colorScheme.Buttons.BootstrapPrimary.backgroundColor}
                                         buttonStyle={ButtonsStyles.default}
                                         style={{
-                                            opacity: buttonDisabled() ? .5 : 1
+                                            opacity: buttonDisabled() ? .5 : 1,
+                                            width: '100%'
                                         }}
                                         onPress={handlesign}
                                         disabled={
@@ -209,6 +246,9 @@ export default function VerPeticaoApp({ navigation, route }) {
                                                     textColor={colorScheme.Buttons.BootstrapSecondary.color}
                                                     bgColor={colorScheme.Buttons.BootstrapSecondary.backgroundColor}
                                                     buttonStyle={ButtonsStyles.default}
+                                                    style={{
+                                                        width: '100%'
+                                                    }}
                                                     onPress={handleEnd}
                                                 />
                                                 <CustomButton
@@ -216,6 +256,9 @@ export default function VerPeticaoApp({ navigation, route }) {
                                                     textColor={colorScheme.Buttons.BootstrapWarning.color}
                                                     bgColor={colorScheme.Buttons.BootstrapWarning.backgroundColor}
                                                     buttonStyle={ButtonsStyles.default}
+                                                    style={{
+                                                        width: '100%'
+                                                    }}
                                                     onPress={handleRevoke}
                                                 />
                                             </>
@@ -231,6 +274,9 @@ export default function VerPeticaoApp({ navigation, route }) {
                                             textColor={colorScheme.Buttons.BootstrapDanger.color}
                                             bgColor={colorScheme.Buttons.BootstrapDanger.backgroundColor}
                                             buttonStyle={ButtonsStyles.default}
+                                            style={{
+                                                width: '100%'
+                                            }}
                                             onPress={handleReprove}
                                         />
                                         <CustomButton
@@ -238,6 +284,9 @@ export default function VerPeticaoApp({ navigation, route }) {
                                             textColor={colorScheme.Buttons.BootstrapSuccess.color}
                                             bgColor={colorScheme.Buttons.BootstrapSuccess.backgroundColor}
                                             buttonStyle={ButtonsStyles.default}
+                                            style={{
+                                                width: '100%'
+                                            }}
                                             onPress={handleApprove}
                                         />
                                     </>
@@ -251,6 +300,9 @@ export default function VerPeticaoApp({ navigation, route }) {
                                     textColor={colorScheme.Buttons.BootstrapDanger.color}
                                     bgColor={colorScheme.Buttons.BootstrapDanger.backgroundColor}
                                     buttonStyle={ButtonsStyles.default}
+                                    style={{
+                                        width: '100%'
+                                    }}
                                     onPress={handleDelete}
                                 />
                             ) : null
@@ -259,7 +311,7 @@ export default function VerPeticaoApp({ navigation, route }) {
 
                 </View>
             ) : (
-                <Text style={[{ color: colorScheme.Text.dark }, styles.error]}>Não foi possível carregar os detalhes da petição.</Text>
+                <Text style={[{ color: colorScheme.Text.text }, styles.error]}>Não foi possível carregar os detalhes da petição.</Text>
             )}
         </MainContainer>
     );

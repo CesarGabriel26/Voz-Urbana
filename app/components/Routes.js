@@ -53,7 +53,6 @@ export default function Routes() {
       StatusBar.setBarStyle('dark-content');
     } else if (Platform.OS === 'ios') {
       StatusBar.setBarStyle('light-content');
-
     }
   }, []);
 
@@ -64,9 +63,9 @@ export default function Routes() {
 
       <Stack.Navigator
         screenOptions={({ navigation }) => ({
-          headerTintColor: colorScheme.Text.text,
+          headerTintColor: colorScheme.Text.headerTittle,
           headerStyle: {
-            backgroundColor: colorScheme.Body_bg,
+            backgroundColor: colorScheme.Header_bg,
             height: 80,
           },
           headerTitleAlign: 'center',
@@ -77,8 +76,6 @@ export default function Routes() {
                 marginRight: 25
               }}
             >
-              {/* <FontAwesome name="gear" size={30} color="white" /> */}
-
               {
                 userData ? (
                   <Avatar

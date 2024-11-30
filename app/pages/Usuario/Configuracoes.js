@@ -122,8 +122,8 @@ export default function Perfil({ navigation }) {
                     />
 
                     <View>
-                        <Text style={styles.userName}>{userData.nome}</Text>
-                        <Text style={styles.userEmail}>{userData.email}</Text>
+                        <Text style={[styles.userName, {color: colorScheme.Text.text}]}>{userData.nome}</Text>
+                        <Text style={[styles.userEmail, {color: colorScheme.Text.placeHolder}]}>{userData.email}</Text>
                     </View>
                 </View>
 
@@ -131,23 +131,23 @@ export default function Perfil({ navigation }) {
                 <Separator texto='Informações do Usuário' color={colorScheme.Text.placeHolder} />
 
                 <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text style={{ maxWidth: 100 }}>CPF: </Text>
-                    <Text style={{ maxWidth: 100 }}>{userData.cpf}</Text>
+                    <Text style={{ maxWidth: 100, color: colorScheme.Text.text }}>CPF: </Text>
+                    <Text style={{ maxWidth: 100, color: colorScheme.Text.text }}>{userData.cpf}</Text>
                 </View>
 
                 <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text style={{ maxWidth: 100 }}>Tipo: </Text>
-                    <Text style={{ maxWidth: 100 }}>{userData.type === 1 ? "Admin" : "User"}</Text>
+                    <Text style={{ maxWidth: 100, color: colorScheme.Text.text }}>Tipo: </Text>
+                    <Text style={{ maxWidth: 100, color: colorScheme.Text.text }}>{userData.type === 1 ? "Admin" : "User"}</Text>
                 </View>
 
                 <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text style={{ maxWidth: 200 }}>Última Atualização: </Text>
-                    <Text style={{ maxWidth: 100 }}>{new Date(userData.updated_at).toLocaleDateString()}</Text>
+                    <Text style={{ maxWidth: 200, color: colorScheme.Text.text }}>Última Atualização: </Text>
+                    <Text style={{ maxWidth: 100, color: colorScheme.Text.text }}>{new Date(userData.updated_at).toLocaleDateString()}</Text>
                 </View>
 
                 <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text style={{ maxWidth: 200 }}>Data de Criação: </Text>
-                    <Text style={{ maxWidth: 100 }}>{new Date(userData.created_at).toLocaleDateString()}</Text>
+                    <Text style={{ maxWidth: 200, color: colorScheme.Text.text }}>Data de Criação: </Text>
+                    <Text style={{ maxWidth: 100, color: colorScheme.Text.text }}>{new Date(userData.created_at).toLocaleDateString()}</Text>
                 </View>
 
                 <Separator texto='Configurações' color={colorScheme.Text.placeHolder} />
@@ -155,15 +155,15 @@ export default function Perfil({ navigation }) {
                 {/* Configurações */}
                 <View style={{ gap: 10 }} >
                     <View>
-                        <Text style={styles.label}>Tema:</Text>
+                        <Text style={[styles.label, {color: colorScheme.Text.text}]}>Tema:</Text>
                         <Dropdown
                             data={themes.map((theme) => ({ label: theme, value: theme }))}
                             labelField="label"
                             valueField="value"
                             value={theme}
-                            placeholder="Selecione um tema"
-                            placeholderStyle={{ color: colorScheme.Text.dark }}
-                            selectedTextStyle={{ color: colorScheme.Text.dark }}
+                            placeholder="Selecione um tema" 
+                            placeholderStyle={{ color: colorScheme.DropDown.color }}
+                            selectedTextStyle={{ color: colorScheme.DropDown.color }}
                             onChange={(item) => {
                                 setTheme(item.value);
                                 changeTheme(item.value);
@@ -172,7 +172,7 @@ export default function Perfil({ navigation }) {
                         />
                     </View>
                     <View>
-                        <Text style={styles.label}>Lingua:</Text>
+                        <Text style={[styles.label, {color: colorScheme.Text.text}]}>Lingua:</Text>
                         <Dropdown
                             data={[
                                 "Portugues",
@@ -183,8 +183,8 @@ export default function Perfil({ navigation }) {
                             valueField="value"
                             value={"Portugues"}
                             placeholder="Selecione uma linguagem"
-                            placeholderStyle={{ color: colorScheme.Text.dark }}
-                            selectedTextStyle={{ color: colorScheme.Text.dark }}
+                            placeholderStyle={{ color: colorScheme.DropDown.color }}
+                            selectedTextStyle={{ color: colorScheme.DropDown.color }}
                             onChange={(item) => {
                                 console.log(item);
                             }}
@@ -193,7 +193,7 @@ export default function Perfil({ navigation }) {
                     </View>
                     <View>
                         <View style={[styles.dropdown, { display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
-                            <Text style={[styles.label, { maxWidth: 150 }]}>Usuario Anonimo:</Text>
+                            <Text style={[styles.label, { maxWidth: 150, color: colorScheme.Text.text }]}>Usuario Anonimo:</Text>
                             <Switch
                                 trackColor={{ false: 'gray', true: 'gray' }}
                                 thumbColor={colorScheme.Switch.thumbColor[isEnabled]}
@@ -310,7 +310,6 @@ const styles = StyleSheet.create({
     },
     userEmail: {
         fontSize: 16,
-        color: 'gray',
     },
     label: {
         fontSize: 16,
