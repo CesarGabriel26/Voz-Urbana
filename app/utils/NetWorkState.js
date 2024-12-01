@@ -9,7 +9,7 @@ export default function NetworkCheck({ children }) {
         const checkNetwork = async () => {
             try {
                 const networkState = await Network.getNetworkStateAsync();
-                setIsConnected(true);
+                setIsConnected(networkState);
             } catch (error) {
                 console.error("Erro ao verificar a conexão de rede:", error);
             }

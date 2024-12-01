@@ -23,6 +23,8 @@ import Detalhes from '../pages/Peticoes/Detalhes';
 import ListaReclamacao from '../pages/Reclamacoes/Lista';
 import EscalaDePrioridade from '../pages/Extra/EscalaDePrioridade';
 import VerReclamacao from '../pages/Reclamacoes/Detalhes';
+import ListaDoUsuario from '../pages/Peticoes/ListaDoUsuario';
+import ListaReclamacaoUsuario from '../pages/Reclamacoes/ListaDoUsuario';
 
 
 const Stack = createStackNavigator();
@@ -47,19 +49,18 @@ export default function Routes() {
 
   useEffect(() => {
     // initializeUser()
-
+    
     if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor('#0A62AC');
+      StatusBar.setBackgroundColor(colorScheme.Header_bg);
       StatusBar.setBarStyle('dark-content');
     } else if (Platform.OS === 'ios') {
       StatusBar.setBarStyle('light-content');
     }
-  }, []);
+  }, [colorScheme]);
 
 
   return (
     <NavigationContainer>
-      <StatusBar style="auto" />
 
       <Stack.Navigator
         screenOptions={({ navigation }) => ({
@@ -141,6 +142,10 @@ export default function Routes() {
           component={ListaReclamacao}
         />
         <Stack.Screen
+          name="Minhas Reclamações"
+          component={ListaReclamacaoUsuario}
+        />
+        <Stack.Screen
           name="Detalhes Da Reclamação"
           component={VerReclamacao}
         />
@@ -153,6 +158,10 @@ export default function Routes() {
         <Stack.Screen
           name="Petições"
           component={Lista}
+        />
+        <Stack.Screen
+          name="Minhas Petições"
+          component={ListaDoUsuario}
         />
         <Stack.Screen
           name="Detalhes Da Petição"

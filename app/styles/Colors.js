@@ -163,7 +163,7 @@ export const Colors = {
 
         Text: {
             headerTittle: '#ffffff',
-            title: "#BB86FC",  // Roxo para títulos
+            title: "#F59D53",  // Roxo para títulos
             text: "#FFFFFF",  // Texto principal em branco
             dark: "#E0E0E0",  // Tons claros para textos secundários
             placeHolder: '#B0B0B0',
@@ -172,13 +172,13 @@ export const Colors = {
         Buttons: {
             Primary: {
                 color: '#FFFFFF',
-                backgroundColor: '#BB86FC',  // Roxo claro
+                backgroundColor: '#F59D53',  // Roxo claro
             },
             Secondary: {
                 color: '#FFFFFF',
                 backgroundColor: '#1E1E1E',
                 borderWidth: 2,
-                borderColor: '#BB86FC'
+                borderColor: '#F59D53'
             },
             Light: {
                 color: '#333333',
@@ -237,7 +237,7 @@ export const Colors = {
 
         Inputs: {
             PrimaryGhost: {
-                borderColor: '#BB86FC',
+                borderColor: '#F59D53',
                 color: '#FFFFFF',
                 placeHolder: '#B0B0B0',
             },
@@ -248,8 +248,8 @@ export const Colors = {
                 width: '100%',
             },
             LightGhost: {
-                color: '#BB86FC',
-                borderColor: '#BB86FC',
+                color: '#F59D53',
+                borderColor: '#F59D53',
                 placeHolder: '#aaaaaa',
                 width: '100%',
             },
@@ -270,24 +270,24 @@ export const Colors = {
         Icons: {
             loader: {
                 light: '#FFFFFF',
-                Primary: '#BB86FC'
+                Primary: '#F59D53'
             },
             check: '#198754',  // Verde de sucesso
-            filter: '#BB86FC'
+            filter: '#F59D53'
         },
 
         Switch: {
             ios_backgroundColor: '#333333',
             thumbColor: {
-                true: '#BB86FC',
+                true: '#F59D53',
                 false: '#B0B0B0'
             }
         },
 
         Steps: {
-            stepStrokeFinishedColor: '#BB86FC',
-            stepIndicatorFinishedColor: '#BB86FC',
-            separatorFinishedColor: '#BB86FC',
+            stepStrokeFinishedColor: '#F59D53',
+            stepIndicatorFinishedColor: '#F59D53',
+            separatorFinishedColor: '#F59D53',
             stepIndicatorLabelFinishedColor: '#FFFFFF',
 
             stepStrokeUnFinishedColor: '#555555',
@@ -295,7 +295,7 @@ export const Colors = {
             stepIndicatorUnFinishedColor: '#555555',
             stepIndicatorLabelUnFinishedColor: '#FFFFFF',
 
-            stepStrokeCurrentColor: '#BB86FC',
+            stepStrokeCurrentColor: '#F59D53',
             stepIndicatorCurrentColor: '#1E1E1E',
             stepIndicatorLabelCurrentColor: '#FFFFFF',
 

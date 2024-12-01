@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import MapView, { Marker, UrlTile } from 'react-native-maps';
-import { ActivityIndicator, Text, View } from 'react-native';
+import {  Text, View } from 'react-native';
 import { useTheme } from '../utils/ThemeContext';
 
 export default React.forwardRef(function CustomMapProvider(
@@ -61,7 +61,7 @@ export default React.forwardRef(function CustomMapProvider(
             <MapView
                 onMapLoaded={focus}
                 ref={mapRef}
-                style={style}
+                style={[style]}
                 {...props}
             >
                 <UrlTile

@@ -9,7 +9,7 @@ export default function CustomButton({ style, buttonStyle = ButtonsStyles.defaul
             disabled={disabled}
             style={[style, buttonStyle, { backgroundColor: bgColor }]}
         >
-            <Text style={[{ color: textColor }, textStyle]} >
+            <Text style={[{ color: textColor, textAlign: 'center' }, textStyle]} >
                 {text}
             </Text>
         </TouchableOpacity>

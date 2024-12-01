@@ -11,6 +11,7 @@ import CustomButton from '../../components/forms/button';
 import { ADMIN_USER_TYPE } from '../../utils/Constantes';
 import { deleteComplaintControl, updateComplaintStatus } from '../../managers/complaintController';
 import StepIndicator from 'react-native-step-indicator';
+import { ButtonsStyles } from '../../styles/Buttons';
 
 export default function VerReclamacao({ navigation, route }) {
     const { colorScheme } = useTheme();
@@ -54,6 +55,14 @@ export default function VerReclamacao({ navigation, route }) {
         });
     };
 
+    const handleApprove = async () => {
+        await updateComplaintStatus(report, 1, true, loadReportDetails);
+    };
+
+    const handleRevoke = async () => {
+        await updateComplaintStatus(report, 0, false, loadReportDetails);
+    };
+
     return (
         <MainContainer>
             {loading ? (
@@ -67,17 +76,17 @@ export default function VerReclamacao({ navigation, route }) {
                             shape='square'
                         />
                         <View style={styles.flexText}>
-                            <Text style={[{ color: colorScheme.Text.dark }, styles.text]}>
+                            <Text style={[{ color: colorScheme.Text.text }, styles.text]}>
                                 Reclamação criada por: <Text style={styles.bold}>{user.anonimo ? "Anônimo" : user.nome}</Text>
                             </Text>
-                            <Text style={[{ color: colorScheme.Text.dark }, styles.text]}>
+                            <Text style={[{ color: colorScheme.Text.text }, styles.text]}>
                                 Em: {formatDate(report.data, true)}
                             </Text>
                         </View>
                     </View>
 
-                    <Text style={[{ color: colorScheme.Text.dark }, styles.title]}>{report.titulo || 'Título da Reclamação'}</Text>
-                    <Text style={[{ color: colorScheme.Text.dark }, styles.description]}>{report.conteudo || 'Descrição não fornecida.'}</Text>
+                    <Text style={[{ color: colorScheme.Text.text }, styles.title]}>{report.titulo || 'Título da Reclamação'}</Text>
+                    <Text style={[{ color: colorScheme.Text.text }, styles.description]}>{report.conteudo || 'Descrição não fornecida.'}</Text>
 
                     <View style={{ marginBottom: 20 }} >
                         <StepIndicator
@@ -95,13 +104,13 @@ export default function VerReclamacao({ navigation, route }) {
 
                     <Separator texto='Detalhes da Reclamação' color={colorScheme.Body_bg} style={{ marginVertical: 20 }} />
 
-                    <Text style={[{ color: colorScheme.Text.dark }, styles.text]}>
+                    <Text style={[{ color: colorScheme.Text.text }, styles.text]}>
                         <Text style={styles.bold}>Categoria:</Text> {report.categoria || 'Não especificada'}
                     </Text>
-                    <Text style={[{ color: colorScheme.Text.dark }, styles.text]}>
+                    <Text style={[{ color: colorScheme.Text.text }, styles.text]}>
                         <Text style={styles.bold}>Prioridade:</Text> {report.prioridade || 'Normal'}
                     </Text>
-                    <Text style={[{ color: colorScheme.Text.dark }, styles.text]}>
+                    <Text style={[{ color: colorScheme.Text.text }, styles.text]}>
                         <Text style={styles.bold}>Endereço:</Text> {report.adress || 'Não informado'}
                     </Text>
 
@@ -110,25 +119,51 @@ export default function VerReclamacao({ navigation, route }) {
                     )}
 
                     <View style={{ gap: 20 }} >
-                        {(currentUser?.type === ADMIN_USER_TYPE && !report.aceito) ?
-                            <CustomButton
-                                text="Aprovar"
-                                textColor={colorScheme.Buttons.BootstrapSuccess.color}
-                                bgColor={colorScheme.Buttons.BootstrapSuccess.backgroundColor}
-                                buttonStyle={styles.button}
-                                onPress={handleDelete}
-                            />
-                            : null
+                        {
+                            (currentUser?.type === ADMIN_USER_TYPE && !report.aceito) ?
+                                <CustomButton
+                                    text="Aprovar"
+                                    textColor={colorScheme.Buttons.BootstrapSuccess.color}
+                                    bgColor={colorScheme.Buttons.BootstrapSuccess.backgroundColor}
+                                    buttonStyle={ButtonsStyles.default}
+                                    style={{
+                                        width: '100%'
+                                    }}
+                                    onPress={handleApprove}
+                                />
+                                : null
                         }
-                        {currentUser?.type === ADMIN_USER_TYPE ?
-                            <CustomButton
-                                text="Apagar"
-                                textColor={colorScheme.Buttons.BootstrapDanger.color}
-                                bgColor={colorScheme.Buttons.BootstrapDanger.backgroundColor}
-                                buttonStyle={styles.button}
-                                onPress={handleDelete}
-                            />
-                            : null
+                        {
+                            currentUser?.type === ADMIN_USER_TYPE && report.aceito ?
+                                <>
+                                    <CustomButton
+                                        text="Revogar"
+                                        textColor={colorScheme.Buttons.BootstrapWarning.color}
+                                        bgColor={colorScheme.Buttons.BootstrapWarning.backgroundColor}
+                                        buttonStyle={ButtonsStyles.default}
+                                        style={{
+                                            width: '100%'
+                                        }}
+                                        onPress={handleRevoke}
+                                    />
+                                </>
+                                : null
+                        }
+                        {
+                            currentUser?.type === ADMIN_USER_TYPE ?
+                                <>
+                                    <CustomButton
+                                        text="Apagar"
+                                        textColor={colorScheme.Buttons.BootstrapDanger.color}
+                                        bgColor={colorScheme.Buttons.BootstrapDanger.backgroundColor}
+                                        buttonStyle={ButtonsStyles.default}
+                                        style={{
+                                            width: '100%'
+                                        }}
+                                        onPress={handleDelete}
+                                    />
+                                </>
+                                : null
                         }
                     </View>
                 </View>

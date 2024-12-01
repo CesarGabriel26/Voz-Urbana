@@ -7,6 +7,8 @@ import CustomMapProvider from '../../components/CustomMap';
 import MainContainer from '../../components/MainContainer'
 import Separator from '../../components/Separator';
 
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 export default function Home({ navigation }) {
     const [complaints, setComplaints] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -41,7 +43,7 @@ export default function Home({ navigation }) {
     }, []);
 
     return (
-        <MainContainer canScroll={false} style={{ display: 'flex', flexDirection: 'column', flex: 1 }} >
+        <MainContainer >
             <View style={[styles.containerHome, { marginTop: 20 }]}>
                 <TouchableOpacity
                     onPress={() => {
@@ -49,51 +51,108 @@ export default function Home({ navigation }) {
                     }}
                     style={[styles.btnSqr, colorScheme.Buttons.Primary]}
                 >
-                    <Image source={require('../../assets/Exclama.png')} resizeMode='cover' />
-                    <Text style={[styles.text, colorScheme.Buttons.Primary]}>Nova</Text>
-                    <Text style={[styles.text, colorScheme.Buttons.Primary]}>reclamação</Text>
-                </TouchableOpacity>
-
-
-                <TouchableOpacity style={[styles.btnSqr, colorScheme.Buttons.Primary]}
-                    onPress={() => {
-                        navigation.navigate('Nova Petiçao')
-                    }}>
-                    <Image source={require('../../assets/Megafone.png')} resizeMode='cover' />
-                    <Text style={[styles.text, colorScheme.Buttons.Primary]}>Nova</Text>
-                    <Text style={[styles.text, colorScheme.Buttons.Primary]}>Petição</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={[styles.btnSqr, colorScheme.Buttons.Primary]}
-                    onPress={() => {
-                        navigation.navigate('Reclamações')
-                    }}>
-                    <Image source={require('../../assets/Megafone.png')} resizeMode='cover' />
-                    <Text style={[styles.text, colorScheme.Buttons.Primary]}> </Text>
-                    <Text style={[styles.text, colorScheme.Buttons.Primary]}>Reclamações</Text>
+                    <Icon
+                        name="alert"
+                        size={60}
+                        color={colorScheme.Buttons.Primary.color}
+                        style={styles.icon}
+                    />
+                    <Text style={[styles.text, { color: colorScheme.Buttons.Primary.color }]}>Nova{"\n"}reclamação</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
                     onPress={() => {
-                        navigation.navigate('Petições')
+                        navigation.navigate('Nova Petiçao')
                     }}
                     style={[styles.btnSqr, colorScheme.Buttons.Primary]}
                 >
-                    <Image source={require('../../assets/Lapis.png')} resizeMode='cover' />
-                    <Text style={[styles.text, colorScheme.Buttons.Primary]}> </Text>
-                    <Text style={[styles.text, colorScheme.Buttons.Primary]}>Petições</Text>
+                    <Icon
+                        name="pen"
+                        size={60}
+                        color={colorScheme.Buttons.Primary.color}
+                        style={styles.icon}
+                    />
+                    <Text style={[styles.text, { color: colorScheme.Buttons.Primary.color }]}>Nova{"\n"}Petição</Text>
                 </TouchableOpacity>
+
+                <TouchableOpacity
+                    onPress={() => {
+                        navigation.navigate('Reclamações')
+                    }}
+                    style={[styles.btnSqr, colorScheme.Buttons.Primary]}
+                >
+                    <Icon
+                        name="format-list-text"
+                        size={60}
+                        color={colorScheme.Buttons.Primary.color}
+                        style={styles.icon}
+                    />
+                    <Text style={[styles.text, { color: colorScheme.Buttons.Primary.color }]}>Reclamações</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('Petições')}
+                    style={[styles.btnSqr, colorScheme.Buttons.Primary]}
+                >
+                    <Icon
+                        name="format-line-style"
+                        size={60}
+                        color={colorScheme.Buttons.Primary.color}
+                        style={styles.icon}
+                    />
+                    <Text style={[styles.text, { color: colorScheme.Buttons.Primary.color }]}>
+                        Petições
+                    </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    onPress={() => {
+                        navigation.navigate('Reclamações')
+                    }}
+                    style={[styles.btnSqr, colorScheme.Buttons.Primary]}
+                >
+                    <Icon
+                        name="format-list-text"
+                        size={60}
+                        color={colorScheme.Buttons.Primary.color}
+                        style={styles.icon}
+                    />
+                    <Text style={[styles.text, { color: colorScheme.Buttons.Primary.color }]}>
+                        Minhas
+                        {"\n"}
+                        Reclamações
+                    </Text>
+                </TouchableOpacity>
+
+
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('Minhas Petições')}
+                    style={[styles.btnSqr, colorScheme.Buttons.Primary]}
+                >
+                    <Icon
+                        name="format-line-style"
+                        size={60}
+                        color={colorScheme.Buttons.Primary.color}
+                        style={styles.icon}
+                    />
+                    <Text style={[styles.text, { color: colorScheme.Buttons.Primary.color }]}>
+                        Minhas
+                        {"\n"}
+                        Petições
+                    </Text>
+                </TouchableOpacity>
+
             </View>
 
-            <Separator color={colorScheme.Body_bg} style={{ marginVertical: 20 }} />
+            <Separator color={colorScheme.Text.title} style={{ marginVertical: 20 }} />
 
-            <View style={{ display: 'flex', alignItems: 'center', flex: 1, paddingBottom: 100 }}>
+            <View style={{ display: 'flex', alignItems: 'center', flex: 1, height: 300 }}>
                 <Text style={{ color: colorScheme.Text.title, fontWeight: '800', fontSize: 20, marginBottom: 20 }}>
                     Reclamações na sua área
                 </Text>
 
                 <Pressable
-                    style={{ width: '100%' }}
+                    style={{ width: '100%', flex: 1, marginBottom: 20 }}
                     onPress={() => {
                         navigation.navigate('Mapa')
                     }}
@@ -129,6 +188,9 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
         gap: 20,
     },
+    icon: {
+        marginBottom: 0,
+    },
     map: {
         width: '100%',
         height: '100%',
@@ -147,6 +209,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontWeight: '700',
-        fontSize: 16
+        fontSize: 16,
+        textAlign: 'center'
     }
 });

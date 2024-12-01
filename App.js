@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View } from 'react-native';
 import { ThemeProvider } from './app/utils/ThemeContext';
 import Routes from './app/components/Routes'
@@ -8,7 +7,6 @@ export default function App() {
   return (
     <NetworkCheck>
       <ThemeProvider style={styles.container}>
-        <StatusBar style="auto" />
         <Routes />
       </ThemeProvider>
     </NetworkCheck>

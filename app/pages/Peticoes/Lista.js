@@ -20,20 +20,19 @@ export default function Lista({ navigation }) {
     const [filterPriorityOption, setFilterPriorityOption] = useState("Todas");
     const [filterCategoryOption, setFilterCategoryOption] = useState('Não Especificada');
 
+    const [filterActiveOption, setFilterActiveOption] = useState(true);
+
     const loadList = async () => {
         setLoading(true)
-        let resp = [];
+        try {
+            let resp = await listPetitions()
 
-        if (loadOption == 'all') {
-            resp = await listPetitions()
-        } else {
-            let userData = await loadCurrentUserData()
-            resp = await getPetitionsByUser(userData[0].id)
-        }
-
-        if (resp.content) {
-            setPetitions(resp.content);
-            setFilteredPetitions(resp.content);
+            if (resp.content) {
+                setPetitions(resp.content);
+                setFilteredPetitions(resp.content);
+            }
+        } catch (error) {
+            console.log(error);
         }
         setLoading(false)
     };
@@ -80,7 +79,7 @@ export default function Lista({ navigation }) {
 
     useEffect(() => {
         loadList()
-    }, [loadOption]);
+    }, []);
 
     useEffect(() => {
         applyFilters();
@@ -97,28 +96,31 @@ export default function Lista({ navigation }) {
                 filterPriorityOption={filterPriorityOption}
                 setFilterPriorityOption={setFilterPriorityOption}
                 navigation={navigation}
-                loadOption={loadOption}
-                setLoadOption={setLoadOption}
                 filterCategoryOption={filterCategoryOption}
                 setFilterCategoryOption={setFilterCategoryOption}
+                filterActiveOption={filterActiveOption}
+                setFilterActiveOption={setFilterActiveOption}
             />
             {
                 loading ? (
                     <ActivityIndicator size="large" color={colorScheme.Icons.loader.Primary} />
                 ) : (
                     filteredPetitions.map((petition, i) => (
-                        <PriorityCard
-                            key={i}
-                            prioridade={petition.prioridade}
-                            tittle={petition.titulo}
-                            date={petition.data}
-                            content={petition.content}
-                            onPress={() => {
-                                navigation.navigate("Detalhes Da Petição", { id: petition.id })
-                            }}
-                            pressableText="ver main"
-                            style={{ marginTop: i == 0 ? 20 : 0 }}
-                        />
+                        petition.aberto === filterActiveOption ? (
+                            <PriorityCard
+                                key={i}
+                                prioridade={petition.prioridade}
+                                tittle={petition.titulo}
+                                date={petition.data}
+                                content={petition.content}
+                                onPress={() => {
+                                    navigation.navigate("Detalhes Da Petição", { id: petition.id })
+                                }}
+                                pressableText="ver main"
+                                style={{ marginTop: i == 0 ? 20 : 0 }}
+                            />
+                        ) : null
+
                     ))
                 )
             }

@@ -59,7 +59,6 @@ export default function NovaReclamacao({ navigation }) {
                 err: "Verifique se a localização esta ativada"
             })
         }
-        console.log(MAPloading);
         setMAPLoading(false)
     };
 
