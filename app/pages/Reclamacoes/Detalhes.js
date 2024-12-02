@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, ActivityIndicator } from 'react-native';
 import { getReportById, getUserById } from '../../utils/Api';
 import { formatDate } from '../../utils/Parser';
 import Avatar from '../../components/UserAvatar';
@@ -8,13 +8,17 @@ import MainContainer from '../../components/MainContainer';
 import Separator from '../../components/Separator';
 import { useTheme } from '../../utils/ThemeContext';
 import CustomButton from '../../components/forms/button';
-import { ADMIN_USER_TYPE } from '../../utils/Constantes';
+import { ADMIN_USER_TYPE, priorities } from '../../utils/Constantes';
 import { deleteComplaintControl, updateComplaintStatus } from '../../managers/complaintController';
 import StepIndicator from 'react-native-step-indicator';
 import { ButtonsStyles } from '../../styles/Buttons';
 
 export default function VerReclamacao({ navigation, route }) {
     const { colorScheme } = useTheme();
+    let prioridades = [...priorities]
+    prioridades.shift()
+    const [customSteps, setCustomSteps] = useState(null);
+
     const [report, setReport] = useState(null);
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState({});
@@ -28,9 +32,18 @@ export default function VerReclamacao({ navigation, route }) {
 
                 const reportDetails = await getReportById(id);
                 if (reportDetails.content) {
-                    setReport(reportDetails.content);
+                    let reportContent = reportDetails.content
+                    setReport(reportContent)
 
-                    const userData = await getUserById(reportDetails.content.user_id);
+                    setCustomSteps({
+                        ...colorScheme.Steps,
+                        stepStrokeFinishedColor: prioridades[reportContent.prioridade].color,
+                        stepIndicatorFinishedColor: prioridades[reportContent.prioridade].color,
+                        separatorFinishedColor: prioridades[reportContent.prioridade].color,
+                        stepStrokeCurrentColor: prioridades[reportContent.prioridade].color,
+                    })
+
+                    const userData = await getUserById(reportContent.user_id);
                     setUser(userData.content);
                 }
             }
@@ -66,7 +79,7 @@ export default function VerReclamacao({ navigation, route }) {
     return (
         <MainContainer>
             {loading ? (
-                <Text style={styles.loadingText}>Carregando...</Text>
+                <ActivityIndicator size="large" color={colorScheme.Icons.loader.Primary} />
             ) : report ? (
                 <View style={styles.panel}>
                     <View style={styles.flexRow}>
@@ -88,6 +101,31 @@ export default function VerReclamacao({ navigation, route }) {
                     <Text style={[{ color: colorScheme.Text.text }, styles.title]}>{report.titulo || 'Título da Reclamação'}</Text>
                     <Text style={[{ color: colorScheme.Text.text }, styles.description]}>{report.conteudo || 'Descrição não fornecida.'}</Text>
 
+                    <Separator texto='Status da Reclamação' color={prioridades[report.prioridade].color} style={{ marginVertical: 20 }} />
+
+                    <View style={{
+                        display: 'flex',
+                        width: '100%',
+                    }} >
+                        <View style={{
+                            backgroundColor: prioridades[report.prioridade].color,
+                            paddingHorizontal: 10,
+                            paddingVertical: 5,
+                            borderRadius: 20, // Faz com que a tag tenha bordas arredondadas
+                            alignSelf: 'center', // Ajusta a altura da tag de acordo com o conteúdo
+                            marginBottom: 20,
+                        }}>
+                            <Text style={[
+                                styles.text,
+                                {
+                                    textAlign: 'center',
+                                }
+                            ]}>
+                                Prioridade {report.prioridade}
+                            </Text>
+                        </View>
+                    </View>
+
                     <View style={{ marginBottom: 20 }} >
                         <StepIndicator
                             currentPosition={report.status < 0 ? 3 : report.status}
@@ -98,11 +136,11 @@ export default function VerReclamacao({ navigation, route }) {
                                     ['Aguardando Aprovação', 'Coleta de assinaturas', 'Encerrada']
                             }
                             stepCount={3}
-                            customStyles={colorScheme.Steps}
+                            customStyles={customSteps}
                         />
                     </View>
 
-                    <Separator texto='Detalhes da Reclamação' color={colorScheme.Body_bg} style={{ marginVertical: 20 }} />
+                    <Separator texto='Detalhes da Reclamação' color={prioridades[report.prioridade].color} style={{ marginVertical: 20 }} />
 
                     <Text style={[{ color: colorScheme.Text.text }, styles.text]}>
                         <Text style={styles.bold}>Categoria:</Text> {report.categoria || 'Não especificada'}

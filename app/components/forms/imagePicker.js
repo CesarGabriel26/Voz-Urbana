@@ -47,7 +47,7 @@ export default function TakePhotoOrChooseFromGallery({ setImage, modalVisible = 
 
         let result = await uploadImage(uri, currentUserData[0].nome)
         if (!result.error) {
-            setImage(result.content.uri);
+            setImage(result.content.url);
         }
     }
 

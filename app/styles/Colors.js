@@ -5,17 +5,20 @@ export const Colors = {
     Light: {
         Header_bg: "#0A62AC",
         Body_bg: "#0A62AC",
+        Body_bg_RGB: "10, 98, 172",
         Body_bg_second: "#ffffff",
         Body_bg_third: "#000000",
         list_item_bg: "#fff", //"#333",
 
         Danger: "#dc3545",
+        DangerLight: "#ff8c83",  // Vermelho intenso para erros
 
         Text: {
             headerTittle: '#ffffff',
             title: "#0A62AC",
             text: "#000000",
-            dark: "#ffffff",
+            dark: "#000000",
+            light: "#FFFFFF",  
             placeHolder: '#adadad',
         },
 
@@ -134,6 +137,7 @@ export const Colors = {
         },
 
         Steps: {
+            currentStepLabelColor: '#000000',
             stepStrokeFinishedColor: '#0A62AC',
             stepIndicatorFinishedColor: '#0A62AC',
             separatorFinishedColor: '#0A62AC',
@@ -149,23 +153,25 @@ export const Colors = {
             stepIndicatorLabelCurrentColor: '#000000',
 
             labelColor: '#999999',
-            currentStepLabelColor: '#000000',
         }
     },
     Dark: {
         Header_bg: "#121212",
+        Body_bg_RGB: "18, 18, 18",
         Body_bg: "#121212",  // Fundo principal mais escuro
         Body_bg_second: "#1E1E1E",  // Fundo secundário para painéis
         Body_bg_third: "#333333",  // Fundo terciário para contrastes
         list_item_bg: "#1E1E1E",
 
         Danger: "#F44336",  // Vermelho intenso para erros
+        DangerLight: "#ff8c83",  // Vermelho intenso para erros
 
         Text: {
             headerTittle: '#ffffff',
             title: "#F59D53",  // Roxo para títulos
             text: "#FFFFFF",  // Texto principal em branco
-            dark: "#E0E0E0",  // Tons claros para textos secundários
+            dark: "#444444",  // Tons claros para textos secundários
+            light: "#FFFFFF",  
             placeHolder: '#B0B0B0',
         },
 
@@ -285,6 +291,7 @@ export const Colors = {
         },
 
         Steps: {
+            currentStepLabelColor: '#FFFFFF',
             stepStrokeFinishedColor: '#F59D53',
             stepIndicatorFinishedColor: '#F59D53',
             separatorFinishedColor: '#F59D53',
@@ -300,11 +307,8 @@ export const Colors = {
             stepIndicatorLabelCurrentColor: '#FFFFFF',
 
             labelColor: '#B0B0B0',
-            currentStepLabelColor: '#FFFFFF',
         }
     }
-
-
 };
 
 // Funções utilitárias para gerenciamento de esquemas de cores

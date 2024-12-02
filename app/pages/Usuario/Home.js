@@ -107,7 +107,7 @@ export default function Home({ navigation }) {
 
                 <TouchableOpacity
                     onPress={() => {
-                        navigation.navigate('Reclamações')
+                        navigation.navigate('Minhas Reclamações')
                     }}
                     style={[styles.btnSqr, colorScheme.Buttons.Primary]}
                 >

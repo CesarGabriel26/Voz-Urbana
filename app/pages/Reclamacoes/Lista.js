@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getReportsByUser, listReports } from '../../utils/Api';
+import { listReports } from '../../utils/Api';
 import MainContainer from '../../components/MainContainer'
 import PriorityCard from '../../components/PriorityCard';
 import FilterForm from '../../components/forms/FilterForm';
@@ -26,15 +26,15 @@ export default function Lista({ navigation }) {
 
     const loadList = async () => {
         setLoading(true)
+        setErro('')
         try {
-            throw new Error("Erro simulado para testes, remover na segunda feira");
-            // let resp = await listReports()
-            // if (resp.content) {
-            //     setReports(resp.content);
-            //     setFilteredPetitions(resp.content);
-            // }
+            // throw new Error("Erro simulado para testes, remover na segunda feira");
+            let resp = await listReports()
+            if (resp.content) {
+                setReports(resp.content);
+                setFilteredPetitions(resp.content);
+            }
         } catch (error) {
-            console.log(error);
             setErro(error.message)
         }
         setLoading(false)

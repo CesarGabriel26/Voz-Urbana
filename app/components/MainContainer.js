@@ -3,11 +3,11 @@ import { StyleSheet, View, ScrollView } from 'react-native';
 import { useTheme } from "../utils/ThemeContext";
 
 
-export default function MainContainer({ style, children, canScroll = true }) {
+export default function MainContainer({ style, children, canScroll = true, bodyBg }) {
     const { colorScheme } = useTheme();
 
     return (
-        <View style={[styles.container, { backgroundColor: colorScheme.Body_bg_second }]}>
+        <View style={[styles.container, { backgroundColor: bodyBg? bodyBg :colorScheme.Body_bg_second }]}>
             <ScrollView contentContainerStyle={[styles.scrollContent, style]}  nestedScrollEnabled={true} showsVerticalScrollIndicator={false} scrollEnabled={canScroll} >
                 {children}
             </ScrollView>

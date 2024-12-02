@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import MapView, { Marker, UrlTile } from 'react-native-maps';
 import {  Text, View } from 'react-native';
 import { useTheme } from '../utils/ThemeContext';
+import { PrioritiesColors } from '../utils/Constantes';
 
 export default React.forwardRef(function CustomMapProvider(
     {
@@ -86,7 +87,7 @@ export default React.forwardRef(function CustomMapProvider(
                                 title={marker.title ? marker.title : marker.titulo}
                                 description={marker.descricao ? marker.descricao : marker.conteudo}
                                 onClick={marker.onClick}
-
+                                pinColor={marker.prioridade? PrioritiesColors[marker.prioridade] : ""}
                                 {...marker.props}
                             />
                         ) : null

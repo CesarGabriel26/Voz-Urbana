@@ -58,6 +58,9 @@ export default function Routes() {
     }
   }, [colorScheme]);
 
+  useEffect(()=>{
+    initializeUser()
+  },[])
 
   return (
     <NavigationContainer>
@@ -74,7 +77,7 @@ export default function Routes() {
             <TouchableOpacity
               onPress={() => navigation.navigate('Configurações')}
               style={{
-                marginRight: 25
+                marginRight: 25,
               }}
             >
               {

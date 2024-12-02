@@ -1,21 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, View, Text, Button, Modal, TouchableOpacity } from 'react-native';
 import CustomMapProvider from '../../components/CustomMap';
 import { getUserLocation } from '../../utils/permissions/LocationPermtion';
 import { listReports } from '../../utils/Api';
 import { Picker } from '@react-native-picker/picker';
-import { Marker } from 'react-native-maps';
+import { useTheme } from '../../utils/ThemeContext';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import FilterForm from '../../components/forms/FilterForm';
 
-export default function Mapa() {
-    const [modalVisible, setModalVisible] = useState(false);
+export default function Mapa({ navigation }) {
+    const { colorScheme } = useTheme();
+    const mapRef = useRef(null);
+
     const [currentIndex, setCurrentIndex] = useState(0);
     const [location, setLocation] = useState(null);
+
     const [complaints, setComplaints] = useState([]);
     const [filteredComplaints, setFilteredComplaints] = useState([]);
 
     // Filtros
-    const [priorityFilter, setPriorityFilter] = useState(null);
-    const [countryFilter, setCountryFilter] = useState(null);
+    const [priorityFilter, setPriorityFilter] = useState('Todas');
+    const [countryFilter, setCountryFilter] = useState('all');
 
     // Carregar dados iniciais
     const loadData = async () => {
@@ -27,8 +32,21 @@ export default function Mapa() {
             let resp = await listReports();
             if (!resp || !resp.content) return console.error('No complaints found');
 
-            setComplaints(resp.content);
-            setFilteredComplaints(resp.content);
+            let dt = [
+                {
+                    passFilter : true,
+                    latitude: parseFloat(loc.latitude),
+                    longitude: parseFloat(loc.longitude),
+                    titulo: "Você está aqui",
+                    props: {
+                        pinColor: colorScheme.Body_bg
+                    }
+                },
+                ...resp.content
+            ]
+
+            setComplaints(dt);
+            setFilteredComplaints(dt);
         } catch (error) {
             console.error('Error in loadData:', error);
         }
@@ -38,37 +56,27 @@ export default function Mapa() {
     const applyFilters = () => {
         let filtered = complaints;
 
-        if (priorityFilter !== null) {
-            filtered = filtered.filter((c) => c.prioridade === priorityFilter);
+        if (priorityFilter !== 'Todas') {
+            filtered = filtered.filter((c) => c.prioridade === priorityFilter || c.passFilter);
         }
 
-        if (countryFilter) {
+        if (countryFilter != 'all') {
             filtered = filtered.filter((c) => {
                 const partes = c.adress.split(',').map((part) => part.trim());
                 const pais = partes[4]; // Posição do país no endereço
-                return pais === countryFilter;
+                return pais === countryFilter || c.passFilter;
             });
         }
 
         setFilteredComplaints(filtered);
         setCurrentIndex(0); // Resetar para o início após filtros
-        setModalVisible(false); // Fechar o modal
     };
 
     // Focar em uma reclamação específica
     const focusOnComplaint = (index) => {
-        console.log(latitude, longitude);
-        if (filteredComplaints[index]) {
-            console.log(filteredComplaints[index]);
-            const latitude  = filteredComplaints[index].latitude;
-            const longitude  = filteredComplaints[index].longitude;
-
-            mapRef.current.animateToRegion({
-                latitude: parseFloat(latitude),
-                longitude: parseFloat(longitude),
-                latitudeDelta: 0.01,
-                longitudeDelta: 0.01,
-            }, 1000);
+        if (filteredComplaints[index] && mapRef.current) {
+            const { latitude, longitude } = filteredComplaints[index];
+            mapRef.current.focusOnRegion(parseFloat(latitude), parseFloat(longitude));
         }
     };
 
@@ -76,6 +84,8 @@ export default function Mapa() {
     const handleNext = () => {
         if (currentIndex < filteredComplaints.length - 1) {
             setCurrentIndex((prevIndex) => prevIndex + 1);
+        } else {
+            setCurrentIndex(0)
         }
     };
 
@@ -83,12 +93,18 @@ export default function Mapa() {
     const handlePrevious = () => {
         if (currentIndex > 0) {
             setCurrentIndex((prevIndex) => prevIndex - 1);
+        } else {
+            setCurrentIndex(filteredComplaints.length - 1)
         }
     };
 
     useEffect(() => {
         loadData();
     }, []);
+
+    useEffect(() => {
+        applyFilters();
+    }, [countryFilter, priorityFilter]);
 
     useEffect(() => {
         if (filteredComplaints.length > 0) {
@@ -98,77 +114,47 @@ export default function Mapa() {
 
     return (
         <View style={styles.container}>
-            <CustomMapProvider style={styles.map} location={location} markers={filteredComplaints}>
-                {location && (
-                    <Marker
-                        coordinate={{
-                            latitude: parseFloat(location.latitude),
-                            longitude: parseFloat(location.longitude),
-                        }}
-                        pinColor="#f000ff"
-                        title="Você está aqui"
+            {
+                location && (filteredComplaints.length > 0) ? (
+                    <CustomMapProvider
+                        ref={mapRef}
+                        style={styles.map}
+                        location={location}
+                        markers={filteredComplaints}
                     />
-                )}
-            </CustomMapProvider>
+                ) : null
+            }
 
-            <View style={styles.controls}>
-                <TouchableOpacity onPress={handlePrevious} disabled={currentIndex === 0}>
-                    <Text style={[styles.arrow, currentIndex === 0 && styles.disabledArrow]}>{'<'}</Text>
+            <View style={[styles.controls, styles.controlTopRight, { backgroundColor: `rgba(${colorScheme.Body_bg_RGB}, 1)`, width: 40, height: 40 }]}>
+                <FilterForm
+                    style={{
+                        iconColor: colorScheme.Text.light,
+                        iconSize: 20,
+                    }}
+
+                    filterPriorityOption={priorityFilter}
+                    setFilterPriorityOption={setPriorityFilter}
+                    filterCountryOption={countryFilter}
+                    setFilterCountryOption={setCountryFilter}
+                    navigation={navigation}
+                />
+            </View>
+
+            <View style={[styles.controls, , styles.controlsBottom, { backgroundColor: `rgba(${colorScheme.Body_bg_RGB}, 1)`, }]}>
+                <TouchableOpacity onPress={handlePrevious}>
+                    <Text style={[styles.arrow, { color: colorScheme.Text.light }]}>{'<'}</Text>
                 </TouchableOpacity>
-                <Text style={styles.complaintTitle}>
-                    {filteredComplaints[currentIndex]?.title || 'Nenhuma reclamação'}
+                <Text style={[styles.complaintTitle, { color: colorScheme.Text.light }]}>
+                    {filteredComplaints[currentIndex]?.titulo || 'Nenhuma reclamação'}
                 </Text>
-                <TouchableOpacity
-                    onPress={handleNext}
-                    disabled={currentIndex === filteredComplaints.length - 1}
-                >
+                <TouchableOpacity onPress={handleNext}>
                     <Text
-                        style={[
-                            styles.arrow,
-                            currentIndex === filteredComplaints.length - 1 && styles.disabledArrow,
-                        ]}
+                        style={[styles.arrow, { color: colorScheme.Text.light }]}
                     >
                         {'>'}
                     </Text>
                 </TouchableOpacity>
             </View>
-
-            {/* Modal para filtros */}
-            <Modal
-                visible={modalVisible}
-                transparent={true}
-                animationType="slide"
-                onRequestClose={() => setModalVisible(false)}
-            >
-                <View style={styles.modalContainer}>
-                    <Text>Filtrar por Prioridade:</Text>
-                    <Picker
-                        selectedValue={priorityFilter}
-                        onValueChange={(value) => setPriorityFilter(value)}
-                    >
-                        <Picker.Item label="Todos" value={null} />
-                        {[...Array(11).keys()].map((level) => (
-                            <Picker.Item key={level} label={`Prioridade ${level}`} value={level} />
-                        ))}
-                    </Picker>
-
-                    <Text>Filtrar por País:</Text>
-                    <Picker
-                        selectedValue={countryFilter}
-                        onValueChange={(value) => setCountryFilter(value)}
-                    >
-                        <Picker.Item label="Todos" value={null} />
-                        <Picker.Item label="Brasil" value="Brasil" />
-                        <Picker.Item label="EUA" value="EUA" />
-                        <Picker.Item label="Outro" value="Outro" />
-                    </Picker>
-
-                    <Button title="Aplicar Filtros" onPress={applyFilters} />
-                    <Button title="Fechar" onPress={() => setModalVisible(false)} />
-                </View>
-            </Modal>
-
-            <Button title="Filtrar" onPress={() => setModalVisible(true)} />
         </View>
     );
 }
@@ -177,19 +163,25 @@ const styles = StyleSheet.create({
     container: { flex: 1 },
     map: { width: '100%', height: '100%' },
     controls: {
+        display: 'flex',
         position: 'absolute',
-        bottom: 20,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        width: '90%',
         alignSelf: 'center',
-        backgroundColor: 'rgba(255, 255, 255, 0.9)',
-        padding: 10,
         borderRadius: 10,
     },
+    controlsBottom: {
+        bottom: 20,
+        width: '90%',
+        padding: 10,
+        justifyContent: 'space-between',
+    },
+    controlTopRight: {
+        top: 20,
+        right: 20,
+        justifyContent: 'center',
+    },
     arrow: { fontSize: 24, fontWeight: 'bold', padding: 10 },
-    disabledArrow: { color: 'gray' },
     complaintTitle: {
         flex: 1,
         textAlign: 'center',

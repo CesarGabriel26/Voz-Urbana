@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { getPetitionById, getRemainingTimeForPetition, getUserById } from '../../utils/Api';
 import { formatDate } from '../../utils/Parser';
 import Avatar from '../../components/UserAvatar';
@@ -12,16 +12,15 @@ import { useTheme } from '../../utils/ThemeContext';
 import StepIndicator from 'react-native-step-indicator';
 import { ButtonsStyles } from '../../styles/Buttons';
 import CustomButton from '../../components/forms/button';
-import { ADMIN_USER_TYPE, priorities } from '../../utils/Constantes';
-import { updateComplaintStatus } from '../../managers/complaintController';
+import { ADMIN_USER_TYPE, priorities, PrioritiesColors } from '../../utils/Constantes';
 import { deletePetitionControl, updatePetitionSignatures, updatePetitionStatus } from '../../managers/petitionController';
 
 export default function VerPeticaoApp({ navigation, route }) {
     const { colorScheme } = useTheme();
     let prioridades = [...priorities]
     prioridades.shift()
-
     const [customSteps, setCustomSteps] = useState(null);
+
     const [petition, setPetition] = useState(null);
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState({});
@@ -91,7 +90,7 @@ export default function VerPeticaoApp({ navigation, route }) {
     };
 
     const handleEnd = async () => {
-        await updatePetitionStatus(petition, 0, false, loadPetitionDetails);
+        await updatePetitionStatus(petition, 2, false, loadPetitionDetails);
     };
 
     const handleDelete = async () => {
@@ -111,7 +110,7 @@ export default function VerPeticaoApp({ navigation, route }) {
     return (
         <MainContainer>
             {loading ? (
-                null
+                <ActivityIndicator size="large" color={colorScheme.Icons.loader.Primary} />
             ) : petition && customSteps ? (
                 <View style={styles.panel}>
                     <>
@@ -157,7 +156,7 @@ export default function VerPeticaoApp({ navigation, route }) {
                                             textAlign: 'center',
                                         }
                                     ]}>
-                                        Prioridade : {prioridades[petition.prioridade].title}
+                                        Prioridade {petition.prioridade}
                                     </Text>
                                 </View>
                             </View>
@@ -198,7 +197,7 @@ export default function VerPeticaoApp({ navigation, route }) {
                                 <Text style={styles.bold}>Data Limite:</Text> {formatDate(petition.data_limite)}
                             </Text>
                             <Text style={[{ color: colorScheme.Text.text }, styles.text]}>
-                                <Text style={styles.bold}>Atualizado em:</Text> {formatDate(petition.data_ultima_atualizacao)}
+                                <Text style={styles.bold}>Atualizado em:</Text> {formatDate(petition.updated_at)}
                             </Text>
                             <Text style={[{ color: colorScheme.Text.text }, styles.text]}>
                                 <Text style={styles.bold}>Data de Conclusão:</Text> {petition.data_conclusao ? formatDate(petition.data_limite) : "Em andamento"}

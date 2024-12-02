@@ -9,6 +9,7 @@ export default function FormInput({
     defaultValue,
     placeholder,
     style = [InputStyles.input],
+    errorTextColor = 'red',
     placeholderTextColor,
     keyboardType = "defaults",
     numberOfLines=1,
@@ -38,7 +39,7 @@ export default function FormInput({
             />
             {
                 errors && errors[name] ? (
-                    <Text style={{ color: "red" }}>{errors[name].message}</Text>
+                    <Text style={{ color: errorTextColor }}>{errors[name].message}</Text>
                 ) : null
             }
         </>

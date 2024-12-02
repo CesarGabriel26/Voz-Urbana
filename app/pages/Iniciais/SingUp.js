@@ -1,179 +1,162 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, View, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
-import { createUser } from '../../utils/Api';
+import { StyleSheet, View, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { useForm } from 'react-hook-form';
 import { useTheme } from '../../utils/ThemeContext';
 import { ButtonsStyles } from '../../styles/Buttons';
+import FormInput from '../../components/forms/input'; // Importando o FormInput
 import LoadingModal from '../../components/LoadingModal';
+import { createUser } from '../../utils/Api';
+import MainContainer from '../../components/MainContainer';
 
-export default function SingUp({ navigation, setUser }) {
+export default function SignUp({ navigation }) {
     const { colorScheme } = useTheme();
-    const [Erro, setErro] = useState("")
+    const { control, handleSubmit, formState: { errors } } = useForm();
+
+    const [Erro, setErro] = useState("");
     const [Loading, setLoading] = useState(false);
 
-    const [Nome, setNome] = useState("")
-    const [Email, setEmail] = useState("")
-    const [Senha, setSenha] = useState("")
-    const [ConfirmarSenha, setConfirmarSenha] = useState("")
-    const [Cpf, setCpf] = useState("")
+    const onSubmit = async (data) => {
+        const { nome, email, cpf, senha, confirmarSenha } = data;
 
-    const checkData = () => {
-        if (Nome == "") {
-            setErro("Preencha o Nome")
-            return false
-        } else if (Email == "") {
-            setErro("Preencha o Email")
-            return false
-        } else if (Cpf == "") {
-            setErro("Preencha o Cpf")
-            return false
-        } else if (Senha == "") {
-            setErro("Preencha a Senha")
-            return false
-        } else if (ConfirmarSenha == "") {
-            setErro("Preencha o ConfirmarSenha")
-            return false
-        } else if (Senha != ConfirmarSenha) {
-            setErro("Senhas devem ser Iguais")
-            return false
+        if (senha !== confirmarSenha) {
+            setErro("As senhas devem ser iguais");
+            return;
         }
-        return true
-    }
 
-    const Confirmar = async () => {
+        try {
+            setLoading(true);
+            const user = { nome, email, cpf, senha, pfp: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLMI5YxZE03Vnj-s-sth2_JxlPd30Zy7yEGg&s' };
+            const resp = await createUser(user);
+            setErro(resp.message);
 
-        if (checkData()) {
-
-            try {
-                setLoading(true)
-                let User = {
-                    'nome': Nome,
-                    'email': Email,
-                    'senha': Senha,
-                    'pfp': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLMI5YxZE03Vnj-s-sth2_JxlPd30Zy7yEGg&s',
-                    'cpf': Cpf,
-                }
-
-                let resp = await createUser(User)
-                setErro(resp.message)
-
+            if (!resp.error) {
                 navigation.navigate('Login', { user: resp.content });
-
-            } catch (error) {
-                setErro(error)
             }
-            setLoading(false)
+        } catch (error) {
+            setErro(error.message || "Erro ao criar usuário");
+        } finally {
+            setLoading(false);
         }
-
-        let interval = setInterval(() => {
-            setErro("")
-            clearInterval(interval)
-        }, 1500);
-    }
+    };
 
     return (
-        <ScrollView style={{ backgroundColor: colorScheme.Body_bg }} contentContainerStyle={styles.scrollViewContent}>
-            <View style={{ flex: 1, width: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                <View style={{ gap: 25, width: '100%' }}>
-                    <View style={{ display: 'flex', alignItems: 'center' }} >
-                        <Image source={require('../../assets/LogoOutile.png')} resizeMode='contain' style={{
-                            width: 80,
-                            height: 80
-                        }} />
-                    </View>
+        <MainContainer bodyBg={colorScheme.Body_bg} style={{ paddingTop: 20 }} >
+            <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 25, flex: 1 }}>
+                <Image source={require('../../assets/LogoOutile.png')} resizeMode='contain' style={{ width: 80, height: 80 }} />
 
-                    <View style={{ gap: 25 }} >
-                        <View>
-                            <Text style={colorScheme.Inputs.LightGhost}>Nome</Text>
-                            <TextInput
-                                placeholder='Carlão'
-                                onChangeText={setNome}
-                                value={Nome}
-                                style={[styles.input, colorScheme.Inputs.LightGhost]}
-                                placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
-                            />
-                        </View>
-                        <View>
-                            <Text style={colorScheme.Inputs.LightGhost}>E-mail</Text>
-                            <TextInput
-                                placeholder='Exemplo@exemplo.com'
-                                onChangeText={setEmail}
-                                value={Email}
-                                style={[styles.input, colorScheme.Inputs.LightGhost]}
-                                placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
-                            />
-                        </View>
-                        <View>
-                            <Text style={colorScheme.Inputs.LightGhost}>Cpf</Text>
-                            <TextInput
-                                placeholder='000.000.000-00'
-                                onChangeText={setCpf}
-                                value={Cpf}
-                                style={[styles.input, colorScheme.Inputs.LightGhost]}
-                                placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
-                            />
-                        </View>
-                        <View>
-                            <Text style={colorScheme.Inputs.LightGhost}>Senha</Text>
-                            <TextInput
-                                placeholder='jorge12320'
-                                onChangeText={setSenha}
-                                value={Senha}
-                                style={[styles.input, colorScheme.Inputs.LightGhost]}
-                                placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
-                            />
-                        </View>
-                        <View>
-                            <Text style={colorScheme.Inputs.LightGhost}>Corfirmar senha</Text>
-                            <TextInput
-                                placeholder='jorge12320'
-                                onChangeText={setConfirmarSenha}
-                                value={ConfirmarSenha}
-                                style={[styles.input, colorScheme.Inputs.LightGhost]}
-                                placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
-                            />
-                        </View>
-                    </View>
-
-                    <View style={{ gap: 10 }} >
-                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
-                            <Text style={{ color: colorScheme.Danger, fontWeight: 'bold' }}>{Erro}</Text>
-                            <LoadingModal visible={Loading} />
-                        </View>
-                        <TouchableOpacity
-                            style={[ButtonsStyles.default, colorScheme.Buttons.Light]}
-                            onPress={Confirmar}
-                        >
-                            <Text style={colorScheme.Buttons.Light}>singUp</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={[ButtonsStyles.default, colorScheme.Buttons.Light]}
-                            onPress={()=>{
-                                navigation.goBack()
+                <View style={{ width: '100%', gap: 20 }}>
+                    <View>
+                        <FormInput
+                            control={control}
+                            errors={errors}
+                            name="nome"
+                            defaultValue=""
+                            style={[styles.input, colorScheme.Inputs.LightGhost]}
+                            placeholder="Nome"
+                            placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
+                            rules={{
+                                required: 'Preencha o Nome',
                             }}
+                            errorTextColor={colorScheme.DangerLight}
+                        />
+                    </View>
+                    <View>
+                        <FormInput
+                            control={control}
+                            errors={errors}
+                            name="email"
+                            defaultValue=""
+                            style={[styles.input, colorScheme.Inputs.LightGhost]}
+                            placeholder="E-mail"
+                            placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
+                            rules={{
+                                required: 'Preencha o Email',
+                                pattern: { value: /\S+@\S+\.\S+/, message: 'Email inválido' },
+                            }}
+                            errorTextColor={colorScheme.DangerLight}
+                        />
+                    </View>
+
+                    <View>
+                        <FormInput
+                            control={control}
+                            errors={errors}
+                            name="cpf"
+                            defaultValue=""
+                            style={[styles.input, colorScheme.Inputs.LightGhost]}
+                            placeholder="CPF"
+                            placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
+                            rules={{ required: 'Preencha o CPF' }}
+                            errorTextColor={colorScheme.DangerLight}
+                        />
+                    </View>
+
+                    <View>
+                        <FormInput
+                            control={control}
+                            errors={errors}
+                            name="senha"
+                            defaultValue=""
+                            style={[styles.input, colorScheme.Inputs.LightGhost]}
+                            placeholder="Senha"
+                            placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
+                            secureTextEntry
+                            rules={{ required: 'Preencha a Senha' }}
+                            errorTextColor={colorScheme.DangerLight}
+                        />
+                    </View>
+
+                    <View>
+                        <FormInput
+                            control={control}
+                            errors={errors}
+                            name="confirmarSenha"
+                            defaultValue=""
+                            style={[styles.input, colorScheme.Inputs.LightGhost]}
+                            placeholder="Confirmar Senha"
+                            placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
+                            secureTextEntry
+                            rules={{ required: 'Confirme a Senha' }}
+                            errorTextColor={colorScheme.DangerLight}
+                        />
+                    </View>
+
+                    <Text style={{ color: colorScheme.DangerLight, fontWeight: 'bold' }}>{Erro}</Text>
+
+                    <View style={{ gap: 20, width: '100%' }} >
+                        <TouchableOpacity
+                            style={[ButtonsStyles.default, colorScheme.Buttons.Light]}
+                            onPress={handleSubmit(onSubmit)}
                         >
-                            <Text style={colorScheme.Buttons.Light}>voltar</Text>
+                            <Text style={colorScheme.Buttons.Light}>Cadastrar</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={[ButtonsStyles.default, colorScheme.Buttons.Light]}
+                            onPress={() => navigation.goBack()}
+                        >
+                            <Text style={colorScheme.Buttons.Light}>Voltar</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
+                <LoadingModal visible={Loading} />
             </View>
-        </ScrollView>
-
+        </MainContainer>
     );
 }
 
-
 const styles = StyleSheet.create({
     scrollViewContent: {
-        flexGrow: 1, // Permite que o conteúdo ocupe todo o espaço disponível
-        justifyContent: 'center', // Centraliza verticalmente
-        alignItems: 'center', // Centraliza horizontalmente
-        paddingHorizontal: 40, // Ajusta a margem interna
-        paddingVertical: 15, // Caso você precise de um espaço adicional superior/inferior
+        flexGrow: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 40,
+        paddingVertical: 15,
     },
     input: {
         height: 40,
         borderWidth: 2,
         borderRadius: 10,
         paddingLeft: 5,
-    }
+    },
 });

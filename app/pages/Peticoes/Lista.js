@@ -4,27 +4,30 @@ import MainContainer from '../../components/MainContainer'
 import PriorityCard from '../../components/PriorityCard';
 import FilterForm from '../../components/forms/FilterForm';
 import { loadCurrentUserData } from '../../managers/userController';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Text } from 'react-native';
 import { useTheme } from '../../utils/ThemeContext';
 
 
 export default function Lista({ navigation }) {
     const { colorScheme } = useTheme();
-    const [loading, setLoading] = useState(true);
 
     const [Petitions, setPetitions] = useState([]);
     const [filteredPetitions, setFilteredPetitions] = useState([]);
     const [searchText, setSearchText] = useState('');
     const [filterOption, setFilterOption] = useState('Data-menor-maior');
-    const [loadOption, setLoadOption] = useState('all');
     const [filterPriorityOption, setFilterPriorityOption] = useState("Todas");
     const [filterCategoryOption, setFilterCategoryOption] = useState('Não Especificada');
 
     const [filterActiveOption, setFilterActiveOption] = useState(true);
 
+    const [loading, setLoading] = useState(true);
+    const [erro, setErro] = useState('');
+
     const loadList = async () => {
         setLoading(true)
-        try {
+            setErro('')
+            try {
+            // throw new Error("Erro simulado para testes3, remover na segunda feira");
             let resp = await listPetitions()
 
             if (resp.content) {
@@ -32,7 +35,7 @@ export default function Lista({ navigation }) {
                 setFilteredPetitions(resp.content);
             }
         } catch (error) {
-            console.log(error);
+            setErro(error.message)
         }
         setLoading(false)
     };
@@ -105,23 +108,34 @@ export default function Lista({ navigation }) {
                 loading ? (
                     <ActivityIndicator size="large" color={colorScheme.Icons.loader.Primary} />
                 ) : (
-                    filteredPetitions.map((petition, i) => (
-                        petition.aberto === filterActiveOption ? (
-                            <PriorityCard
-                                key={i}
-                                prioridade={petition.prioridade}
-                                tittle={petition.titulo}
-                                date={petition.data}
-                                content={petition.content}
-                                onPress={() => {
-                                    navigation.navigate("Detalhes Da Petição", { id: petition.id })
-                                }}
-                                pressableText="ver main"
-                                style={{ marginTop: i == 0 ? 20 : 0 }}
-                            />
-                        ) : null
+                    erro != '' ? (
+                        <>
+                            <Text style={{ color: colorScheme.Danger, textAlign: 'center', marginBottom: 20 }} >
+                                Ocorreu um erro ao carregar as reclamações. Por favor, tente novamente mais tarde.
+                            </Text>
+                            <Text style={{ color: colorScheme.Danger, textAlign: 'center' }} >
+                                {erro}
+                            </Text>
+                        </>
+                    ) : (
+                        filteredPetitions.map((petition, i) => (
+                            petition.aberto === filterActiveOption ? (
+                                <PriorityCard
+                                    key={i}
+                                    prioridade={petition.prioridade}
+                                    tittle={petition.titulo}
+                                    date={petition.data}
+                                    content={petition.content}
+                                    onPress={() => {
+                                        navigation.navigate("Detalhes Da Petição", { id: petition.id })
+                                    }}
+                                    pressableText="ver main"
+                                    style={{ marginTop: i == 0 ? 20 : 0 }}
+                                />
+                            ) : null
 
-                    ))
+                        ))
+                    )
                 )
             }
         </MainContainer>

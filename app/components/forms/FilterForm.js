@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { InputStyles } from "../../styles/Inputs";
 import { ButtonsStyles } from "../../styles/Buttons";
 import { loadCurrentUserData } from "../../managers/userController";
+import { getCountries } from "../../utils/permissions/LocationSearch";
 
 export default function FilterForm({
     style,
@@ -18,6 +19,8 @@ export default function FilterForm({
     setFilterPriorityOption,
     filterCategoryOption,
     setFilterCategoryOption,
+    filterCountryOption,
+    setFilterCountryOption,
     navigation,
     loadOption,
     setLoadOption,
@@ -27,43 +30,65 @@ export default function FilterForm({
     const { colorScheme } = useTheme();
     const [visible, setVisible] = useState(false);
     const [user, setUser] = useState(null)
+    const [countries, setCountries] = useState([])
 
     useEffect(() => {
         const load = async () => {
             let us = await loadCurrentUserData()
             setUser(us[0])
+
+            const c = await getCountries()
+            let ct = [
+                {
+                    name: 'Todos',
+                    code: 'all'
+                },
+                ...c
+            ]
+            setCountries(ct)
         }
 
         load()
     }, [])
 
     return (
-        <View style={style} >
+        <View style={[style, { width: '100%' }]} >
             <View style={{ display: 'flex', flexDirection: 'row' }} >
-                <TextInput
-                    style={[
-                        colorScheme.Inputs.PrimaryGhost,
-                        {
-                            borderWidth: 1,
-                            padding: 10,
-                            borderRadius: 8,
-                            marginVertical: 10,
-                            flex: 6
-                        }
-                    ]}
-                    placeholder="Buscar por título ou conteúdo"
-                    placeholderTextColor={colorScheme.Inputs.PrimaryGhost.placeHolder}
-                    value={searchText}
-                    onChangeText={setSearchText}
-                />
+                {
+                    setSearchText ? (
+                        <TextInput
+                            style={[
+                                colorScheme.Inputs.PrimaryGhost,
+                                {
+                                    borderWidth: 1,
+                                    padding: 10,
+                                    borderRadius: 8,
+                                    marginVertical: 10,
+                                    flex: 6,
+                                    borderColor: style?.inputBorderColor ? style.inputBorderColor : "",
+                                    color: style?.inputTextColor ? style.inputTextColor : "" // inputTextColor
+                                }
+                            ]}
+                            placeholder="Buscar por título ou conteúdo"
+                            placeholderTextColor={
+                                style?.inputPlaceholderTextColor ?
+                                    style.inputPlaceholderTextColor
+                                    :
+                                    colorScheme.Inputs.PrimaryGhost.placeHolder
+                            }
+                            value={searchText}
+                            onChangeText={setSearchText}
+                        />
+                    ) : null
+                }
 
                 <TouchableOpacity
-                    style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginLeft: 20 }}
+                    style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginLeft: setSearchText ? 20 : 0 }}
                     onPress={() => {
                         setVisible(true)
                     }}
                 >
-                    <Icon name="filter-variant" size={30} color={colorScheme.Icons.filter} />
+                    <Icon name="filter-variant" size={style.iconSize ? style.iconSize : 30} color={style?.iconColor ? style.iconColor : colorScheme.Icons.filter} />
                 </TouchableOpacity>
             </View>
 
@@ -71,10 +96,10 @@ export default function FilterForm({
                 visible={visible}
                 transparent={true}
                 animationType="slide"
-                onRequestClose={() => setVisible(false)} // Fecha o modal ao pressionar o botão de voltar
+                onRequestClose={() => setVisible(false)}
             >
-                <View style={[styles.modalOverlay, { backgroundColor: colorScheme.Body_bg }]}>
-                    <View style={styles.modalContent}>
+                <View style={[styles.modalOverlay]}>
+                    <View style={[styles.modalContent, { backgroundColor: colorScheme.Body_bg_second }]}>
                         <Text style={{ fontSize: 20, textAlign: 'center', color: colorScheme.Text.text }} >
                             Filtros
                         </Text>
@@ -101,7 +126,7 @@ export default function FilterForm({
                                         value={loadOption}
                                         placeholder="Selecione um tema"
                                         placeholderStyle={{ color: colorScheme.Text.placeHolder }}
-                                        selectedTextStyle={{ color: colorScheme.Text.text }}x
+                                        selectedTextStyle={{ color: colorScheme.Text.text }} x
                                         onChange={(item) => { setLoadOption(item.value) }}
                                         style={[InputStyles.input, { borderColor: colorScheme.Text.text }]}
                                     />
@@ -109,67 +134,100 @@ export default function FilterForm({
                             ) : null
                         }
 
-                        <View style={{ gap: 5 }} >
-                            <Text style={{ fontSize: 15, color: colorScheme.Text.text }} >
-                                Organizar por
-                            </Text>
-                            <Dropdown
-                                data={FILTROS.map((f) => ({ label: f.label, value: f.value }))}
-                                labelField="label"
-                                valueField="value"
-                                value={filterOption}
-                                placeholder="Selecione um tema"
-                                placeholderStyle={{ color: colorScheme.Text.placeHolder }}
-                                selectedTextStyle={{ color: colorScheme.Text.text }}
-                                onChange={(item) => { setFilterOption(item.value) }}
-                                style={[InputStyles.input, { borderColor: colorScheme.Text.text }]}
-                            />
-                        </View>
-
-                        <View style={{ gap: 5 }} >
-                            <Text style={{ fontSize: 15, color: colorScheme.Text.text }} >
-                                Prioridade
-                            </Text>
-                            <Dropdown
-                                data={priorities.map((Item) => ({ label: `${Item.level}`, value: Item.level }))}
-                                labelField="label"
-                                valueField="value"
-                                value={filterPriorityOption}
-                                placeholder=""
-                                placeholderStyle={{ color: colorScheme.Text.placeHolder }}
-                                selectedTextStyle={{ color: colorScheme.Text.text }}
-                                onChange={(item) => { setFilterPriorityOption(item.value) }}
-                                style={[InputStyles.input, { borderColor: colorScheme.Text.text }]}
-                            />
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setVisible(false)
-                                    navigation.navigate('Escala de Prioridades')
-                                }}
-                            >
-                                <Text style={{ fontSize: 15, color: colorScheme.Text.text }} >O que são as prioridades ?</Text>
-                            </TouchableOpacity>
-                        </View>
-
-                        <View style={{ gap: 5 }} >
-                            <Text style={{ fontSize: 15, color: colorScheme.Text.text }} >
-                                Categoria
-                            </Text>
-                            <Dropdown
-                                data={categories.map((Item) => ({ label: Item, value: Item }))}
-                                labelField="label"
-                                valueField="value"
-                                value={filterCategoryOption}
-                                placeholder=""
-                                placeholderStyle={{ color: colorScheme.Text.placeHolder }}
-                                selectedTextStyle={{ color: colorScheme.Text.text }}
-                                onChange={(item) => { setFilterCategoryOption(item.value) }}
-                                style={[InputStyles.input, { borderColor: colorScheme.Text.text }]}
-                            />
-                        </View>
+                        {
+                            setFilterOption ? (
+                                <View style={{ gap: 5 }} >
+                                    <Text style={{ fontSize: 15, color: colorScheme.Text.text }} >
+                                        Organizar por
+                                    </Text>
+                                    <Dropdown
+                                        data={FILTROS.map((f) => ({ label: f.label, value: f.value }))}
+                                        labelField="label"
+                                        valueField="value"
+                                        value={filterOption}
+                                        placeholder="Selecione um tema"
+                                        placeholderStyle={{ color: colorScheme.Text.placeHolder }}
+                                        selectedTextStyle={{ color: colorScheme.Text.text }}
+                                        onChange={(item) => { setFilterOption(item.value) }}
+                                        style={[InputStyles.input, { borderColor: colorScheme.Text.text }]}
+                                    />
+                                </View>
+                            ) : null
+                        }
 
                         {
-                            user?.type === ADMIN_USER_TYPE ? (
+                            setFilterPriorityOption ? (
+                                <View style={{ gap: 5 }} >
+                                    <Text style={{ fontSize: 15, color: colorScheme.Text.text }} >
+                                        Prioridade
+                                    </Text>
+                                    <Dropdown
+                                        data={priorities.map((Item) => ({ label: `${Item.level}`, value: Item.level }))}
+                                        labelField="label"
+                                        valueField="value"
+                                        value={filterPriorityOption}
+                                        placeholder=""
+                                        placeholderStyle={{ color: colorScheme.Text.placeHolder }}
+                                        selectedTextStyle={{ color: colorScheme.Text.text }}
+                                        onChange={(item) => { setFilterPriorityOption(item.value) }}
+                                        style={[InputStyles.input, { borderColor: colorScheme.Text.text }]}
+                                    />
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            setVisible(false)
+                                            navigation.navigate('Escala de Prioridades')
+                                        }}
+                                    >
+                                        <Text style={{ fontSize: 15, color: colorScheme.Text.text }} >O que são as prioridades ?</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            ) : null
+                        }
+
+                        {
+                            setFilterCategoryOption ? (
+                                <View style={{ gap: 5 }} >
+                                    <Text style={{ fontSize: 15, color: colorScheme.Text.text }} >
+                                        Categoria
+                                    </Text>
+                                    <Dropdown
+                                        data={categories.map((Item) => ({ label: Item, value: Item }))}
+                                        labelField="label"
+                                        valueField="value"
+                                        value={filterCategoryOption}
+                                        placeholder=""
+                                        placeholderStyle={{ color: colorScheme.Text.placeHolder }}
+                                        selectedTextStyle={{ color: colorScheme.Text.text }}
+                                        onChange={(item) => { setFilterCategoryOption(item.value) }}
+                                        style={[InputStyles.input, { borderColor: colorScheme.Text.text }]}
+                                    />
+                                </View>
+                            ) : null
+                        }
+
+                        {
+                            setFilterCountryOption ? (
+                                <View style={{ gap: 5 }} >
+                                    <Text style={{ fontSize: 15, color: colorScheme.Text.text }} >
+                                        País(es)
+                                    </Text>
+                                    <Dropdown
+                                        data={countries.map((Item) => ({ label: Item.name, value: Item.code }))}
+                                        labelField="label"
+                                        valueField="value"
+                                        value={filterCountryOption}
+                                        placeholder=""
+                                        placeholderStyle={{ color: colorScheme.Text.placeHolder }}
+                                        selectedTextStyle={{ color: colorScheme.Text.text }}
+                                        onChange={(item) => { setFilterCountryOption(item.value) }}
+                                        style={[InputStyles.input, { borderColor: colorScheme.Text.text }]}
+                                    />
+                                </View>
+                            ) : null
+                        }
+
+                        {
+                            user?.type === ADMIN_USER_TYPE && setFilterActiveOption ? (
                                 <View style={{ gap: 5 }} >
                                     <Text style={{ fontSize: 15, color: colorScheme.Text.text }} >
                                         Listar

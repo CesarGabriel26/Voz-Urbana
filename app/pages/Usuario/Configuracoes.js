@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TextInput, Button, Image, Alert, ScrollView, TouchableOpacity, Switch } from 'react-native';
+import { StyleSheet, View, Text, TextInput, Button, Image, Alert, ScrollView, TouchableOpacity, Switch, Modal } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Dropdown } from 'react-native-element-dropdown';
 import { useTheme } from '../../utils/ThemeContext';
@@ -10,16 +10,18 @@ import { colorSchemas } from '../../styles/Colors';
 import Separator from '../../components/Separator';
 import { ButtonsStyles } from '../../styles/Buttons';
 import Avatar from '../../components/UserAvatar';
+import LoadingModal from '../../components/LoadingModal';
 
 export default function Perfil({ navigation }) {
     const { changeTheme, colorScheme } = useTheme();
 
     const [themes, setThemes] = useState([]);
-    const [theme, setTheme] = useState('');
+    const [theme, setTheme] = useState('light');
     const [editing, setEditing] = useState(false);
     const [canEdit, setCanEdit] = useState(false);
 
     const [isEnabled, setIsEnabled] = useState(false);
+    const [loading, setLoading] = useState(false)
 
     const [formData, setFormData] = useState({
         nome: '',
@@ -37,18 +39,24 @@ export default function Perfil({ navigation }) {
     useEffect(() => {
         setThemes(colorSchemas());
         (async () => {
-            let currentTheme = await AsyncStorage.getItem('colorSchema') || 'Light';
-            setTheme(currentTheme);
+            setLoading(true)
+            try {
+                let currentTheme = await AsyncStorage.getItem('colorSchema') || 'Light';
+                setTheme(currentTheme);
 
-            const user = decodeUserToken(await AsyncStorage.getItem('usuario')) || {};
-            setUserData(user);
-            setFormData({
-                nome: user.nome || '',
-                email: user.email || '',
-                pfp: user.pfp || '',
-                senhaAtual: '',
-                novaSenha: '',
-            });
+                const user = decodeUserToken(await AsyncStorage.getItem('usuario')) || {};
+                setUserData(user);
+                setFormData({
+                    nome: user.nome || '',
+                    email: user.email || '',
+                    pfp: user.pfp || '',
+                    senhaAtual: '',
+                    novaSenha: '',
+                });
+            } catch (error) {
+                console.log(error);
+            }
+            setLoading(false)
         })();
     }, []);
 
@@ -63,6 +71,7 @@ export default function Perfil({ navigation }) {
 
     const logOut = async () => {
         await AsyncStorage.removeItem('usuario');
+        // changeTheme('light')
         navigation.navigate('Login');
     };
 
@@ -107,146 +116,176 @@ export default function Perfil({ navigation }) {
         }
     };
 
-    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+    const toggleSwitch = async (v) => {
+        setLoading(true)
+        try {
+            let dt = {
+                nome: userData.nome,
+                email: userData.email,
+                cpf: userData.cpf,
+                pfp: userData.pfp,
+                anonimo: v
+            }
+
+            const response = await updateUser(userData.id, dt);
+            if (response.error) {
+                Alert.alert('Erro', response.error);
+                return;
+            } else {
+                console.log(response.message);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+        setLoading(false)
+    }
 
     return (
-        <MainContainer>
-            <ScrollView style={styles.container}>
-                {/* Informações do Usuário */}
-                <View style={styles.profileHeader}>
-                    <Avatar
-                        uri = {userData.pfp}
-                        text={userData.nome + " profile pcture"}
-                        size="md"
-                        shape="square"
+        <MainContainer style={styles.container} >
+            {/* Informações do Usuário */}
+            <View style={styles.profileHeader}>
+                <Avatar
+                    uri={userData.pfp}
+                    text={userData.nome + " profile pcture"}
+                    size="md"
+                    shape="square"
+                />
+
+                <View>
+                    <Text style={[styles.userName, { color: colorScheme.Text.text }]}>{userData.nome}</Text>
+                    <Text style={[styles.userEmail, { color: colorScheme.Text.placeHolder }]}>{userData.email}</Text>
+                </View>
+            </View>
+
+
+            <Separator texto='Informações do Usuário' color={colorScheme.Text.placeHolder} />
+
+            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Text style={{ maxWidth: 100, color: colorScheme.Text.text }}>CPF: </Text>
+                <Text style={{ maxWidth: 100, color: colorScheme.Text.text }}>{userData.cpf}</Text>
+            </View>
+
+            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Text style={{ maxWidth: 100, color: colorScheme.Text.text }}>Tipo: </Text>
+                <Text style={{ maxWidth: 100, color: colorScheme.Text.text }}>{userData.type === 1 ? "Admin" : "User"}</Text>
+            </View>
+
+            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Text style={{ maxWidth: 200, color: colorScheme.Text.text }}>Última Atualização: </Text>
+                <Text style={{ maxWidth: 100, color: colorScheme.Text.text }}>{new Date(userData.updated_at).toLocaleDateString()}</Text>
+            </View>
+
+            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Text style={{ maxWidth: 200, color: colorScheme.Text.text }}>Data de Criação: </Text>
+                <Text style={{ maxWidth: 100, color: colorScheme.Text.text }}>{new Date(userData.created_at).toLocaleDateString()}</Text>
+            </View>
+
+            <Separator texto='Configurações' color={colorScheme.Text.placeHolder} />
+
+            {/* Configurações */}
+            <View style={{ gap: 10 }} >
+                <View>
+                    <Text style={[styles.label, { color: colorScheme.Text.text }]}>Tema:</Text>
+                    <Dropdown
+                        data={themes.map((theme) => ({ label: theme, value: theme }))}
+                        labelField="label"
+                        valueField="value"
+                        value={theme}
+                        placeholder="Selecione um tema"
+                        placeholderStyle={{ color: colorScheme.DropDown.color }}
+                        selectedTextStyle={{ color: colorScheme.DropDown.color }}
+                        onChange={(item) => {
+                            setTheme(item.value);
+                            changeTheme(item.value);
+                        }}
+                        style={styles.dropdown}
                     />
-
-                    <View>
-                        <Text style={[styles.userName, {color: colorScheme.Text.text}]}>{userData.nome}</Text>
-                        <Text style={[styles.userEmail, {color: colorScheme.Text.placeHolder}]}>{userData.email}</Text>
-                    </View>
                 </View>
-
-
-                <Separator texto='Informações do Usuário' color={colorScheme.Text.placeHolder} />
-
-                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text style={{ maxWidth: 100, color: colorScheme.Text.text }}>CPF: </Text>
-                    <Text style={{ maxWidth: 100, color: colorScheme.Text.text }}>{userData.cpf}</Text>
+                <View>
+                    <Text style={[styles.label, { color: colorScheme.Text.text }]}>Lingua:</Text>
+                    <Dropdown
+                        data={[
+                            "Portugues",
+                            "Ingles",
+                            "Espanhol"
+                        ].map((theme) => ({ label: theme, value: theme }))}
+                        labelField="label"
+                        valueField="value"
+                        value={"Portugues"}
+                        placeholder="Selecione uma linguagem"
+                        placeholderStyle={{ color: colorScheme.DropDown.color }}
+                        selectedTextStyle={{ color: colorScheme.DropDown.color }}
+                        onChange={(item) => {
+                            console.log(item);
+                        }}
+                        style={styles.dropdown}
+                    />
                 </View>
-
-                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text style={{ maxWidth: 100, color: colorScheme.Text.text }}>Tipo: </Text>
-                    <Text style={{ maxWidth: 100, color: colorScheme.Text.text }}>{userData.type === 1 ? "Admin" : "User"}</Text>
-                </View>
-
-                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text style={{ maxWidth: 200, color: colorScheme.Text.text }}>Última Atualização: </Text>
-                    <Text style={{ maxWidth: 100, color: colorScheme.Text.text }}>{new Date(userData.updated_at).toLocaleDateString()}</Text>
-                </View>
-
-                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text style={{ maxWidth: 200, color: colorScheme.Text.text }}>Data de Criação: </Text>
-                    <Text style={{ maxWidth: 100, color: colorScheme.Text.text }}>{new Date(userData.created_at).toLocaleDateString()}</Text>
-                </View>
-
-                <Separator texto='Configurações' color={colorScheme.Text.placeHolder} />
-
-                {/* Configurações */}
-                <View style={{ gap: 10 }} >
-                    <View>
-                        <Text style={[styles.label, {color: colorScheme.Text.text}]}>Tema:</Text>
-                        <Dropdown
-                            data={themes.map((theme) => ({ label: theme, value: theme }))}
-                            labelField="label"
-                            valueField="value"
-                            value={theme}
-                            placeholder="Selecione um tema" 
-                            placeholderStyle={{ color: colorScheme.DropDown.color }}
-                            selectedTextStyle={{ color: colorScheme.DropDown.color }}
-                            onChange={(item) => {
-                                setTheme(item.value);
-                                changeTheme(item.value);
+                <View>
+                    <View style={[styles.dropdown, { display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
+                        <Text style={[styles.label, { maxWidth: 150, color: colorScheme.Text.text }]}>Usuario Anonimo:</Text>
+                        <Switch
+                            trackColor={{ false: 'gray', true: 'gray' }}
+                            thumbColor={colorScheme.Switch.thumbColor[isEnabled]}
+                            ios_backgroundColor={colorScheme.Switch.ios_backgroundColor}
+                            onValueChange={(value) => {
+                                setIsEnabled(value);
+                                toggleSwitch(value)
                             }}
-                            style={styles.dropdown}
+                            value={isEnabled}
+                            style={{
+                                margin: 0,
+                                width: 50,
+                                height: 20,
+                            }}
                         />
                     </View>
-                    <View>
-                        <Text style={[styles.label, {color: colorScheme.Text.text}]}>Lingua:</Text>
-                        <Dropdown
-                            data={[
-                                "Portugues",
-                                "Ingles",
-                                "Espanhol"
-                            ].map((theme) => ({ label: theme, value: theme }))}
-                            labelField="label"
-                            valueField="value"
-                            value={"Portugues"}
-                            placeholder="Selecione uma linguagem"
-                            placeholderStyle={{ color: colorScheme.DropDown.color }}
-                            selectedTextStyle={{ color: colorScheme.DropDown.color }}
-                            onChange={(item) => {
-                                console.log(item);
-                            }}
-                            style={styles.dropdown}
-                        />
-                    </View>
-                    <View>
-                        <View style={[styles.dropdown, { display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
-                            <Text style={[styles.label, { maxWidth: 150, color: colorScheme.Text.text }]}>Usuario Anonimo:</Text>
-                            <Switch
-                                trackColor={{ false: 'gray', true: 'gray' }}
-                                thumbColor={colorScheme.Switch.thumbColor[isEnabled]}
-                                ios_backgroundColor={colorScheme.Switch.ios_backgroundColor}
-                                onValueChange={toggleSwitch}
-                                value={isEnabled}
-                                style={{
-                                    margin: 0,
-                                    width: 50,
-                                    height: 20,
-                                }}
-                            />
-                        </View>
-                    </View>
                 </View>
+            </View>
 
-                <Separator color={colorScheme.Text.placeHolder} style={{ marginVertical: 20 }} />
+            <Separator color={colorScheme.Text.placeHolder} style={{ marginVertical: 20 }} />
 
-                {/* Botões de ação */}
-                <View style={styles.actions}>
-                    <TouchableOpacity
+            {/* Botões de ação */}
+            <View style={styles.actions}>
+                <TouchableOpacity
 
-                        onPress={toggleEditing}
-                        style={[
-                            ButtonsStyles.default,
-                            colorScheme.Buttons.Primary,
-                            { backgroundColor: "#0d6efd" }
-                        ]}
+                    onPress={toggleEditing}
+                    style={[
+                        ButtonsStyles.default,
+                        colorScheme.Buttons.Primary,
+                        { backgroundColor: "#0d6efd" }
+                    ]}
+                >
+                    <Text
+                        style={{ color: 'white' }}
                     >
-                        <Text
-                            style={{ color: 'white' }}
-                        >
-                            {editing ? 'Cancelar' : 'Editar Perfil'}
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={logOut}
-                        style={[
-                            ButtonsStyles.default,
-                            { backgroundColor: colorScheme.Danger }
-                        ]}
+                        {editing ? 'Cancelar' : 'Editar Perfil'}
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={logOut}
+                    style={[
+                        ButtonsStyles.default,
+                        { backgroundColor: colorScheme.Danger }
+                    ]}
+                >
+                    <Text
+                        style={{ color: 'white' }}
                     >
-                        <Text
-                            style={{ color: 'white' }}
-                        >
-                            Sair
-                        </Text>
-                    </TouchableOpacity>
-                </View>
+                        Sair
+                    </Text>
+                </TouchableOpacity>
+            </View>
 
 
-                {/* Edição de Perfil */}
-                {editing && (
+            {/* Edição de Perfil */}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={editing}
+                onRequestClose={() => setEditing(false)}
+            >
+                <MainContainer>
                     <View style={styles.editForm}>
                         {canEdit ? (
                             <>
@@ -285,10 +324,15 @@ export default function Perfil({ navigation }) {
                                 onChangeText={(text) => handleInputChange('senhaAtual', text)}
                             />
                         )}
-                        <Button title="Salvar" onPress={handleSave} />
+                        <View style={{ gap: 20 }}>
+                            <Button title="Salvar" onPress={handleSave} />
+                            <Button title="Cancelar" onPress={handleSave} />
+                        </View>
                     </View>
-                )}
-            </ScrollView>
+                </MainContainer>
+            </Modal>
+
+            <LoadingModal visible={loading} />
         </MainContainer>
     );
 }
@@ -327,7 +371,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     editForm: {
-        gap: 10,
+        paddingVertical: 20,
     },
     input: {
         borderWidth: 1,

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { getReportsByUser, listReports } from '../../utils/Api';
+import { getReportsByUser } from '../../utils/Api';
 import MainContainer from '../../components/MainContainer'
 import PriorityCard from '../../components/PriorityCard';
 import FilterForm from '../../components/forms/FilterForm';
 import { loadCurrentUserData } from '../../managers/userController';
 import { ActivityIndicator } from 'react-native';
 import { useTheme } from '../../utils/ThemeContext';
+import { Text } from 'react-native';
 
 
 export default function ListaReclamacaoUsuario({ navigation }) {
@@ -16,16 +17,18 @@ export default function ListaReclamacaoUsuario({ navigation }) {
 
     const [searchText, setSearchText] = useState('');
     const [filterOption, setFilterOption] = useState('Data-menor-maior');
-    const [loadOption, setLoadOption] = useState('all');
     const [filterPriorityOption, setFilterPriorityOption] = useState("Todas");
     const [filterCategoryOption, setFilterCategoryOption] = useState('Não Especificada');
     const [filterActiveOption, setFilterActiveOption] = useState(true);
 
     const [loading, setLoading] = useState(true);
+    const [erro, setErro] = useState('');
 
     const loadList = async () => {
         setLoading(true)
+        setErro('')
         try {
+            // throw new Error("Erro simulado para testes2, remover na segunda feira");
             let userData = await loadCurrentUserData()
             let resp = await getReportsByUser(userData[0].id)
             if (resp.content) {
@@ -33,7 +36,7 @@ export default function ListaReclamacaoUsuario({ navigation }) {
                 setFilteredPetitions(resp.content);
             }
         } catch (error) {
-            console.log(error);
+            setErro(error.message)
         }
         setLoading(false)
     };
@@ -85,7 +88,7 @@ export default function ListaReclamacaoUsuario({ navigation }) {
 
     useEffect(() => {
         loadList()
-    }, [loadOption]);
+    }, []);
 
     useEffect(() => {
         applyFilters();
@@ -102,8 +105,6 @@ export default function ListaReclamacaoUsuario({ navigation }) {
                 filterPriorityOption={filterPriorityOption}
                 setFilterPriorityOption={setFilterPriorityOption}
                 navigation={navigation}
-                loadOption={loadOption}
-                setLoadOption={setLoadOption}
                 filterCategoryOption={filterCategoryOption}
                 setFilterCategoryOption={setFilterCategoryOption}
                 filterActiveOption={filterActiveOption}
@@ -113,8 +114,17 @@ export default function ListaReclamacaoUsuario({ navigation }) {
                 loading ? (
                     <ActivityIndicator size="large" color={colorScheme.Icons.loader.Primary} />
                 ) : (
-                    filteredPetitions.map((petition, i) => (
-                        petition.aceito === filterActiveOption ? (
+                    erro != '' ? (
+                        <>
+                            <Text style={{ color: colorScheme.Danger, textAlign: 'center', marginBottom: 20 }} >
+                                Ocorreu um erro ao carregar as reclamações. Por favor, tente novamente mais tarde.
+                            </Text>
+                            <Text style={{ color: colorScheme.Danger, textAlign: 'center' }} >
+                                {erro}
+                            </Text>
+                        </>
+                    ) : (
+                        filteredPetitions.map((petition, i) => (
                             <PriorityCard
                                 key={i}
                                 prioridade={petition.prioridade}
@@ -127,8 +137,8 @@ export default function ListaReclamacaoUsuario({ navigation }) {
                                 pressableText="ver main"
                                 style={{ marginTop: i == 0 ? 20 : 0 }}
                             />
-                        ) : null
-                    ))
+                        ))
+                    )
                 )
             }
         </MainContainer>

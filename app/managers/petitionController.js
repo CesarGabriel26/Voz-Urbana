@@ -6,6 +6,7 @@ export const updatePetitionStatus = async (petition, status, aberto, loadList) =
 
         // Limpa os apoiadores se a petição for fechada (status 0 ou -1)
         if (status === 0 || status === -1) {
+            updatedPetition.signatures = 0
             updatedPetition.apoiadores = [];
         }
 

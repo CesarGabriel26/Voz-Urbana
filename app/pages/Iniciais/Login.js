@@ -1,28 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, TextInput, View, Text, TouchableOpacity, Image, ScrollView, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useForm, Controller } from 'react-hook-form';
 import { loginUser } from '../../utils/Api';
 import { ButtonsStyles } from '../../styles/Buttons';
 import { useTheme } from '../../utils/ThemeContext';
 import LoadingModal from '../../components/LoadingModal';
+import FormInput from '../../components/forms/input';
 
 export default function Login({ navigation, route }) {
     const { colorScheme } = useTheme();
+    const { control, handleSubmit, setValue, formState: { errors } } = useForm();
 
-    const [Loading, setLoading] = useState(false);
-
-    const [Email, setEmail] = useState("");
-    const [Senha, setSenha] = useState("");
-
-    const [Erro, setErro] = useState("");
-
+    const [loading, setLoading] = useState(false);
+    const [erro, setErro] = useState("");
 
     const checkUser = async () => {
         let User = await AsyncStorage.getItem('usuario');
         if (User != null) {
-            route.params.initializeUser()
-            
+            route.params.initializeUser();
             navigation.reset({
                 index: 0,
                 routes: [{ name: 'Home' }],
@@ -33,30 +30,28 @@ export default function Login({ navigation, route }) {
     useEffect(() => {
         if (route.params && route.params.user) {
             const { email, senha } = route.params.user;
-            setEmail(email);
-            setSenha(senha);
+            setValue('email', email);
+            setValue('senha', senha);
         }
 
         checkUser();
     }, [route.params]);
 
-    const Confirmar = async () => {
-        if (Email !== "" && Senha !== "") {
-            setLoading(true)
-            let resp = await loginUser(Email, Senha);
-            setLoading(false)
+    const Confirmar = async (data) => {
+        const { email, senha } = data;
+        setLoading(true);
+        let resp = await loginUser(email, senha);
+        setLoading(false);
 
-            if (resp.error) {
-                setErro(resp.error);
-            } else {
-                await AsyncStorage.setItem('usuario', JSON.stringify(resp.content));
-                navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'Home' }],
-                });
-            }
+        if (resp.error) {
+            setErro(resp.error);
         } else {
-            setErro(Email === "" ? "Preencha o Email" : "Preencha a Senha");
+            await AsyncStorage.setItem('usuario', JSON.stringify(resp.content));
+            route.params.initializeUser();
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'Home' }],
+            });
         }
 
         setTimeout(() => {
@@ -72,35 +67,38 @@ export default function Login({ navigation, route }) {
                         <Image
                             source={require('../../assets/LogoOutile.png')}
                             resizeMode='contain'
-                            style={{
-                                width: 80,
-                                height: 80,
-                            }}
+                            style={{ width: 80, height: 80 }}
                             onError={(error) => console.error('Image Error:', error.nativeEvent)}
                         />
                     </View>
 
                     <View style={{ gap: 25 }}>
                         <View>
-                            <Text style={colorScheme.Inputs.LightGhost}>E-mail</Text>
-                            <TextInput
-                                placeholder='Exemplo@exemplo.com'
-                                onChangeText={setEmail}
+                            <FormInput
+                                control={control}
+                                errors={errors}
+                                name="email"
+                                defaultValue=""
                                 style={[styles.input, colorScheme.Inputs.LightGhost]}
+                                placeholder="Exemplo@exemplo.com"
                                 placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
-                                value={Email}
+                                rules={{ required: 'Preencha o Email' }}
+                                errorTextColor={colorScheme.DangerLight}
                             />
                         </View>
 
                         <View>
-                            <Text style={colorScheme.Inputs.LightGhost}>Senha</Text>
-                            <TextInput
-                                placeholder='Exemplo123'
-                                onChangeText={setSenha}
+                            <FormInput
+                                control={control}
+                                errors={errors}
+                                name="senha"
+                                defaultValue=""
                                 style={[styles.input, colorScheme.Inputs.LightGhost]}
+                                placeholder="Exemplo123"
                                 placeholderTextColor={colorScheme.Inputs.LightGhost.placeHolder}
-                                value={Senha}
                                 secureTextEntry
+                                rules={{ required: 'Preencha a Senha' }}
+                                errorTextColor={colorScheme.DangerLight}
                             />
                         </View>
                     </View>
@@ -118,43 +116,42 @@ export default function Login({ navigation, route }) {
 
                     <View style={{ gap: 15 }}>
                         <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
-                            <Text style={{ color: colorScheme.Danger, fontWeight: 'bold' }}>{Erro}</Text>
-                            <LoadingModal visible={Loading} />
+                            <Text style={{ color: colorScheme.Danger, fontWeight: 'bold' }}>{erro}</Text>
+                            <LoadingModal visible={loading} />
                         </View>
 
                         <TouchableOpacity
                             style={[ButtonsStyles.btn, ButtonsStyles.default, colorScheme.Buttons.Light]}
-                            onPress={Confirmar}>
-                            <Text style={colorScheme.Buttons.Light}>entrar</Text>
+                            onPress={handleSubmit(Confirmar)}
+                        >
+                            <Text style={colorScheme.Buttons.Light}>Entrar</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
                             style={[ButtonsStyles.btn, ButtonsStyles.default, colorScheme.Buttons.Light]}
-                            onPress={() => {
-                                navigation.navigate('SingUp');
-                            }}>
-                            <Text style={colorScheme.Buttons.Light}>cadastro</Text>
+                            onPress={() => navigation.navigate('SingUp')}
+                        >
+                            <Text style={colorScheme.Buttons.Light}>Cadastro</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
             </View>
         </ScrollView>
-
     );
 }
 
 const styles = StyleSheet.create({
     scrollViewContent: {
-        flexGrow: 1, // Permite que o conteúdo ocupe todo o espaço disponível
-        justifyContent: 'center', // Centraliza verticalmente
-        alignItems: 'center', // Centraliza horizontalmente
-        paddingHorizontal: 40, // Ajusta a margem interna
-        paddingVertical: 15, // Caso você precise de um espaço adicional superior/inferior
+        flexGrow: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 40,
+        paddingVertical: 15,
     },
     input: {
         height: 40,
         borderWidth: 2,
         borderRadius: 10,
         paddingLeft: 5,
-    }
+    },
 });
