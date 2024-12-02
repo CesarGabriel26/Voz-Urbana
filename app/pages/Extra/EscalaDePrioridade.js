@@ -22,9 +22,9 @@ export default function EscalaDePrioridade() {
                     <View
                         style={[styles.colorIndicator, { backgroundColor: priority.color }]}
                     />
-                    <Text style={styles.level}>Prioridade {priority.level}</Text>
-                    <Text style={styles.description}>{priority.description}</Text>
-                    <Text style={styles.example}>Exemplo: {priority.example}</Text>
+                    <Text style={[styles.level, {color: colorScheme.Text.text}]}>Prioridade {priority.level}</Text>
+                    <Text style={[styles.description, { color: colorScheme.Text.text }]}>{priority.description}</Text>
+                    <Text style={[styles.example, { color: colorScheme.Text.placeHolder }]}>Exemplo: {priority.example}</Text>
                 </View>
             ))}
         </MainContainer>
@@ -61,6 +61,5 @@ const styles = StyleSheet.create({
     example: {
         fontSize: 14,
         fontStyle: "italic",
-        color: "#555",
     },
 });

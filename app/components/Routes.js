@@ -25,12 +25,13 @@ import EscalaDePrioridade from '../pages/Extra/EscalaDePrioridade';
 import VerReclamacao from '../pages/Reclamacoes/Detalhes';
 import ListaDoUsuario from '../pages/Peticoes/ListaDoUsuario';
 import ListaReclamacaoUsuario from '../pages/Reclamacoes/ListaDoUsuario';
+import Ajuda from '../pages/Extra/Ajuda';
 
 
 const Stack = createStackNavigator();
 
 export default function Routes() {
-  const { colorScheme } = useTheme();
+  const { changeTheme, colorScheme } = useTheme();
   const [userData, setUserData] = useState();
 
   const initializeUser = async () => {
@@ -48,8 +49,6 @@ export default function Routes() {
   };
 
   useEffect(() => {
-    // initializeUser()
-    
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(colorScheme.Header_bg);
       StatusBar.setBarStyle('dark-content');
@@ -58,9 +57,9 @@ export default function Routes() {
     }
   }, [colorScheme]);
 
-  useEffect(()=>{
+  useEffect(() => {
     initializeUser()
-  },[])
+  }, [])
 
   return (
     <NavigationContainer>
@@ -129,6 +128,11 @@ export default function Routes() {
           name="Mapa"
           component={Mapa}
         />
+        <Stack.Screen
+          name="Ajuda"
+          component={Ajuda}
+        />
+
 
         <Stack.Screen
           name="Escala de Prioridades"

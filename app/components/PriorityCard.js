@@ -41,26 +41,33 @@ export default function PriorityCard({ tittle = "", content = "", date = "", pri
                 flexDirection: 'row',
                 alignItems: 'center'
             }} >
-                <Text style={[CardStyles.example, {
-                    flex: 1,
-                    color: colorScheme.Text.text
-                }]}>
-                    {formatDate(date)}
-                </Text>
-
-                <TouchableOpacity
-                    onPress={onPress}
-                >
-                    <Text
-                        style={{
+                {
+                    date != "" ? (
+                        <Text style={[CardStyles.example, {
                             flex: 1,
-                            textAlign: 'right',
                             color: colorScheme.Text.text
-                        }}
-                    >
-                        {pressableText}
-                    </Text>
-                </TouchableOpacity>
+                        }]}>
+                            {formatDate(date)}
+                        </Text>
+                    ) : null
+                }
+                {
+                    onPress ? (
+                        <TouchableOpacity
+                            onPress={onPress}
+                        >
+                            <Text
+                                style={{
+                                    flex: 1,
+                                    textAlign: 'right',
+                                    color: colorScheme.Text.text
+                                }}
+                            >
+                                {pressableText}
+                            </Text>
+                        </TouchableOpacity>
+                    ) : null
+                }
             </View>
         </View>
     )

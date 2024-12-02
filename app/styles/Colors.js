@@ -111,7 +111,7 @@ export const Colors = {
                 placeHolder: '#adadad',
                 width: '100%',
             },
-            DarktGhost: {
+            DarkGhost: {
                 color: '#000000',
                 borderColor: '#000000',
                 placeHolder: '#adadad',
@@ -168,7 +168,7 @@ export const Colors = {
 
         Text: {
             headerTittle: '#ffffff',
-            title: "#F59D53",  // Roxo para títulos
+            title: "#0159a2",  // Roxo para títulos
             text: "#FFFFFF",  // Texto principal em branco
             dark: "#444444",  // Tons claros para textos secundários
             light: "#FFFFFF",  
@@ -178,13 +178,13 @@ export const Colors = {
         Buttons: {
             Primary: {
                 color: '#FFFFFF',
-                backgroundColor: '#F59D53',  // Roxo claro
+                backgroundColor: '#034d89',  // Roxo claro
             },
             Secondary: {
                 color: '#FFFFFF',
                 backgroundColor: '#1E1E1E',
                 borderWidth: 2,
-                borderColor: '#F59D53'
+                borderColor: '#034d89'
             },
             Light: {
                 color: '#333333',
@@ -243,7 +243,7 @@ export const Colors = {
 
         Inputs: {
             PrimaryGhost: {
-                borderColor: '#F59D53',
+                borderColor: '#034d89',
                 color: '#FFFFFF',
                 placeHolder: '#B0B0B0',
             },
@@ -254,8 +254,8 @@ export const Colors = {
                 width: '100%',
             },
             LightGhost: {
-                color: '#F59D53',
-                borderColor: '#F59D53',
+                color: '#FFFFFF',
+                borderColor: '#FFFFFF',
                 placeHolder: '#aaaaaa',
                 width: '100%',
             },
@@ -276,25 +276,25 @@ export const Colors = {
         Icons: {
             loader: {
                 light: '#FFFFFF',
-                Primary: '#F59D53'
+                Primary: '#034d89'
             },
             check: '#198754',  // Verde de sucesso
-            filter: '#F59D53'
+            filter: '#034d89'
         },
 
         Switch: {
             ios_backgroundColor: '#333333',
             thumbColor: {
-                true: '#F59D53',
+                true: '#034d89',
                 false: '#B0B0B0'
             }
         },
 
         Steps: {
             currentStepLabelColor: '#FFFFFF',
-            stepStrokeFinishedColor: '#F59D53',
-            stepIndicatorFinishedColor: '#F59D53',
-            separatorFinishedColor: '#F59D53',
+            stepStrokeFinishedColor: '#034d89',
+            stepIndicatorFinishedColor: '#034d89',
+            separatorFinishedColor: '#034d89',
             stepIndicatorLabelFinishedColor: '#FFFFFF',
 
             stepStrokeUnFinishedColor: '#555555',
@@ -302,7 +302,7 @@ export const Colors = {
             stepIndicatorUnFinishedColor: '#555555',
             stepIndicatorLabelUnFinishedColor: '#FFFFFF',
 
-            stepStrokeCurrentColor: '#F59D53',
+            stepStrokeCurrentColor: '#034d89',
             stepIndicatorCurrentColor: '#1E1E1E',
             stepIndicatorLabelCurrentColor: '#FFFFFF',
 
@@ -313,7 +313,7 @@ export const Colors = {
 
 // Funções utilitárias para gerenciamento de esquemas de cores
 export async function getColorScheme() {
-    const storedSchema = await AsyncStorage.getItem('colorSchema');
+    const storedSchema = await AsyncStorage.getItem('colorSchema') || "Light";
     if (storedSchema && Colors[storedSchema]) {
         return Colors[storedSchema];
     }
